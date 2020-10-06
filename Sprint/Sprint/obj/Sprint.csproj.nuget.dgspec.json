@@ -1,25 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Samantha\\source\\repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj": {}
+    "C:\\Users\\conor\\Source\\Repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Samantha\\source\\repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj": {
+    "C:\\Users\\conor\\Source\\Repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Samantha\\source\\repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj",
+        "projectUniqueName": "C:\\Users\\conor\\Source\\Repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj",
         "projectName": "Sprint",
-        "projectPath": "C:\\Users\\Samantha\\source\\repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj",
-        "packagesPath": "C:\\Users\\Samantha\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Samantha\\source\\repos\\PROG3050\\Sprint\\Sprint\\obj\\",
+        "projectPath": "C:\\Users\\conor\\Source\\Repos\\PROG3050\\Sprint\\Sprint\\Sprint.csproj",
+        "packagesPath": "C:\\Users\\conor\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\conor\\Source\\Repos\\PROG3050\\Sprint\\Sprint\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Samantha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\conor\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -54,9 +55,15 @@
               "target": "Package",
               "version": "[3.1.1, )"
             },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.8, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.1, )"
+              "version": "[3.1.3, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "target": "Package",
@@ -81,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
