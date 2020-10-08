@@ -26,7 +26,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_IndexGET_Returns_ViewResult()
+        public async Task Index_ReturnsViewResult()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -49,7 +49,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_DetailsGET_Returns_ViewResult()
+        public async Task Details_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -72,7 +72,7 @@ namespace Sprint.Tests.Controllers
         [Theory]
         [InlineData(null)]
         [InlineData(666)]
-        public async Task Test_DetailsGET_Returns_NotFound(int? gameId)
+        public async Task Details_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -86,7 +86,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public void Test_CreateGET_ReturnsViewResult()
+        public void Create_ReturnsViewResult()
         {
             // Arrange
             using var context = new GameStoreContext();
@@ -102,7 +102,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_CreatePOST_ReturnsRedirectToActionResult()
+        public async Task Create_ReturnsRedirectToActionResult_WhenGameIsCreated()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -124,7 +124,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_EditGET_ReturnsViewResult()
+        public async Task Edit_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -149,7 +149,7 @@ namespace Sprint.Tests.Controllers
         [Theory]
         [InlineData(null)]
         [InlineData(666)]
-        public async Task Test_EditGET_ReturnsNotFound(int? gameId)
+        public async Task Edit_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -165,7 +165,7 @@ namespace Sprint.Tests.Controllers
         [Theory]
         [InlineData(0)]
         [InlineData(666)]
-        public async Task Test_EditPOST_ReturnsNotFound(int gameId)
+        public async Task Edit_ReturnsNotFound_WhenGameIdDoesNotMatchPostBody(int gameId)
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -179,7 +179,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_EditPOST_ReturnsRedirectToActionResult()
+        public async Task Edit_ReturnsRedirectToActionResult_WhenGameIsUpdated()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -201,7 +201,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_DeleteGET_ReturnsViewResult()
+        public async Task Delete_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -224,7 +224,7 @@ namespace Sprint.Tests.Controllers
         [Theory]
         [InlineData(null)]
         [InlineData(666)]
-        public async Task Test_DeleteGET_ReturnsNotFound(int? gameId)
+        public async Task Delete_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -238,7 +238,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_DeleteConfirmedPOST_ReturnsRedirectToActionResult()
+        public async Task DeleteConfirmed_ReturnsRedirectToActionResult_WhenGameIsDeleted()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
