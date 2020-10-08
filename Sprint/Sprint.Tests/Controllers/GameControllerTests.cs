@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sprint.Controllers;
 using Sprint.Models;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_Index_Returns_ViewResult()
+        public async Task Test_IndexGET_Returns_ViewResult()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -48,7 +49,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Test_Details_Returns_ViewResult()
+        public async Task Test_DetailsGET_Returns_ViewResult()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -71,7 +72,7 @@ namespace Sprint.Tests.Controllers
         [Theory]
         [InlineData(null)]
         [InlineData(666)]
-        public async Task Test_Details_Returns_NotFound(int? gameId)
+        public async Task Test_DetailsGET_Returns_NotFound(int? gameId)
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
@@ -85,32 +86,170 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public void Test_Create_ReturnsEmpty_ViewResult()
+        public void Test_CreateGET_ReturnsViewResult()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new GameStoreContext();
             GameController gameController = new GameController(context);
-
+            
             // Act
             var result = gameController.Create();
-
+            
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
+
             Assert.Null(viewResult.ViewData.Model);
         }
 
         [Fact]
-        public async Task Test_Create_Returns_RedirectToActionResult()
+        public async Task Test_CreatePOST_ReturnsRedirectToActionResult()
         {
             // Arrange
             using var context = new GameStoreContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
-            var result = await gameController.Create(new Game { GameId = 2, Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
+            var result = await gameController.Create(new Game { Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
+
+            // Assert
+            var game = Assert.IsAssignableFrom<Game>(context.Game.FirstOrDefault(g => g.GameId == 2));
+            var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+
+            Assert.Equal(2, game.GameId);
+            Assert.Equal("Blizzard", game.Developer);
+            Assert.Equal("StarCraft", game.GameName);
+            Assert.Equal(2, game.GameTypeId);
+            Assert.Equal(4, game.Rating);
+            Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
+        }
+
+        [Fact]
+        public async Task Test_EditGET_ReturnsViewResult()
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.Edit(1);
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
+            var game = Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
+            var selectList = Assert.IsAssignableFrom<SelectList>(viewResult.ViewData["GameTypeId"]);
+
+            Assert.Equal(2, selectList.Count());
+            Assert.Equal(1, game.GameId);
+            Assert.Equal("Valve", game.Developer);
+            Assert.Equal("Half-life", game.GameName);
+            Assert.Equal(1, game.GameTypeId);
+            Assert.Equal(3, game.Rating);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(666)]
+        public async Task Test_EditGET_ReturnsNotFound(int? gameId)
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.Edit(gameId);
+
+            // Assert
+            Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(666)]
+        public async Task Test_EditPOST_ReturnsNotFound(int gameId)
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
+
+            // Assert
+            Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task Test_EditPOST_ReturnsRedirectToActionResult()
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.Edit(1, new Game { GameId = 1, Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            var game = Assert.IsAssignableFrom<Game>(context.Game.FirstOrDefault(g => g.GameId == 1));
+
+            Assert.Equal(1, game.GameId);
+            Assert.Equal("Blizzard", game.Developer);
+            Assert.Equal("StarCraft", game.GameName);
+            Assert.Equal(2, game.GameTypeId);
+            Assert.Equal(4, game.Rating);
+            Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
+        }
+
+        [Fact]
+        public async Task Test_DeleteGET_ReturnsViewResult()
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.Delete(1);
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
+            var game = Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
+
+            Assert.Equal(1, game.GameId);
+            Assert.Equal("Valve", game.Developer);
+            Assert.Equal("Half-life", game.GameName);
+            Assert.Equal(1, game.GameTypeId);
+            Assert.Equal(3, game.Rating);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(666)]
+        public async Task Test_DeleteGET_ReturnsNotFound(int? gameId)
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.Delete(gameId);
+
+            // Assert
+            Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task Test_DeleteConfirmedPOST_ReturnsRedirectToActionResult()
+        {
+            // Arrange
+            using var context = new GameStoreContext(ContextOptions);
+            GameController gameController = new GameController(context);
+
+            // Act
+            var result = await gameController.DeleteConfirmed(1);
+
+            // Assert
+            var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            Assert.Null(context.Game.FirstOrDefault(g => g.GameId == 1));
             Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
     }
