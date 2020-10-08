@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Sprint.Models
 {
@@ -7,12 +6,12 @@ namespace Sprint.Models
     {
         public GameType()
         {
-            Games = new HashSet<Games>();
+            Games = new HashSet<Game>();
         }
 
         public int GameTypeId { get; set; }
-        public string GameType1 { get; set; }
+        public string Type { get; set; }
 
-        public virtual ICollection<Games> Games { get; set; }
+        public virtual ICollection<Game> Games { get; set; }
     }
 }

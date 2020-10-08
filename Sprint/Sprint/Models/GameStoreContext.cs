@@ -1,22 +1,20 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Sprint.Models
 {
-    public partial class game_storeContext : DbContext
+    public partial class GameStoreContext : DbContext
     {
-        public game_storeContext()
+        public GameStoreContext()
         {
         }
 
-        public game_storeContext(DbContextOptions<game_storeContext> options)
+        public GameStoreContext(DbContextOptions<GameStoreContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<GameType> GameType { get; set; }
-        public virtual DbSet<Games> Games { get; set; }
+        public virtual DbSet<Game> Game { get; set; }
         public virtual DbSet<Reviews> Reviews { get; set; }
         public virtual DbSet<UserType> UserType { get; set; }
         public virtual DbSet<Users> Users { get; set; }
@@ -38,14 +36,14 @@ namespace Sprint.Models
 
                 entity.Property(e => e.GameTypeId).HasColumnName("gameTypeId");
 
-                entity.Property(e => e.GameType1)
+                entity.Property(e => e.Type)
                     .IsRequired()
                     .HasColumnName("gameType")
                     .HasMaxLength(25)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Games>(entity =>
+            modelBuilder.Entity<Game>(entity =>
             {
                 entity.HasKey(e => e.GameId);
 
