@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Sprint.Models;
+using Sprint.Data;
 
 namespace Sprint.Tests.Controllers
 {
     public abstract class DBContextController
     {
-        public DbContextOptions<GameStoreContext> ContextOptions { get; }
+        public DbContextOptions<ApplicationDbContext> ContextOptions { get; }
 
         public DBContextController()
         {
-            ContextOptions = new DbContextOptionsBuilder<GameStoreContext>()
-                .UseInMemoryDatabase(databaseName: "game_store")
+            ContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "RDSCGameStore")
                 .Options;
 
             Seed();

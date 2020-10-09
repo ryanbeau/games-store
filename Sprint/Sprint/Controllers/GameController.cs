@@ -3,15 +3,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Sprint.Data;
 using Sprint.Models;
 
 namespace Sprint.Controllers
 {
     public class GameController : Controller
     {
-        private readonly GameStoreContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public GameController(GameStoreContext context)
+        public GameController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -19,7 +20,7 @@ namespace Sprint.Controllers
         // GET: Game
         public async Task<IActionResult> Index()
         {
-            var gameStoreContext = _context.Game.Include(g => g.GameType);
+            var gameStoreContext = _context.Games.Include(g => g.GameType);
             return View(await gameStoreContext.ToListAsync());
         }
 
@@ -31,7 +32,7 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
+            var game = await _context.Games
                 .Include(g => g.GameType)
                 .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
@@ -45,7 +46,7 @@ namespace Sprint.Controllers
         // GET: Game/Create
         public IActionResult Create()
         {
-            ViewData["GameTypeId"] = new SelectList(_context.GameType, "GameTypeId", "Type");
+            ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name");
             return View();
         }
 
@@ -62,7 +63,7 @@ namespace Sprint.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameTypeId"] = new SelectList(_context.GameType, "GameTypeId", "Type", game.GameTypeId);
+            ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
             return View(game);
         }
 
@@ -74,12 +75,12 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game.FindAsync(id);
+            var game = await _context.Games.FindAsync(id);
             if (game == null)
             {
                 return NotFound();
             }
-            ViewData["GameTypeId"] = new SelectList(_context.GameType, "GameTypeId", "Type", game.GameTypeId);
+            ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
             return View(game);
         }
 
@@ -115,7 +116,7 @@ namespace Sprint.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameTypeId"] = new SelectList(_context.GameType, "GameTypeId", "Game", game.GameTypeId);
+            ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Game", game.GameTypeId);
             return View(game);
         }
 
@@ -127,7 +128,7 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Game
+            var game = await _context.Games
                 .Include(g => g.GameType)
                 .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
@@ -143,15 +144,15 @@ namespace Sprint.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var game = await _context.Game.FindAsync(id);
-            _context.Game.Remove(game);
+            var game = await _context.Games.FindAsync(id);
+            _context.Games.Remove(game);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool GameExists(int id)
         {
-            return _context.Game.Any(e => e.GameId == id);
+            return _context.Games.Any(e => e.GameId == id);
         }
     }
 }
