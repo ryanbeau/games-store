@@ -55,7 +55,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,GameName,Developer,Rating")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameTypeId,GameName,Developer,Rating")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameTypeId,Name,Developer,Rating")] Game game)
         {
             if (id != game.GameId)
             {
