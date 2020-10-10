@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Sprint.Data;
@@ -7,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sprint.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Sprint
 {
@@ -22,13 +24,26 @@ namespace Sprint
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("game_store")));
+            var lockoutOptions = new LockoutOptions
+            {
+                AllowedForNewUsers = true,
+                DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1),
+                MaxFailedAccessAttempts = 3
+            };
 
-            services.AddScoped<GameStoreContext>();
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.User.RequireUniqueEmail = true;
+                options.Lockout = lockoutOptions;
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("AppData"));
+            });
 
             services.AddControllersWithViews();
             services.AddRazorPages();

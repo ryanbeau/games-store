@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sprint.Controllers;
+using Sprint.Data;
 using Sprint.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,14 @@ namespace Sprint.Tests.Controllers
     {
         protected override void Seed()
         {
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
 
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            context.GameType.Add(new GameType { GameTypeId = 1, Type = "1st Person Shooter" });
-            context.GameType.Add(new GameType { GameTypeId = 2, Type = "RTS" });
-            context.Game.Add(new Game { GameId = 1, Developer = "Valve", GameName = "Half-life", GameTypeId = 1, Rating = 3 });
+            context.GameTypes.Add(new GameType { GameTypeId = 1, Name = "1st Person Shooter" });
+            context.GameTypes.Add(new GameType { GameTypeId = 2, Name = "RTS" });
+            context.Games.Add(new Game { GameId = 1, Developer = "Valve", Name = "Half-life", GameTypeId = 1 });
 
             context.SaveChanges();
         }
@@ -29,7 +30,7 @@ namespace Sprint.Tests.Controllers
         public async Task Index_ReturnsViewResult()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -43,16 +44,15 @@ namespace Sprint.Tests.Controllers
             var game = model.First();
             Assert.Equal(1, game.GameId);
             Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.GameName);
+            Assert.Equal("Half-life", game.Name);
             Assert.Equal(1, game.GameTypeId);
-            Assert.Equal(3, game.Rating);
         }
 
         [Fact]
         public async Task Details_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -64,9 +64,8 @@ namespace Sprint.Tests.Controllers
 
             Assert.Equal(1, game.GameId);
             Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.GameName);
+            Assert.Equal("Half-life", game.Name);
             Assert.Equal(1, game.GameTypeId);
-            Assert.Equal(3, game.Rating);
         }
 
         [Theory]
@@ -75,7 +74,7 @@ namespace Sprint.Tests.Controllers
         public async Task Details_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -89,7 +88,7 @@ namespace Sprint.Tests.Controllers
         public void Create_ReturnsViewResult()
         {
             // Arrange
-            using var context = new GameStoreContext();
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
             
             // Act
@@ -105,21 +104,20 @@ namespace Sprint.Tests.Controllers
         public async Task Create_ReturnsRedirectToActionResult_WhenGameIsCreated()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
-            var result = await gameController.Create(new Game { Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
+            var result = await gameController.Create(new Game { Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
-            var game = Assert.IsAssignableFrom<Game>(context.Game.FirstOrDefault(g => g.GameId == 2));
+            var game = Assert.IsAssignableFrom<Game>(context.Games.FirstOrDefault(g => g.GameId == 2));
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
 
             Assert.Equal(2, game.GameId);
             Assert.Equal("Blizzard", game.Developer);
-            Assert.Equal("StarCraft", game.GameName);
+            Assert.Equal("StarCraft", game.Name);
             Assert.Equal(2, game.GameTypeId);
-            Assert.Equal(4, game.Rating);
             Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
 
@@ -127,7 +125,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -141,9 +139,8 @@ namespace Sprint.Tests.Controllers
             Assert.Equal(2, selectList.Count());
             Assert.Equal(1, game.GameId);
             Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.GameName);
+            Assert.Equal("Half-life", game.Name);
             Assert.Equal(1, game.GameTypeId);
-            Assert.Equal(3, game.Rating);
         }
 
         [Theory]
@@ -152,7 +149,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -168,11 +165,11 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdDoesNotMatchPostBody(int gameId)
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
-            var result = await gameController.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
+            var result = await gameController.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -182,21 +179,20 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsRedirectToActionResult_WhenGameIsUpdated()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
-            var result = await gameController.Edit(1, new Game { GameId = 1, Developer = "Blizzard", GameName = "StarCraft", GameTypeId = 2, Rating = 4 });
+            var result = await gameController.Edit(1, new Game { GameId = 1, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
-            var game = Assert.IsAssignableFrom<Game>(context.Game.FirstOrDefault(g => g.GameId == 1));
+            var game = Assert.IsAssignableFrom<Game>(context.Games.FirstOrDefault(g => g.GameId == 1));
 
             Assert.Equal(1, game.GameId);
             Assert.Equal("Blizzard", game.Developer);
-            Assert.Equal("StarCraft", game.GameName);
+            Assert.Equal("StarCraft", game.Name);
             Assert.Equal(2, game.GameTypeId);
-            Assert.Equal(4, game.Rating);
             Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
 
@@ -204,7 +200,7 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -216,9 +212,8 @@ namespace Sprint.Tests.Controllers
 
             Assert.Equal(1, game.GameId);
             Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.GameName);
+            Assert.Equal("Half-life", game.Name);
             Assert.Equal(1, game.GameTypeId);
-            Assert.Equal(3, game.Rating);
         }
 
         [Theory]
@@ -227,7 +222,7 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -241,7 +236,7 @@ namespace Sprint.Tests.Controllers
         public async Task DeleteConfirmed_ReturnsRedirectToActionResult_WhenGameIsDeleted()
         {
             // Arrange
-            using var context = new GameStoreContext(ContextOptions);
+            using var context = new ApplicationDbContext(ContextOptions);
             GameController gameController = new GameController(context);
 
             // Act
@@ -249,7 +244,7 @@ namespace Sprint.Tests.Controllers
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
-            Assert.Null(context.Game.FirstOrDefault(g => g.GameId == 1));
+            Assert.Null(context.Games.FirstOrDefault(g => g.GameId == 1));
             Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
     }

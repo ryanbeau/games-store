@@ -17,19 +17,14 @@
                 <select asp-for="GameTypeId" class ="form-control" asp-items="ViewBag.GameTypeId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="GameName" class="control-label"></label>
-                <input asp-for="GameName" class="form-control" />
-                <span asp-validation-for="GameName" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Developer" class="control-label"></label>
                 <input asp-for="Developer" class="form-control" />
                 <span asp-validation-for="Developer" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
