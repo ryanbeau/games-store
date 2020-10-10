@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Sprint.Enums;
 using Sprint.Models;
 using System;
 
@@ -8,6 +9,7 @@ namespace Sprint.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
+        public virtual DbSet<GameImage> GameImages { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
@@ -105,11 +107,58 @@ namespace Sprint.Data
                 new Game { GameId = 19, Name = "The Legend of Zelda: Breath of the Wild", Developer = "Nintendo", GameTypeId = 2 },
                 new Game { GameId = 20, Name = "Call of Duty: Black Ops 4", Developer = "Activision", GameTypeId = 1 }
             );
+
+            modelBuilder.Entity<GameImage>().HasData(
+                new GameImage { GameImageId = 1, GameId = 1, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/d5c91983451d0fa52a7ce530a3714ab7.png" },
+                new GameImage { GameImageId = 2, GameId = 2, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/767b2cc82cecc0385fe6f1086dd2c748.png" },
+                new GameImage { GameImageId = 3, GameId = 3, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/94cd0468d6f321ec192c9e301ba30e85.png" },
+                new GameImage { GameImageId = 4, GameId = 4, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png" },
+                new GameImage { GameImageId = 5, GameId = 5, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/9a3bd37a71b632e7726f149bbd771052.png" },
+                //new GameImage { GameImageId = 6, GameId = 6, ImageType = ImageType.Banner, ImageURL = "" },
+                new GameImage { GameImageId = 7, GameId = 7, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/71e9c6620d381d60196ebe694840aaaa.png" },
+                //new GameImage { GameImageId = 8, GameId = 8, ImageType = ImageType.Banner, ImageURL = "" },
+                new GameImage { GameImageId = 9, GameId = 9, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/29ddbdb402491a6aa97964a8139a1356.png" },
+                new GameImage { GameImageId = 10, GameId = 10, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/c6d4eb15f1e84a36eff58eca3627c82e.png" },
+                //new GameImage { GameImageId = 11, GameId = 11, ImageType = ImageType.Banner, ImageURL = "" },
+                new GameImage { GameImageId = 12, GameId = 12, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png" },
+                new GameImage { GameImageId = 13, GameId = 13, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/2a574bcb25a0ae1faad7c630370e6234.png" },
+                new GameImage { GameImageId = 14, GameId = 14, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png" },
+                //new GameImage { GameImageId = 15, GameId = 15, ImageType = ImageType.Banner, ImageURL = "" },
+                //new GameImage { GameImageId = 16, GameId = 16, ImageType = ImageType.Banner, ImageURL = "" },
+                new GameImage { GameImageId = 17, GameId = 17, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png" },
+                new GameImage { GameImageId = 18, GameId = 18, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/f4a331b7a22d1b237565d8813a34d8ac.png" },
+                new GameImage { GameImageId = 19, GameId = 19, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/2da535ad78bb2e93aa448b1a4a61134e.png" },
+                new GameImage { GameImageId = 20, GameId = 20, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png" }
+            );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<GameImage>(entity =>
+            {
+                entity.HasKey(e => e.GameImageId);
+
+                entity.ToTable("GameImage");
+
+                entity.Property(p => p.GameImageId).HasColumnName("GameImageId").UseIdentityColumn();
+
+                entity.Property(e => e.GameId).HasColumnName("GameId")
+                    .IsRequired();
+
+                entity.Property(e => e.ImageURL).HasColumnName("ImageURL")
+                    .IsRequired();
+
+                entity.Property(e => e.ImageType).HasColumnName("ImageType")
+                    .IsRequired();
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.GameImages)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GameImage_Game");
+            });
 
             modelBuilder.Entity<GameType>(entity =>
             {
@@ -159,7 +208,7 @@ namespace Sprint.Data
 
                 entity.ToTable("Review");
 
-                entity.Property(p => p.ReviewId).UseIdentityColumn();
+                entity.Property(p => p.ReviewId).HasColumnName("ReviewId").UseIdentityColumn();
 
                 entity.Property(e => e.UserId).HasColumnName("UserId");
 
@@ -173,7 +222,7 @@ namespace Sprint.Data
 
                 entity.Property(e => e.ReviewContent)
                     .IsRequired()
-                    .HasColumnName("reviewContent")
+                    .HasColumnName("ReviewContent")
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Game)

@@ -190,6 +190,27 @@ namespace Sprint.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GameImage",
+                columns: table => new
+                {
+                    GameImageId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameId = table.Column<int>(nullable: false),
+                    ImageURL = table.Column<string>(nullable: false),
+                    ImageType = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameImage", x => x.GameImageId);
+                    table.ForeignKey(
+                        name: "FK_GameImage_Game",
+                        column: x => x.GameId,
+                        principalTable: "Game",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Review",
                 columns: table => new
                 {
@@ -198,7 +219,7 @@ namespace Sprint.Migrations
                     UserId = table.Column<int>(nullable: false),
                     GameId = table.Column<int>(nullable: false),
                     Rating = table.Column<int>(nullable: false),
-                    reviewContent = table.Column<string>(unicode: false, nullable: false)
+                    ReviewContent = table.Column<string>(unicode: false, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,8 +259,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "c315f520-ec0d-4a7d-9d6c-f2561e0ecd23", "Admin", "ADMIN" },
-                    { 2, "59c5f842-0601-4aa4-8fbc-269afaebc3ef", "Member", "MEMBER" }
+                    { 1, "1af2bd5b-0ea6-4e73-b154-99ecdf50a26d", "Admin", "ADMIN" },
+                    { 2, "b9fec59b-9cce-42fd-b063-0d84e4f8f626", "Member", "MEMBER" }
                 });
 
             migrationBuilder.InsertData(
@@ -247,8 +268,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "52dfe94f-9a07-485b-aa5e-a1a967abb671", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "bfc48b77-f61d-419c-b911-3eb254eb420f", "admin@admin.com", true, false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEH64xIstCeGs5vobEvGPjWjVgxSQpwrX3knpBRWoC5QOnaNiiod2yMRPUmnf8QC2Bw==", "555-555-5555", false, "", false, "admin" },
-                    { 2, 0, "a1d5f8d6-e8dd-4fdd-9a77-70f58ff7c87e", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "6eddac10-7289-437a-8d8b-73b4316a22ab", "user@user.com", true, false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEFoiA+2lmEdxkuyebBf38RVQjDvQAvI/ykso2HBpteUXG6ql7Txzseuf/ICrDh9VQw==", "555-555-5555", false, "", false, "user" }
+                    { 1, 0, "9ad2731b-8284-4969-91a9-4249163d3383", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "c647cfb0-eb9e-490f-99ed-f821949ef080", "admin@admin.com", true, false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEIBWwLPax0P8kihtMpSpwI68pHdHP7pRiNmHGl8b3tIHncyJ6479yXjgzMqL+6ij1Q==", "555-555-5555", false, "", false, "admin" },
+                    { 2, 0, "f5e9d7a0-86f3-44c0-a632-6524fae724b4", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "19ea9d1f-84ed-48c8-a72f-579903c15b0f", "user@user.com", true, false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEC7VH3CIZz+tWu1POsi0h7fMeJpF3QO42PGuiF9WRPBOQf5nf+en4Azjn65ddZST8w==", "555-555-5555", false, "", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -287,10 +308,37 @@ namespace Sprint.Migrations
                     { 2, 2 }
                 });
 
+            migrationBuilder.InsertData(
+                table: "GameImage",
+                columns: new[] { "GameImageId", "GameId", "ImageType", "ImageURL" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, "https://cdn.steamgriddb.com/grid/d5c91983451d0fa52a7ce530a3714ab7.png" },
+                    { 4, 4, 1, "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png" },
+                    { 5, 5, 1, "https://cdn.steamgriddb.com/grid/9a3bd37a71b632e7726f149bbd771052.png" },
+                    { 7, 7, 1, "https://cdn.steamgriddb.com/grid/71e9c6620d381d60196ebe694840aaaa.png" },
+                    { 9, 9, 1, "https://cdn.steamgriddb.com/grid/29ddbdb402491a6aa97964a8139a1356.png" },
+                    { 10, 10, 1, "https://cdn.steamgriddb.com/grid/c6d4eb15f1e84a36eff58eca3627c82e.png" },
+                    { 14, 14, 1, "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png" },
+                    { 17, 17, 1, "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png" },
+                    { 20, 20, 1, "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png" },
+                    { 19, 19, 1, "https://cdn.steamgriddb.com/grid/2da535ad78bb2e93aa448b1a4a61134e.png" },
+                    { 2, 2, 1, "https://cdn.steamgriddb.com/grid/767b2cc82cecc0385fe6f1086dd2c748.png" },
+                    { 3, 3, 1, "https://cdn.steamgriddb.com/grid/94cd0468d6f321ec192c9e301ba30e85.png" },
+                    { 18, 18, 1, "https://cdn.steamgriddb.com/grid/f4a331b7a22d1b237565d8813a34d8ac.png" },
+                    { 12, 12, 1, "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png" },
+                    { 13, 13, 1, "https://cdn.steamgriddb.com/grid/2a574bcb25a0ae1faad7c630370e6234.png" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Game_GameTypeId",
                 table: "Game",
                 column: "GameTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameImage_GameId",
+                table: "GameImage",
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Review_GameId",
@@ -330,6 +378,9 @@ namespace Sprint.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "GameImage");
+
             migrationBuilder.DropTable(
                 name: "Review");
 

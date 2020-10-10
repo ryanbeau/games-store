@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sprint.Controllers;
-using Sprint.Data;
 using Sprint.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,26 +11,11 @@ namespace Sprint.Tests.Controllers
 {
     public class GameControllerTests : DBContextController
     {
-        protected override void Seed()
-        {
-            using var context = new ApplicationDbContext(ContextOptions);
-
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            context.GameTypes.Add(new GameType { GameTypeId = 1, Name = "1st Person Shooter" });
-            context.GameTypes.Add(new GameType { GameTypeId = 2, Name = "RTS" });
-            context.Games.Add(new Game { GameId = 1, Developer = "Valve", Name = "Half-life", GameTypeId = 1 });
-
-            context.SaveChanges();
-        }
-
         [Fact]
         public async Task Index_ReturnsViewResult()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Index();
@@ -39,33 +23,21 @@ namespace Sprint.Tests.Controllers
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
             var model = Assert.IsAssignableFrom<IEnumerable<Game>>(viewResult.ViewData.Model);
-            Assert.Single(model);
-
-            var game = model.First();
-            Assert.Equal(1, game.GameId);
-            Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.Name);
-            Assert.Equal(1, game.GameTypeId);
+            Assert.NotEmpty(model);
         }
 
         [Fact]
         public async Task Details_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Details(1);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var game = Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
-
-            Assert.Equal(1, game.GameId);
-            Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.Name);
-            Assert.Equal(1, game.GameTypeId);
+            Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
         }
 
         [Theory]
@@ -74,8 +46,7 @@ namespace Sprint.Tests.Controllers
         public async Task Details_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Details(gameId);
@@ -88,8 +59,7 @@ namespace Sprint.Tests.Controllers
         public void Create_ReturnsViewResult()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
             
             // Act
             var result = gameController.Create();
@@ -104,19 +74,16 @@ namespace Sprint.Tests.Controllers
         public async Task Create_ReturnsRedirectToActionResult_WhenGameIsCreated()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
-            var result = await gameController.Create(new Game { Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
+            var result = await gameController.Create(new Game { Developer = "TEST_DEVELOPER", Name = "NEW_GAME", GameTypeId = 2 });
 
             // Assert
-            var game = Assert.IsAssignableFrom<Game>(context.Games.FirstOrDefault(g => g.GameId == 2));
+            var game = Assert.IsAssignableFrom<Game>(_context.Games.FirstOrDefault(g => g.Name == "NEW_GAME"));
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
 
-            Assert.Equal(2, game.GameId);
-            Assert.Equal("Blizzard", game.Developer);
-            Assert.Equal("StarCraft", game.Name);
+            Assert.Equal("TEST_DEVELOPER", game.Developer);
             Assert.Equal(2, game.GameTypeId);
             Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
@@ -125,22 +92,17 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Edit(1);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var game = Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
             var selectList = Assert.IsAssignableFrom<SelectList>(viewResult.ViewData["GameTypeId"]);
+            Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
 
-            Assert.Equal(2, selectList.Count());
-            Assert.Equal(1, game.GameId);
-            Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.Name);
-            Assert.Equal(1, game.GameTypeId);
+            Assert.NotEmpty(selectList);
         }
 
         [Theory]
@@ -149,8 +111,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Edit(gameId);
@@ -165,8 +126,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdDoesNotMatchPostBody(int gameId)
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
@@ -179,15 +139,14 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsRedirectToActionResult_WhenGameIsUpdated()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Edit(1, new Game { GameId = 1, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
-            var game = Assert.IsAssignableFrom<Game>(context.Games.FirstOrDefault(g => g.GameId == 1));
+            var game = Assert.IsAssignableFrom<Game>(_context.Games.FirstOrDefault(g => g.GameId == 1));
 
             Assert.Equal(1, game.GameId);
             Assert.Equal("Blizzard", game.Developer);
@@ -200,20 +159,14 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Delete(1);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var game = Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
-
-            Assert.Equal(1, game.GameId);
-            Assert.Equal("Valve", game.Developer);
-            Assert.Equal("Half-life", game.Name);
-            Assert.Equal(1, game.GameTypeId);
+            Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
         }
 
         [Theory]
@@ -222,8 +175,7 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.Delete(gameId);
@@ -236,15 +188,14 @@ namespace Sprint.Tests.Controllers
         public async Task DeleteConfirmed_ReturnsRedirectToActionResult_WhenGameIsDeleted()
         {
             // Arrange
-            using var context = new ApplicationDbContext(ContextOptions);
-            GameController gameController = new GameController(context);
+            GameController gameController = new GameController(_context);
 
             // Act
             var result = await gameController.DeleteConfirmed(1);
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
-            Assert.Null(context.Games.FirstOrDefault(g => g.GameId == 1));
+            Assert.Null(_context.Games.FirstOrDefault(g => g.GameId == 1));
             Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
     }
