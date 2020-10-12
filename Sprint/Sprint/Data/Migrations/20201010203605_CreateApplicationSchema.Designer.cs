@@ -10,7 +10,7 @@ using Sprint.Data;
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201009220018_CreateApplicationSchema")]
+    [Migration("20201010203605_CreateApplicationSchema")]
     partial class CreateApplicationSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,6 +301,143 @@ namespace Sprint.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Sprint.Models.GameImage", b =>
+                {
+                    b.Property<int>("GameImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("GameImageId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("GameId")
+                        .HasColumnName("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ImageType")
+                        .HasColumnName("ImageType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageURL")
+                        .IsRequired()
+                        .HasColumnName("ImageURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GameImageId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("GameImage");
+
+                    b.HasData(
+                        new
+                        {
+                            GameImageId = 1,
+                            GameId = 1,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/d5c91983451d0fa52a7ce530a3714ab7.png"
+                        },
+                        new
+                        {
+                            GameImageId = 2,
+                            GameId = 2,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/767b2cc82cecc0385fe6f1086dd2c748.png"
+                        },
+                        new
+                        {
+                            GameImageId = 3,
+                            GameId = 3,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/94cd0468d6f321ec192c9e301ba30e85.png"
+                        },
+                        new
+                        {
+                            GameImageId = 4,
+                            GameId = 4,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png"
+                        },
+                        new
+                        {
+                            GameImageId = 5,
+                            GameId = 5,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/9a3bd37a71b632e7726f149bbd771052.png"
+                        },
+                        new
+                        {
+                            GameImageId = 7,
+                            GameId = 7,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/71e9c6620d381d60196ebe694840aaaa.png"
+                        },
+                        new
+                        {
+                            GameImageId = 9,
+                            GameId = 9,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/29ddbdb402491a6aa97964a8139a1356.png"
+                        },
+                        new
+                        {
+                            GameImageId = 10,
+                            GameId = 10,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/c6d4eb15f1e84a36eff58eca3627c82e.png"
+                        },
+                        new
+                        {
+                            GameImageId = 12,
+                            GameId = 12,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png"
+                        },
+                        new
+                        {
+                            GameImageId = 13,
+                            GameId = 13,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/2a574bcb25a0ae1faad7c630370e6234.png"
+                        },
+                        new
+                        {
+                            GameImageId = 14,
+                            GameId = 14,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png"
+                        },
+                        new
+                        {
+                            GameImageId = 17,
+                            GameId = 17,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png"
+                        },
+                        new
+                        {
+                            GameImageId = 18,
+                            GameId = 18,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/f4a331b7a22d1b237565d8813a34d8ac.png"
+                        },
+                        new
+                        {
+                            GameImageId = 19,
+                            GameId = 19,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/2da535ad78bb2e93aa448b1a4a61134e.png"
+                        },
+                        new
+                        {
+                            GameImageId = 20,
+                            GameId = 20,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png"
+                        });
+                });
+
             modelBuilder.Entity("Sprint.Models.GameType", b =>
                 {
                     b.Property<int>("GameTypeId")
@@ -374,6 +511,7 @@ namespace Sprint.Migrations
                 {
                     b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("ReviewId")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:IdentityIncrement", 1)
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
@@ -389,7 +527,7 @@ namespace Sprint.Migrations
 
                     b.Property<string>("ReviewContent")
                         .IsRequired()
-                        .HasColumnName("reviewContent")
+                        .HasColumnName("ReviewContent")
                         .HasColumnType("varchar(max)")
                         .IsUnicode(false);
 
@@ -439,14 +577,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "c315f520-ec0d-4a7d-9d6c-f2561e0ecd23",
+                            ConcurrencyStamp = "1af2bd5b-0ea6-4e73-b154-99ecdf50a26d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "59c5f842-0601-4aa4-8fbc-269afaebc3ef",
+                            ConcurrencyStamp = "b9fec59b-9cce-42fd-b063-0d84e4f8f626",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -549,16 +687,16 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "52dfe94f-9a07-485b-aa5e-a1a967abb671",
+                            AccountNum = "9ad2731b-8284-4969-91a9-4249163d3383",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "bfc48b77-f61d-419c-b911-3eb254eb420f",
+                            ConcurrencyStamp = "c647cfb0-eb9e-490f-99ed-f821949ef080",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH64xIstCeGs5vobEvGPjWjVgxSQpwrX3knpBRWoC5QOnaNiiod2yMRPUmnf8QC2Bw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIBWwLPax0P8kihtMpSpwI68pHdHP7pRiNmHGl8b3tIHncyJ6479yXjgzMqL+6ij1Q==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -569,16 +707,16 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "a1d5f8d6-e8dd-4fdd-9a77-70f58ff7c87e",
+                            AccountNum = "f5e9d7a0-86f3-44c0-a632-6524fae724b4",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "6eddac10-7289-437a-8d8b-73b4316a22ab",
+                            ConcurrencyStamp = "19ea9d1f-84ed-48c8-a72f-579903c15b0f",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFoiA+2lmEdxkuyebBf38RVQjDvQAvI/ykso2HBpteUXG6ql7Txzseuf/ICrDh9VQw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEC7VH3CIZz+tWu1POsi0h7fMeJpF3QO42PGuiF9WRPBOQf5nf+en4Azjn65ddZST8w==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -644,6 +782,15 @@ namespace Sprint.Migrations
                         .WithMany("Games")
                         .HasForeignKey("GameTypeId")
                         .HasConstraintName("FK_Game_GameType")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sprint.Models.GameImage", b =>
+                {
+                    b.HasOne("Sprint.Models.Game", "Game")
+                        .WithMany("GameImages")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_GameImage_Game")
                         .IsRequired();
                 });
 

@@ -1,24 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Sprint.Controllers;
 using Sprint.Data;
+using System;
 
 namespace Sprint.Tests.Controllers
 {
-    public abstract class DBContextController
+    public abstract class DBContextController : IDisposable
     {
-        public DbContextOptions<ApplicationDbContext> ContextOptions { get; }
+        protected readonly ApplicationDbContext _context;
+        protected readonly Mock<ILogger<HomeController>> _mockLogger;
 
         public DBContextController()
         {
-            ContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
+            _mockLogger = new Mock<ILogger<HomeController>>();
+
+            var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "RDSCGameStore")
                 .Options;
 
-            Seed();
+            _context = new ApplicationDbContext(contextOptions);
+            _context.Database.EnsureCreated();
         }
 
-        /// <summary>
-        /// Populate DBContext with data.
-        /// </summary>
-        protected abstract void Seed();
+        public virtual void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }
