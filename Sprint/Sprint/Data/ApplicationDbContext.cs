@@ -210,9 +210,11 @@ namespace Sprint.Data
 
                 entity.Property(p => p.ReviewId).HasColumnName("ReviewId").UseIdentityColumn();
 
-                entity.Property(e => e.UserId).HasColumnName("UserId");
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
 
-                entity.Property(e => e.GameId).HasColumnName("GameId");
+                entity.Property(e => e.GameId).HasColumnName("GameId")
+                    .IsRequired();
 
                 entity.Property(e => e.Rating).HasColumnName("Rating")
                     .IsRequired();
@@ -230,6 +232,45 @@ namespace Sprint.Data
                     .HasForeignKey(d => d.GameId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Review_Game");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Reviews)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Review_User");
+            });
+
+            modelBuilder.Entity<UserGameWishlist>(entity =>
+            {
+                entity.HasKey(e => e.UserGameId);
+
+                entity.ToTable("UserGameWishlist");
+
+                entity.Property(p => p.UserGameId).HasColumnName("UserGameId").UseIdentityColumn();
+
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
+
+                entity.Property(e => e.GameId).HasColumnName("GameId")
+                    .IsRequired();
+
+                entity.Property(e => e.AddedOn).HasColumnName("AddedOn")
+                    .IsRequired();
+
+                entity.HasIndex(b => new { b.UserId, b.GameId })
+                    .IsUnique();
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.Wishlists)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Wishlist_Game");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Wishlists)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Wishlist_User");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -305,5 +346,7 @@ namespace Sprint.Data
 
             Seed(modelBuilder);
         }
+
+        public DbSet<Sprint.Models.UserGameWishlist> UserGameWishlist { get; set; }
     }
 }

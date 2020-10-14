@@ -29,6 +29,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.GameType.Name)
         </dd>
+        <div class="col-4">
+            <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to your wishlist</a>
+        </div>
+        <div class="col-4">
+            <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>
+        </div>
     </dl>
 </div>
 <div>
