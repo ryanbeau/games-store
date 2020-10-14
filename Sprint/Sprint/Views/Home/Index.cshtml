@@ -2,21 +2,22 @@
     ViewData["Title"] = "Home Page";
 }
 
-<section>
+<section style="padding-bottom: 30px;">
     <div class="text-center">
-        <div id="carouselExampleIndicators" class="carousel slide carouselstyle" data-ride="carousel">
+        <h3 class="carouselTitle">Featured & Recommended</h3>
+        <div id="carouselExampleIndicators" class="carousel slide carouselstyle" data-ride="carousel" style="width: auto;">
             <ol class="carousel-indicators">
                 @for (int i = 0; i < ViewBag.BannerImages.Count; i++)
                 {
                     <li data-target="#carouselExampleIndicators" data-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
                 }
             </ol>
-            <div class="carousel-inner">
+            <div class="carousel-inner carouselSize">
                 @for (int i = 0; i < ViewBag.BannerImages.Count; i++)
                 {
-                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <div class="carouselImageSize carousel-item @(i == 0 ? "active" : "")">
                         <a asp-controller="Game" asp-action="Details" asp-route-id="@ViewBag.BannerImages[i].GameId">
-                            <img class="d-block imagesize" src="@ViewBag.BannerImages[i].ImageURL" alt="@ViewBag.BannerImages[i].Game.Name">
+                            <img class="d-block carouselSize" src="@ViewBag.BannerImages[i].ImageURL" alt="@ViewBag.BannerImages[i].Game.Name" />
                         </a>
                     </div>
                 }
@@ -30,5 +31,84 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+        <div class="row">
+            <div class="col-6" style="text-align: left;">
+                <h3 class="sectionHeading">Special Offers</h3>
+            </div>
+            <div class="col-6" style="text-align: right;">
+                <h3 class="sectionHeading">&nbsp;</h3>
+            </div>
+        </div>
+        <div class="row" style="height: 200px;">
+            <div class="col-4">
+                <img src="~/image/game1.jpg" class="img-thumbnail" style="width: 100%;" />
+                <div class="row specialOffers">
+                    <h4 class="discount">-25%</h4>
+                </div>
+            </div>
+            <div class="col-4">
+                <img src="~/image/game2.jpg" class="img-thumbnail" style="width: 100%;" />
+                <div class="row specialOffers">
+                    <h4 class="discount">-50%</h4>
+                </div>
+            </div>
+            <div class="col-4">
+                <img src="~/image/game7.jpg" class="img-thumbnail" style="width: 100%;" />
+                <div class="row specialOffers">
+                    <h4 class="discount">-20%</h4>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row" style="height: 200px;">
+            <div class="col-4">
+                <img src="~/image/game4.jpg" class="img-thumbnail" style="width: 100%;" />
+                <div class="row specialOffers">
+                    <h4 class="discount">-80%</h4>
+                </div>
+            </div>
+            <div class="col-4">
+                <img src="~/image/game8.jpg" class="img-thumbnail" style="width: 100%;" />
+                <div class="row specialOffers">
+                    <h4 class="discount">-30%</h4>
+                </div>
+            </div>
+            <div class="col-4">
+                <img src="~/image/game6.jpg" class="img-thumbnail" style="width: 100%;" />
+                <div class="row specialOffers">
+                    <h4 class="discount">-60%</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="margin-top: 60px; margin-bottom: 60px;">
+    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+        <div class="row">
+            <div class="col-6" style="text-align: left;">
+                <h3 class="sectionHeading">Browse Moist</h3>
+            </div>
+            <div class="col-6" style="text-align: right;">
+                <h3 class="sectionHeading">&nbsp;</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">New Releases</a>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Free Games</a>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Game List</a>
+            </div>
+        </div>
+
     </div>
 </section>

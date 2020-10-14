@@ -59,3 +59,17 @@ html {
     position: relative;
     min-height: 100%;
 }
+
+/* footer link colouring
+-------------------------------------------------- */
+.footerLinks a:link, .footerLinks a:visited {
+    color: white;
+}
+
+.footerLinks a:hover {
+    color: grey;
+}
+
+.footerLinks a:active {
+    color: grey;
+}
