@@ -107,7 +107,7 @@ float:right;}
 -------------------------------------------------- */
 @media (min-width: 320px) {
     .carouselSize {
-        height: 100px;
+        height: 200px;
         width: 100%;
     }
 }
