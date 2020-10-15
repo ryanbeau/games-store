@@ -15,7 +15,7 @@ namespace Sprint.Tests.Controllers
         public async Task Index_ReturnsViewResult()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Index();
@@ -30,7 +30,7 @@ namespace Sprint.Tests.Controllers
         public async Task Details_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Details(1);
@@ -46,7 +46,7 @@ namespace Sprint.Tests.Controllers
         public async Task Details_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Details(gameId);
@@ -59,7 +59,7 @@ namespace Sprint.Tests.Controllers
         public void Create_ReturnsViewResult()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
             
             // Act
             var result = gameController.Create();
@@ -74,7 +74,7 @@ namespace Sprint.Tests.Controllers
         public async Task Create_ReturnsRedirectToActionResult_WhenGameIsCreated()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Create(new Game { Developer = "TEST_DEVELOPER", Name = "NEW_GAME", GameTypeId = 2 });
@@ -92,7 +92,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Edit(1);
@@ -111,7 +111,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Edit(gameId);
@@ -126,7 +126,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdDoesNotMatchPostBody(int gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
@@ -139,7 +139,7 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsRedirectToActionResult_WhenGameIsUpdated()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Edit(1, new Game { GameId = 1, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
@@ -159,7 +159,7 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Delete(1);
@@ -175,7 +175,7 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.Delete(gameId);
@@ -188,7 +188,7 @@ namespace Sprint.Tests.Controllers
         public async Task DeleteConfirmed_ReturnsRedirectToActionResult_WhenGameIsDeleted()
         {
             // Arrange
-            GameController gameController = new GameController(_context);
+            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
             var result = await gameController.DeleteConfirmed(1);
