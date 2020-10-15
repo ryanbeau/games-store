@@ -5,44 +5,42 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Wishlist</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Game.Developer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game.Name)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.AddedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Game)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddedOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.AccountNum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Game.Developer)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserGameId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserGameId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserGameId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Game.Developer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Game.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AddedOn)
+                </td>
+                <td>
+                    <form class="form-inline" asp-route-id="@item.UserGameId" asp-action="Delete">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,9 +28,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Game" asp-action="Index">Games</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Wishlist" asp-action="Index">Wishlist</a>
+                            </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav ml-auto">
@@ -43,21 +49,13 @@
         </main>
     </div>
 
-    @*<footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2020 - RDSC Game Store - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>*@
-
     <footer class="border-top footer">
         <div class="container-fluid" style="text-align: center; color: #ffffff;">
             <div class="row">
                 <div class="col-4 footerLinks" style="padding-top: 10px;">&copy; 2020 Moist Gaming</div>
                 <div class="col-4 footerLinks"><img src="~/image/moistLogo2.png" /></div>
                 <div class="col-4 footerLinks" style="padding-top: 10px;">
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a><span> | </span>
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a><span> | </span>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Logout</a>
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </div>
             </div>
         </div>

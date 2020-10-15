@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sprint.Data;
 using Sprint.Models;
@@ -12,10 +10,12 @@ namespace Sprint.Controllers
 {
     public class WishlistController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public WishlistController(ApplicationDbContext context)
+        public WishlistController(UserManager<User> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -26,141 +26,47 @@ namespace Sprint.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Wishlist/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var userGameWishlist = await _context.UserGameWishlist
-                .Include(u => u.Game)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.UserGameId == id);
-            if (userGameWishlist == null)
-            {
-                return NotFound();
-            }
-
-            return View(userGameWishlist);
-        }
-
-        // GET: Wishlist/Create
-        public IActionResult Create()
-        {
-            ViewData["GameId"] = new SelectList(_context.Games, "GameId", "Developer");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum");
-            return View();
-        }
-
-        // POST: Wishlist/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Wishlist/Create/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserGameId,UserId,GameId,AddedOn")] UserGameWishlist userGameWishlist)
+        public async Task<IActionResult> Create(int? gameId)
         {
-            if (ModelState.IsValid)
+            if (gameId == null)
             {
-                _context.Add(userGameWishlist);
+                return NotFound();
+            }
+
+            bool gameExists = await _context.Games.AnyAsync(g => g.GameId == gameId);
+            if (!gameExists)
+            {
+                return NotFound();
+            }
+
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            bool wishlisted = await _context.UserGameWishlist.AnyAsync(w => w.GameId == gameId && w.UserId == user.Id);
+            if (!wishlisted)
+            {
+                _context.UserGameWishlist.Add(new UserGameWishlist { GameId = gameId.Value, UserId = user.Id, AddedOn = DateTime.Now });
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "GameId", "Developer", userGameWishlist.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", userGameWishlist.UserId);
-            return View(userGameWishlist);
-        }
-
-        // GET: Wishlist/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
             }
 
-            var userGameWishlist = await _context.UserGameWishlist.FindAsync(id);
-            if (userGameWishlist == null)
-            {
-                return NotFound();
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "GameId", "Developer", userGameWishlist.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", userGameWishlist.UserId);
-            return View(userGameWishlist);
-        }
-
-        // POST: Wishlist/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserGameId,UserId,GameId,AddedOn")] UserGameWishlist userGameWishlist)
-        {
-            if (id != userGameWishlist.UserGameId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(userGameWishlist);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserGameWishlistExists(userGameWishlist.UserGameId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["GameId"] = new SelectList(_context.Games, "GameId", "Developer", userGameWishlist.GameId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", userGameWishlist.UserId);
-            return View(userGameWishlist);
-        }
-
-        // GET: Wishlist/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var userGameWishlist = await _context.UserGameWishlist
-                .Include(u => u.Game)
-                .Include(u => u.User)
-                .FirstOrDefaultAsync(m => m.UserGameId == id);
-            if (userGameWishlist == null)
-            {
-                return NotFound();
-            }
-
-            return View(userGameWishlist);
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Wishlist/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var userGameWishlist = await _context.UserGameWishlist.FindAsync(id);
             _context.UserGameWishlist.Remove(userGameWishlist);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserGameWishlistExists(int id)
-        {
-            return _context.UserGameWishlist.Any(e => e.UserGameId == id);
         }
     }
 }

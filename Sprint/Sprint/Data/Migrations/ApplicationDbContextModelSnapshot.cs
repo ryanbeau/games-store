@@ -575,14 +575,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "1af2bd5b-0ea6-4e73-b154-99ecdf50a26d",
+                            ConcurrencyStamp = "5506bc20-485e-4048-8983-e07a641906fa",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "b9fec59b-9cce-42fd-b063-0d84e4f8f626",
+                            ConcurrencyStamp = "48ab214b-d0ec-4c85-b162-e59227fa47e8",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -685,16 +685,16 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "9ad2731b-8284-4969-91a9-4249163d3383",
+                            AccountNum = "cfca3e22-747d-4fa7-bfa9-bcf124a8922c",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "c647cfb0-eb9e-490f-99ed-f821949ef080",
+                            ConcurrencyStamp = "b65e0986-1967-4a16-bf25-038003c43313",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIBWwLPax0P8kihtMpSpwI68pHdHP7pRiNmHGl8b3tIHncyJ6479yXjgzMqL+6ij1Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEO1+6f0JcBCaUaVOkzOQxPkekVNI0eX0LXQ5VHZWgc5GMPN+vfFwCr07inyBzY7Ulg==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -705,22 +705,55 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "f5e9d7a0-86f3-44c0-a632-6524fae724b4",
+                            AccountNum = "d07ae704-71fb-4d7c-9549-2a84ebb7d6e7",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "19ea9d1f-84ed-48c8-a72f-579903c15b0f",
+                            ConcurrencyStamp = "571b2c62-3c17-4c8f-bb9c-c0744bb575cd",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC7VH3CIZz+tWu1POsi0h7fMeJpF3QO42PGuiF9WRPBOQf5nf+en4Azjn65ddZST8w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDXf+0civiIXMAnRrTdCxBbPFcmIp3Jq+QsWoS1JS/6ciexl6Fdu+IR1CshwRZyktA==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         });
+                });
+
+            modelBuilder.Entity("Sprint.Models.UserGameWishlist", b =>
+                {
+                    b.Property<int>("UserGameId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("UserGameId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("AddedOn")
+                        .IsRequired()
+                        .HasColumnName("AddedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GameId")
+                        .HasColumnName("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnName("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserGameId");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("UserId", "GameId")
+                        .IsUnique();
+
+                    b.ToTable("UserGameWishlist");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -803,7 +836,22 @@ namespace Sprint.Migrations
                     b.HasOne("Sprint.Models.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Review_User")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sprint.Models.UserGameWishlist", b =>
+                {
+                    b.HasOne("Sprint.Models.Game", "Game")
+                        .WithMany("Wishlists")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Wishlist_Game")
+                        .IsRequired();
+
+                    b.HasOne("Sprint.Models.User", "User")
+                        .WithMany("Wishlists")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("FK_Wishlist_User")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

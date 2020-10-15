@@ -1,4 +1,7 @@
-﻿@model Sprint.Models.Game
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+
+@model Sprint.Models.Game
 
 @{
     ViewData["Title"] = "Details";
@@ -29,15 +32,31 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.GameType.Name)
         </dd>
-        <div class="col-4">
-            <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to your wishlist</a>
-        </div>
-        <div class="col-4">
-            <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>
-        </div>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="col-4">
+                <form class="form-inline" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Create">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">Add to your wishlist</button>
+                </form>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>
+            </div>
+        }
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.GameId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <div>
+        <a asp-action="Delete" asp-route-id="@Model.GameId">Delete</a> |
+        <a asp-action="Edit" asp-route-id="@Model.GameId">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
+else
+{
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+}
