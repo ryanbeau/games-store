@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,17 @@ namespace Sprint.Controllers
         // GET: Wishlist
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.UserGameWishlist.Include(u => u.Game).Include(u => u.User);
-            return View(await applicationDbContext.ToListAsync());
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            var applicationDbContext = await _context.UserGameWishlist
+                .Include(w => w.Game)
+                .Where(w => w.UserId == user.Id)
+                .ToListAsync();
+            return View(applicationDbContext);
         }
 
         // POST: Wishlist/Create/5
