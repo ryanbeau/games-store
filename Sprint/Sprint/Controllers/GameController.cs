@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +11,12 @@ namespace Sprint.Controllers
 {
     public class GameController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public GameController(ApplicationDbContext context)
+        public GameController(UserManager<User> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -32,14 +35,16 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games
+            Game game = await _context.Games
                 .Include(g => g.GameType)
+                .Include(g => g.GameImages)
                 .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
                 return NotFound();
             }
 
+            ViewData["IsWishlisted"] = await IsGameWishlisted(game.GameId);
             return View(game);
         }
 
@@ -148,6 +153,16 @@ namespace Sprint.Controllers
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> IsGameWishlisted(int id)
+        {
+            User user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                return await _context.UserGameWishlist.AnyAsync(w => w.GameId == id && w.UserId == user.Id);
+            }
+            return false;
         }
 
         private bool GameExists(int id)

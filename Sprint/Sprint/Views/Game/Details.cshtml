@@ -4,22 +4,18 @@
 @model Sprint.Models.Game
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Model.Name;
 }
 
-<h1>Game Details</h1>
+<h1>@Model.Name</h1>
 
 <div>
     @foreach (var image in Model.GameImages)
-    {<img class="d-block" src="image">}
+    {
+        <img class="d-block" src="@image.ImageURL">
+    }
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Developer)
         </dt>
@@ -32,12 +28,22 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.GameType.Name)
         </dd>
+
         @if (SignInManager.IsSignedIn(User))
         {
             <div class="col-4">
-                <form class="form-inline" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Create">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg">Add to your wishlist</button>
-                </form>
+                @if (ViewBag.IsWishlisted)
+                {
+                    <form class="form-inline" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Remove">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Remove from wishlist</button>
+                    </form>
+                }
+                else
+                {
+                    <form class="form-inline" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Add">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Add to your wishlist</button>
+                    </form>
+                }
             </div>
             <div class="col-4">
                 <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>

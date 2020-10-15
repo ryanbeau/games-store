@@ -36,10 +36,10 @@ namespace Sprint.Controllers
             return View(applicationDbContext);
         }
 
-        // POST: Wishlist/Create/5
+        // POST: Wishlist/Add/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? gameId)
+        public async Task<IActionResult> Add(int? gameId)
         {
             if (gameId == null)
             {
@@ -68,12 +68,18 @@ namespace Sprint.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Wishlist/Delete/5
+        // POST: Wishlist/Remove/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Remove(int gameId)
         {
-            var userGameWishlist = await _context.UserGameWishlist.FindAsync(id);
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            var userGameWishlist = await _context.UserGameWishlist.FirstOrDefaultAsync(w => w.GameId == gameId && w.UserId == user.Id);
             _context.UserGameWishlist.Remove(userGameWishlist);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
