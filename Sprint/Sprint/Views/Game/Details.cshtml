@@ -7,62 +7,68 @@
     ViewData["Title"] = @Model.Name;
 }
 
-<h1>@Model.Name</h1>
+<div style="min-width:580px;">
 
-<div>
-    @foreach (var image in Model.GameImages)
-    {
-        <img class="d-block" src="@image.ImageURL">
-    }
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Developer)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Developer)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameType.Name)
-        </dd>
+    <h1>@Model.Name</h1>
 
-        @if (SignInManager.IsSignedIn(User))
+    <div>
+        @foreach (var image in Model.GameImages)
         {
-            <div class="col-4">
+            <img class="d-block detailimage" src="@image.ImageURL">
+        }
+        <hr />
+        <dl class="row" style="height:215px;max-width:400px;padding-left:20px">
+            <div class="row" style="width:100%">
+                <dt class="col-md-8">
+                    @Html.DisplayNameFor(model => model.Developer)
+                </dt>
+                <dd class="col-md-8">
+                    @Html.DisplayFor(model => model.Developer)
+                </dd>
+            </div>
+            <div class="row" style="width:100%">
+                <dt class="col-md-8">
+                    @Html.DisplayNameFor(model => model.GameType)
+                </dt>
+                <dd class="col-md-8">
+                    @Html.DisplayFor(model => model.GameType.Name)
+                </dd>
+            </div>
+        </dl>
+    </div>
+    <div class="detailbuttoncontainer">
+        @if (SignInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
+        {
+            <div class="col-sm-4" style="float:left">
                 @if (ViewBag.IsWishlisted)
                 {
                     <form class="form-inline" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.GameId })">
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">Remove from wishlist</button>
+                        <button type="submit" class="btn btn-primary detailbutton">Remove from wishlist</button>
                     </form>
                 }
                 else
                 {
                     <form class="form-inline" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.GameId })">
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">Add to your wishlist</button>
+                        <button type="submit" class="btn btn-primary detailbutton">Add to wishlist</button>
                     </form>
                 }
             </div>
-            <div class="col-4">
-                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>
+            <div class="col-sm-4" style="float:inherit">
+                <a class="btn btn-primary detailbutton" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>
             </div>
         }
-    </dl>
+        else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <div style="float:left;">
+                <a class="btn btn-primary detailbutton" role="button" asp-action="Delete" asp-route-id="@Model.GameId">Delete</a>
+            </div>
+            <div class="col-sm-4" style="float:inherit">
+                <a class="btn btn-primary detailbutton" role="button" asp-action="Edit" asp-route-id="@Model.GameId">Edit</a>
+            </div>
+        }
+        <div class="col-sm-4" style="float:right">
+            <a class="btn btn-primary detailbutton" role="button" asp-action="Index">Back to List</a>
+        </div>
+    </div>
+    <br />
 </div>
-
-@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-{
-    <div>
-        <a asp-action="Delete" asp-route-id="@Model.GameId">Delete</a> |
-        <a asp-action="Edit" asp-route-id="@Model.GameId">Edit</a> |
-        <a asp-action="Index">Back to List</a>
-    </div>
-}
-else
-{
-    <div>
-        <a asp-action="Index">Back to List</a>
-    </div>
-}

@@ -103,6 +103,26 @@ float:right;}
     padding: 5px;
 }
 
+.detailimage {
+    width:50%;
+    height:50%;
+    float:left;
+}
+
+.detailbutton {
+    display: inline-block;
+    font-size: medium;
+    min-width: 150px;
+    max-height: 40px;
+    overflow: hidden;
+}
+
+.detailbuttoncontainer {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    max-height: 40px;
+}
 /* media queries for carousel re-sizing
 -------------------------------------------------- */
 @media (min-width: 320px) {

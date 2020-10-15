@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sprint.Models
 {
@@ -16,6 +17,7 @@ namespace Sprint.Models
         public string Name { get; set; }
         public string Developer { get; set; }
 
+        [Display(Name = "Game Type")]
         public virtual GameType GameType { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<GameImage> GameImages { get; set; }
