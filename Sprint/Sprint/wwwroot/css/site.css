@@ -67,9 +67,9 @@ html {
 }
 
 .footerLinks a:hover {
-    color: grey;
+    color: orange;
 }
 
 .footerLinks a:active {
-    color: grey;
+    color: orange;
 }
