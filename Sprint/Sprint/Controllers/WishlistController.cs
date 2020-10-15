@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Sprint.Models;
 
 namespace Sprint.Controllers
 {
+    [Authorize(Roles = "Admin,Member")]
     public class WishlistController : Controller
     {
         private readonly UserManager<User> _userManager;
