@@ -11,10 +11,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Game.Developer)
+                @Html.DisplayNameFor(model => model.Game.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Game.Name)
+                @Html.DisplayNameFor(model => model.Game.Developer)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AddedOn)
@@ -27,10 +27,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Game.Developer)
+                    <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Game.Name)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Game.Name)
+                    @Html.DisplayFor(modelItem => item.Game.Developer)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.AddedOn)
