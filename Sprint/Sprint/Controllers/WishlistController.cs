@@ -10,7 +10,6 @@ using Sprint.Models;
 
 namespace Sprint.Controllers
 {
-    [Authorize(Roles = "Admin,Member")]
     public class WishlistController : Controller
     {
         private readonly UserManager<User> _userManager;
@@ -23,6 +22,7 @@ namespace Sprint.Controllers
         }
 
         // GET: Wishlist
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Index()
         {
             User user = await _userManager.GetUserAsync(User);
@@ -38,10 +38,23 @@ namespace Sprint.Controllers
             return View(applicationDbContext);
         }
 
+        // GET: Wishlist/Add -- redirect user
+        [HttpGet]
+        public IActionResult Add(string returnUrl)
+        {
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         // POST: Wishlist/Add/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(int? gameId)
+        [Authorize(Roles = "Admin,Member")]
+        public async Task<IActionResult> Add(int? gameId, string returnUrl)
         {
             if (gameId == null)
             {
@@ -67,13 +80,31 @@ namespace Sprint.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Wishlist/Remove -- redirect user
+        [HttpGet]
+        public IActionResult Remove(string returnUrl)
+        {
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: Wishlist/Remove/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Remove(int gameId)
+        [Authorize(Roles = "Admin,Member")]
+        public async Task<IActionResult> Remove(int gameId, string returnUrl)
         {
             User user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -84,6 +115,12 @@ namespace Sprint.Controllers
             var userGameWishlist = await _context.UserGameWishlist.FirstOrDefaultAsync(w => w.GameId == gameId && w.UserId == user.Id);
             _context.UserGameWishlist.Remove(userGameWishlist);
             await _context.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }
