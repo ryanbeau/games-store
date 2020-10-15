@@ -231,11 +231,38 @@ namespace Sprint.Migrations
                         principalColumn: "GameId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Review_User_UserId",
+                        name: "FK_Review_User",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserGameWishlist",
+                columns: table => new
+                {
+                    UserGameId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: false),
+                    GameId = table.Column<int>(nullable: false),
+                    AddedOn = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserGameWishlist", x => x.UserGameId);
+                    table.ForeignKey(
+                        name: "FK_Wishlist_Game",
+                        column: x => x.GameId,
+                        principalTable: "Game",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Wishlist_User",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -259,8 +286,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "1af2bd5b-0ea6-4e73-b154-99ecdf50a26d", "Admin", "ADMIN" },
-                    { 2, "b9fec59b-9cce-42fd-b063-0d84e4f8f626", "Member", "MEMBER" }
+                    { 1, "5506bc20-485e-4048-8983-e07a641906fa", "Admin", "ADMIN" },
+                    { 2, "48ab214b-d0ec-4c85-b162-e59227fa47e8", "Member", "MEMBER" }
                 });
 
             migrationBuilder.InsertData(
@@ -268,8 +295,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "9ad2731b-8284-4969-91a9-4249163d3383", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "c647cfb0-eb9e-490f-99ed-f821949ef080", "admin@admin.com", true, false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEIBWwLPax0P8kihtMpSpwI68pHdHP7pRiNmHGl8b3tIHncyJ6479yXjgzMqL+6ij1Q==", "555-555-5555", false, "", false, "admin" },
-                    { 2, 0, "f5e9d7a0-86f3-44c0-a632-6524fae724b4", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "19ea9d1f-84ed-48c8-a72f-579903c15b0f", "user@user.com", true, false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEC7VH3CIZz+tWu1POsi0h7fMeJpF3QO42PGuiF9WRPBOQf5nf+en4Azjn65ddZST8w==", "555-555-5555", false, "", false, "user" }
+                    { 1, 0, "cfca3e22-747d-4fa7-bfa9-bcf124a8922c", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "b65e0986-1967-4a16-bf25-038003c43313", "admin@admin.com", true, false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEO1+6f0JcBCaUaVOkzOQxPkekVNI0eX0LXQ5VHZWgc5GMPN+vfFwCr07inyBzY7Ulg==", "555-555-5555", false, "", false, "admin" },
+                    { 2, 0, "d07ae704-71fb-4d7c-9549-2a84ebb7d6e7", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "571b2c62-3c17-4c8f-bb9c-c0744bb575cd", "user@user.com", true, false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEDXf+0civiIXMAnRrTdCxBbPFcmIp3Jq+QsWoS1JS/6ciexl6Fdu+IR1CshwRZyktA==", "555-555-5555", false, "", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -371,6 +398,17 @@ namespace Sprint.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserGameWishlist_GameId",
+                table: "UserGameWishlist",
+                column: "GameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserGameWishlist_UserId_GameId",
+                table: "UserGameWishlist",
+                columns: new[] { "UserId", "GameId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
@@ -389,6 +427,9 @@ namespace Sprint.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserClaims");
+
+            migrationBuilder.DropTable(
+                name: "UserGameWishlist");
 
             migrationBuilder.DropTable(
                 name: "UserLogins");

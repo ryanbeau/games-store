@@ -9,6 +9,7 @@ namespace Sprint.Models
         public User()
         {
             Reviews = new HashSet<Review>();
+            Wishlists = new HashSet<UserGameWishlist>();
         }
 
         public string AccountNum { get; set; }
@@ -16,5 +17,6 @@ namespace Sprint.Models
         public DateTime BirthDate { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<UserGameWishlist> Wishlists { get; set; }
     }
 }
