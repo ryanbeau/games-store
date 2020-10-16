@@ -17,6 +17,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
+    height: 60px;
     padding: 20px;
 }
 
@@ -41,6 +42,10 @@ input {
 .col-md-12 {
     float:left;
     width:50%;
+}
+
+label.radio-inline {
+    padding-right:15px;
 }
 
 .button {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sprint.Data;
 
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201016123233_CreateApplicationSchema")]
+    partial class CreateApplicationSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -575,14 +577,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "5506bc20-485e-4048-8983-e07a641906fa",
+                            ConcurrencyStamp = "e6ff8a8e-fe92-460d-96ee-83947b6fa30a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "48ab214b-d0ec-4c85-b162-e59227fa47e8",
+                            ConcurrencyStamp = "24c332f9-105b-4852-a8f8-208c7b653f81",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -625,6 +627,11 @@ namespace Sprint.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnName("Gender")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -685,16 +692,17 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "cfca3e22-747d-4fa7-bfa9-bcf124a8922c",
+                            AccountNum = "fb722425-c655-4970-bd39-a6649a484316",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "b65e0986-1967-4a16-bf25-038003c43313",
+                            ConcurrencyStamp = "bd3eaf70-5a11-4767-b382-9ee05f3e7761",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
+                            Gender = "Other",
                             LockoutEnabled = false,
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEO1+6f0JcBCaUaVOkzOQxPkekVNI0eX0LXQ5VHZWgc5GMPN+vfFwCr07inyBzY7Ulg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELRww9VzKYOZgl7qSBe44WYVOqoSpuQGVFNcc0TPiUonOmnED/nWeYsEyCPTyV0dIQ==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -705,16 +713,17 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "d07ae704-71fb-4d7c-9549-2a84ebb7d6e7",
+                            AccountNum = "9a8010df-e540-4bc1-98dc-f89338d4f0dd",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "571b2c62-3c17-4c8f-bb9c-c0744bb575cd",
+                            ConcurrencyStamp = "d3a9c423-afd0-423d-9c57-5b934a16b506",
                             Email = "user@user.com",
                             EmailConfirmed = true,
+                            Gender = "Other",
                             LockoutEnabled = false,
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDXf+0civiIXMAnRrTdCxBbPFcmIp3Jq+QsWoS1JS/6ciexl6Fdu+IR1CshwRZyktA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJvXCB7iQo0UDeFkH8YI7rCnR4OMl4BzY9g+8PBhpMcVixjz+Prm2dCqKeMgcVe7Ow==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
