@@ -49,6 +49,7 @@ namespace Sprint.Data
                     SecurityStamp = string.Empty,
                     AccountNum = Guid.NewGuid().ToString(),
                     Name = "Admin",
+                    Gender = "Other",
                     PhoneNumber = "555-555-5555",
                     BirthDate = new DateTime(1970, 01, 01)
                 },
@@ -64,6 +65,7 @@ namespace Sprint.Data
                     SecurityStamp = string.Empty,
                     AccountNum = Guid.NewGuid().ToString(),
                     Name = "User",
+                    Gender = "Other",
                     PhoneNumber = "555-555-5555",
                     BirthDate = new DateTime(1970, 01, 01)
                 });
@@ -307,6 +309,10 @@ namespace Sprint.Data
                     .IsRequired()
                     .HasColumnName("UserName")
                     .HasMaxLength(256);
+
+                entity.Property(e => e.Gender)
+                    .IsRequired()
+                    .HasColumnName("Gender");
             });
 
             modelBuilder.Entity<Role>(entity =>

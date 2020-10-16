@@ -57,7 +57,8 @@ namespace Sprint.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     AccountNum = table.Column<string>(unicode: false, maxLength: 36, nullable: false),
                     Name = table.Column<string>(unicode: false, maxLength: 128, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "date", nullable: false)
+                    BirthDate = table.Column<DateTime>(type: "date", nullable: false),
+                    Gender = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -286,17 +287,17 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "5506bc20-485e-4048-8983-e07a641906fa", "Admin", "ADMIN" },
-                    { 2, "48ab214b-d0ec-4c85-b162-e59227fa47e8", "Member", "MEMBER" }
+                    { 1, "e6ff8a8e-fe92-460d-96ee-83947b6fa30a", "Admin", "ADMIN" },
+                    { 2, "24c332f9-105b-4852-a8f8-208c7b653f81", "Member", "MEMBER" }
                 });
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "Gender", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "cfca3e22-747d-4fa7-bfa9-bcf124a8922c", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "b65e0986-1967-4a16-bf25-038003c43313", "admin@admin.com", true, false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEO1+6f0JcBCaUaVOkzOQxPkekVNI0eX0LXQ5VHZWgc5GMPN+vfFwCr07inyBzY7Ulg==", "555-555-5555", false, "", false, "admin" },
-                    { 2, 0, "d07ae704-71fb-4d7c-9549-2a84ebb7d6e7", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "571b2c62-3c17-4c8f-bb9c-c0744bb575cd", "user@user.com", true, false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEDXf+0civiIXMAnRrTdCxBbPFcmIp3Jq+QsWoS1JS/6ciexl6Fdu+IR1CshwRZyktA==", "555-555-5555", false, "", false, "user" }
+                    { 1, 0, "fb722425-c655-4970-bd39-a6649a484316", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "bd3eaf70-5a11-4767-b382-9ee05f3e7761", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAELRww9VzKYOZgl7qSBe44WYVOqoSpuQGVFNcc0TPiUonOmnED/nWeYsEyCPTyV0dIQ==", "555-555-5555", false, "", false, "admin" },
+                    { 2, 0, "9a8010df-e540-4bc1-98dc-f89338d4f0dd", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "d3a9c423-afd0-423d-9c57-5b934a16b506", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEJvXCB7iQo0UDeFkH8YI7rCnR4OMl4BzY9g+8PBhpMcVixjz+Prm2dCqKeMgcVe7Ow==", "555-555-5555", false, "", false, "user" }
                 });
 
             migrationBuilder.InsertData(
