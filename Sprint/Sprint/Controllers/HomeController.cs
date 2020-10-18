@@ -29,7 +29,7 @@ namespace Sprint.Controllers
                 .Where(i => i.ImageType == ImageType.Banner)
                 .Include(i => i.Game)
                 .OrderBy(r => Guid.NewGuid())
-                .Take(6)
+                .Take(8)
                 .ToListAsync();
 
             ViewData["BannerImages"] = bannerGames;

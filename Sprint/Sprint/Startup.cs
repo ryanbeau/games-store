@@ -40,6 +40,8 @@ namespace Sprint
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AppData"));
