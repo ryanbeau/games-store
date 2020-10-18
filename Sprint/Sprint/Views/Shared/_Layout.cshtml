@@ -13,7 +13,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm moist-bg-light moist-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/image/moistLogo2.png" /></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -23,15 +23,15 @@
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav nav">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark font-weight-bold text-uppercase" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Game" asp-action="Index">Games</a>
+                            <a class="nav-link text-dark font-weight-bold text-uppercase" asp-area="" asp-controller="Game" asp-action="Index">Games</a>
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Wishlist" asp-action="Index">Wishlist</a>
+                                <a class="nav-link text-dark font-weight-bold text-uppercase" asp-area="" asp-controller="Wishlist" asp-action="Index">Wishlist</a>
                             </li>
                         }
                     </ul>

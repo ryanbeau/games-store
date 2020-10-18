@@ -4,8 +4,9 @@
 
 <section style="padding-bottom: 30px;">
     <div class="text-center">
-        <h3 class="carouselTitle">Featured & Recommended</h3>
-        <div id="carouselExampleIndicators" class="carousel slide carouselstyle" data-ride="carousel" style="width: auto;">
+        <h5 class="text-light text-left font-weight-light">Highlights</h5>
+        <hr />
+        <div id="carouselExampleIndicators" class="carousel slide carouselstyle moist-shadow rounded" data-ride="carousel" style="width: auto;">
             <ol class="carousel-indicators">
                 @for (int i = 0; i < ViewBag.BannerImages.Count; i++)
                 {
@@ -15,10 +16,16 @@
             <div class="carousel-inner carouselSize">
                 @for (int i = 0; i < ViewBag.BannerImages.Count; i++)
                 {
-                    <div class="carouselImageSize carousel-item @(i == 0 ? "active" : "")">
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
                         <a asp-controller="Game" asp-action="Details" asp-route-id="@ViewBag.BannerImages[i].GameId">
-                            <img class="d-block carouselSize" src="@ViewBag.BannerImages[i].ImageURL" alt="@ViewBag.BannerImages[i].Game.Name" />
+                            <div class="carousel-image">
+                                <img class="d-block carouselSize" src="@ViewBag.BannerImages[i].ImageURL" alt="@ViewBag.BannerImages[i].Game.Name" >
+                            </div>
                         </a>
+                        <div class="carousel-info">
+                            <h3 class="float-left">@ViewBag.BannerImages[i].Game.Name</h3>
+                            <h3 class="float-right">$69.99</h3>
+                        </div>
                     </div>
                 }
             </div>
@@ -35,10 +42,10 @@
 </section>
 
 <section>
-    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+    <div class="container-fluid mt-4" style="padding-left: 0px; padding-right: 0px;">
         <div class="row">
             <div class="col-6" style="text-align: left;">
-                <h3 class="sectionHeading">Moist Deals</h3>
+                <h5 class="text-light text-left font-weight-light">Moist Deals</h5>
             </div>
             <div class="col-6" style="text-align: right;">
                 <h3 class="sectionHeading">&nbsp;</h3>
@@ -92,7 +99,7 @@
     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
         <div class="row">
             <div class="col-6" style="text-align: left;">
-                <h3 class="sectionHeading">Browse Moist</h3>
+                <h5 class="text-light text-left font-weight-light">Browse Moist</h5>
             </div>
             <div class="col-6" style="text-align: right;">
                 <h3 class="sectionHeading">&nbsp;</h3>
