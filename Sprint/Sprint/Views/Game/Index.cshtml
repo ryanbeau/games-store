@@ -1,8 +1,12 @@
-﻿@model IEnumerable<Sprint.Models.Game>
+﻿@using Microsoft.AspNetCore.Html
+
+@model IList<Sprint.Models.Game>
 
 @{
     ViewData["Title"] = "Index";
 }
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <h1>Available Games</h1>
 
@@ -12,35 +16,41 @@
         <a asp-action="Create">Create New</a>
     </p>
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Developer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GameType)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Name)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Developer)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GameType.Name)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div class="container">
+    <div class="row">
+        @* Filter *@
+        <div class="col-sm-3">
+            <p>Filter TODO</p>
+        </div>
+
+        @* Games *@
+        <div class="col-sm-9">
+            @for (int i = 0; i < Model.Count; i += 3)
+            {
+                <div class="row">
+                    @for (int j = 0; j < 3 && i + j < Model.Count; j++)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <a asp-action="Details" asp-route-id="@Model[i+j].GameId" class="text-decoration-none">
+                                <div class="moist-card moist-shadow rounded h-100">
+                                    <img class="card-img-top moist-card-img" data-src="holder.js/100px117?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22348%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20348%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_17547732eb0%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A17pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_17547732eb0%22%3E%3Crect%20width%3D%22348%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22116.7109375%22%20y%3D%22120.15%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+                                    <div class="card-body gradient-buttons">
+                                        <p class="card-text text-dark">@Model[i + j].Name</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="btn-group hide">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark"></i></button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark"></i></button>
+                                            </div>
+                                            <p class="text-dark font-weight-bold mt-1 mb-0">$69.99</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

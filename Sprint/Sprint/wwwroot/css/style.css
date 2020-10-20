@@ -20,12 +20,33 @@ body {
     padding: 20px;
 }
 
+.moist-card {
+    background-color: #d3d3d3;
+}
+
+.moist-card .hide {
+    visibility: hidden;
+}
+
+.moist-card:hover .hide {
+    visibility: visible;
+}
+
+.moist-card-img {
+    border-bottom: 4px solid #1b6ec2;
+}
+
 .moist-bg-light {
     background-color: #d3d3d3;
 }
 
 .moist-shadow {
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.5) !important;
+}
+
+.gradient-buttons .btn {
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.2) 49%, rgba(0,0,0,0.15) 51%, rgba(0,0,0,0.05));
+    background-repeat: repeat-x;
 }
 
 /* Carousel */
@@ -84,11 +105,6 @@ label, p, h1, h4, td, th, dt, dd {
 input {
     background-color: #787878;
     background: #787878;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
 }
 
 .center {
@@ -160,26 +176,6 @@ ul.nav .nav-link:hover {
     padding: 5px;
 }
 
-.detailimage {
-    width: 50%;
-    height: 50%;
-    float: left;
-}
-
-.detailbutton {
-    display: inline-block;
-    font-size: medium;
-    min-width: 150px;
-    max-height: 40px;
-    overflow: hidden;
-}
-
-.detailbuttoncontainer {
-    display: inline-block;
-    width: 100%;
-    float: left;
-    max-height: 40px;
-}
 /* media queries for carousel re-sizing
 -------------------------------------------------- */
 @media (min-width: 320px) {
