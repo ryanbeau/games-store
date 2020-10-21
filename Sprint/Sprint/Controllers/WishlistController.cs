@@ -13,11 +13,13 @@ namespace Sprint.Controllers
 {
     public class WishlistController : Controller
     {
+        private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public WishlistController(UserManager<User> userManager, ApplicationDbContext context)
+        public WishlistController(SignInManager<User> signInManager, UserManager<User> userManager, ApplicationDbContext context)
         {
+            _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
         }
@@ -39,7 +41,40 @@ namespace Sprint.Controllers
 
             return View(new Wishlist
             {
+                Authorized = true,
+                Username = User.Identity.Name,
                 WishlistVisibility = user.WishlistVisibility,
+                Games = wishlistGames
+            });
+        }
+
+        // GET: Wishlist
+        [HttpGet("Wishlist/{username}")]
+        [Authorize(Roles = "Admin,Member")]
+        public async Task<IActionResult> UserWishlist(string username)
+        {
+            // if viewing your own page - redirect to index
+            if (username == User.Identity.Name)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            User wishlistUser = await _signInManager.UserManager.FindByNameAsync(username);
+            if (wishlistUser == null)
+            {
+                return NotFound();
+            }
+
+            var wishlistGames = await _context.UserGameWishlist
+                .Include(w => w.Game)
+                .Where(w => w.UserId == wishlistUser.Id)
+                .ToListAsync();
+
+            return View("Index", new Wishlist
+            {
+                Authorized = false,
+                Username = wishlistUser.Name,
+                WishlistVisibility = wishlistUser.WishlistVisibility,
                 Games = wishlistGames
             });
         }
