@@ -275,6 +275,40 @@ namespace Sprint.Data
                     .HasConstraintName("FK_Wishlist_User");
             });
 
+            modelBuilder.Entity<UserRelationship>(entity =>
+            {
+                entity.HasKey(e => e.UserRelationshipId);
+
+                entity.ToTable("UserRelationship");
+
+                entity.Property(p => p.UserRelationshipId).HasColumnName("UserRelationshipId").UseIdentityColumn();
+
+                entity.Property(e => e.RelatingUserId).HasColumnName("RelatingUser")
+                    .IsRequired();
+
+                entity.Property(e => e.RelatedUserId).HasColumnName("RelatedUser")
+                    .IsRequired();
+
+                entity.Property(e => e.Type).HasColumnName("Type")
+                    .IsRequired()
+                    .HasDefaultValue(Relationship.Pending);
+
+                entity.HasIndex(b => new { b.RelatingUserId, b.RelatedUserId })
+                    .IsUnique();
+
+                entity.HasOne(d => d.RelatingUser)
+                    .WithMany(p => p.RelatingRelationships)
+                    .HasForeignKey(d => d.RelatingUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Relating");
+
+                entity.HasOne(d => d.RelatedUser)
+                    .WithMany(p => p.RelatedRelationships)
+                    .HasForeignKey(d => d.RelatedUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Related");
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasKey(e => e.Id);

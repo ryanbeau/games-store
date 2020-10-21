@@ -148,6 +148,33 @@ namespace Sprint.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRelationship",
+                columns: table => new
+                {
+                    UserRelationshipId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RelatingUser = table.Column<int>(nullable: false),
+                    RelatedUser = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRelationship", x => x.UserRelationshipId);
+                    table.ForeignKey(
+                        name: "FK_User_Related",
+                        column: x => x.RelatedUser,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_User_Relating",
+                        column: x => x.RelatingUser,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
@@ -288,8 +315,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "cf8c3185-1df4-4468-a2a1-a35f9596bc03", "Admin", "ADMIN" },
-                    { 2, "ec500148-c625-4f41-8867-5541236e566a", "Member", "MEMBER" }
+                    { 1, "1711a59f-c5a2-444e-a89b-ca93253785c1", "Admin", "ADMIN" },
+                    { 2, "552a93bd-b517-4f4a-a2ff-415d26b14ca5", "Member", "MEMBER" }
                 });
 
             migrationBuilder.InsertData(
@@ -297,8 +324,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "Gender", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "d633cbc9-d529-4208-9360-dd7eb4d6c645", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "097ebb49-bef0-46b0-a475-c521bf4a3480", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEFD+nyIJBNIO0gIBqIczHb4VGDjjjIj9v/fSBD717Oo9WXA5HbQjTN1yZ+Q4fKoK1A==", "555-555-5555", false, "", false, "admin" },
-                    { 2, 0, "ff3b2187-a7f6-4e00-bcd8-5ee364794e0c", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "4453025a-28c5-4563-a599-2110b6b0960f", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEEeKTLO5perZOvCf1nist6BGtLeja+jbEAA48Dmxrn7mzRZrnzS/h4wwwSyl7SZuVw==", "555-555-5555", false, "", false, "user" }
+                    { 1, 0, "764dd499-ed3b-49c2-89e9-160f2b3b6fdd", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "f853e60d-f764-445e-93ba-cd06e7884c00", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAENHU7v7nDZ6/oPNyxIUGnq0AwTR/S2XjCs+EvxIVTeEaKy6jMai5wYfv/9z9ARZO9Q==", "555-555-5555", false, "", false, "admin" },
+                    { 2, 0, "bd60cfad-ea23-4794-bce1-ac0162b1523e", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "57f67139-4790-481f-aabb-0c0edbc31bd4", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAENr53DBtq/FKEnQEWrAZLJRdvkNqiczJfWlbUa1/03bh4UHojAj4iWV0QWII8tFf/A==", "555-555-5555", false, "", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -411,6 +438,17 @@ namespace Sprint.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserRelationship_RelatedUser",
+                table: "UserRelationship",
+                column: "RelatedUser");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRelationship_RelatingUser_RelatedUser",
+                table: "UserRelationship",
+                columns: new[] { "RelatingUser", "RelatedUser" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
@@ -435,6 +473,9 @@ namespace Sprint.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserLogins");
+
+            migrationBuilder.DropTable(
+                name: "UserRelationship");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");

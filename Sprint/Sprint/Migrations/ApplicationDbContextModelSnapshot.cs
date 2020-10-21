@@ -575,14 +575,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "cf8c3185-1df4-4468-a2a1-a35f9596bc03",
+                            ConcurrencyStamp = "1711a59f-c5a2-444e-a89b-ca93253785c1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "ec500148-c625-4f41-8867-5541236e566a",
+                            ConcurrencyStamp = "552a93bd-b517-4f4a-a2ff-415d26b14ca5",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -696,9 +696,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "d633cbc9-d529-4208-9360-dd7eb4d6c645",
+                            AccountNum = "764dd499-ed3b-49c2-89e9-160f2b3b6fdd",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "097ebb49-bef0-46b0-a475-c521bf4a3480",
+                            ConcurrencyStamp = "f853e60d-f764-445e-93ba-cd06e7884c00",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -706,7 +706,7 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFD+nyIJBNIO0gIBqIczHb4VGDjjjIj9v/fSBD717Oo9WXA5HbQjTN1yZ+Q4fKoK1A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENHU7v7nDZ6/oPNyxIUGnq0AwTR/S2XjCs+EvxIVTeEaKy6jMai5wYfv/9z9ARZO9Q==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -718,9 +718,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "ff3b2187-a7f6-4e00-bcd8-5ee364794e0c",
+                            AccountNum = "bd60cfad-ea23-4794-bce1-ac0162b1523e",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "4453025a-28c5-4563-a599-2110b6b0960f",
+                            ConcurrencyStamp = "57f67139-4790-481f-aabb-0c0edbc31bd4",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -728,7 +728,7 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEeKTLO5perZOvCf1nist6BGtLeja+jbEAA48Dmxrn7mzRZrnzS/h4wwwSyl7SZuVw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENr53DBtq/FKEnQEWrAZLJRdvkNqiczJfWlbUa1/03bh4UHojAj4iWV0QWII8tFf/A==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -769,6 +769,40 @@ namespace Sprint.Migrations
                         .IsUnique();
 
                     b.ToTable("UserGameWishlist");
+                });
+
+            modelBuilder.Entity("Sprint.Models.UserRelationship", b =>
+                {
+                    b.Property<int>("UserRelationshipId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("UserRelationshipId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("RelatedUserId")
+                        .HasColumnName("RelatedUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RelatingUserId")
+                        .HasColumnName("RelatingUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Type")
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("UserRelationshipId");
+
+                    b.HasIndex("RelatedUserId");
+
+                    b.HasIndex("RelatingUserId", "RelatedUserId")
+                        .IsUnique();
+
+                    b.ToTable("UserRelationship");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -867,6 +901,21 @@ namespace Sprint.Migrations
                         .WithMany("Wishlists")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Wishlist_User")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sprint.Models.UserRelationship", b =>
+                {
+                    b.HasOne("Sprint.Models.User", "RelatedUser")
+                        .WithMany("RelatedRelationships")
+                        .HasForeignKey("RelatedUserId")
+                        .HasConstraintName("FK_User_Related")
+                        .IsRequired();
+
+                    b.HasOne("Sprint.Models.User", "RelatingUser")
+                        .WithMany("RelatingRelationships")
+                        .HasForeignKey("RelatingUserId")
+                        .HasConstraintName("FK_User_Relating")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

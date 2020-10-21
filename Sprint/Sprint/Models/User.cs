@@ -19,6 +19,14 @@ namespace Sprint.Models
         public string Gender { get; set; }
         public WishlistVisibility WishlistVisibility { get; set; }
 
+        /// <summary>
+        /// Relationships where this User has Friended a User
+        /// </summary>
+        public virtual ICollection<UserRelationship> RelatedRelationships { get; set; }
+        /// <summary>
+        /// Relationships where this User was Friended by another User
+        /// </summary>
+        public virtual ICollection<UserRelationship> RelatingRelationships { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<UserGameWishlist> Wishlists { get; set; }
     }
