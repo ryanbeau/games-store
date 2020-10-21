@@ -313,6 +313,11 @@ namespace Sprint.Data
                 entity.Property(e => e.Gender)
                     .IsRequired()
                     .HasColumnName("Gender");
+
+                entity.Property(e => e.WishlistVisibility)
+                    .IsRequired()
+                    .HasColumnName("WishlistVisibility")
+                    .HasDefaultValue(WishlistVisibility.FriendsOnly);
             });
 
             modelBuilder.Entity<Role>(entity =>

@@ -575,14 +575,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "e6ff8a8e-fe92-460d-96ee-83947b6fa30a",
+                            ConcurrencyStamp = "cf8c3185-1df4-4468-a2a1-a35f9596bc03",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "24c332f9-105b-4852-a8f8-208c7b653f81",
+                            ConcurrencyStamp = "ec500148-c625-4f41-8867-5541236e566a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -673,6 +673,12 @@ namespace Sprint.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<int>("WishlistVisibility")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("WishlistVisibility")
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -690,9 +696,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "fb722425-c655-4970-bd39-a6649a484316",
+                            AccountNum = "d633cbc9-d529-4208-9360-dd7eb4d6c645",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "bd3eaf70-5a11-4767-b382-9ee05f3e7761",
+                            ConcurrencyStamp = "097ebb49-bef0-46b0-a475-c521bf4a3480",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -700,20 +706,21 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELRww9VzKYOZgl7qSBe44WYVOqoSpuQGVFNcc0TPiUonOmnED/nWeYsEyCPTyV0dIQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFD+nyIJBNIO0gIBqIczHb4VGDjjjIj9v/fSBD717Oo9WXA5HbQjTN1yZ+Q4fKoK1A==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UserName = "admin"
+                            UserName = "admin",
+                            WishlistVisibility = 0
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "9a8010df-e540-4bc1-98dc-f89338d4f0dd",
+                            AccountNum = "ff3b2187-a7f6-4e00-bcd8-5ee364794e0c",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "d3a9c423-afd0-423d-9c57-5b934a16b506",
+                            ConcurrencyStamp = "4453025a-28c5-4563-a599-2110b6b0960f",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -721,12 +728,13 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJvXCB7iQo0UDeFkH8YI7rCnR4OMl4BzY9g+8PBhpMcVixjz+Prm2dCqKeMgcVe7Ow==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEeKTLO5perZOvCf1nist6BGtLeja+jbEAA48Dmxrn7mzRZrnzS/h4wwwSyl7SZuVw==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UserName = "user"
+                            UserName = "user",
+                            WishlistVisibility = 0
                         });
                 });
 

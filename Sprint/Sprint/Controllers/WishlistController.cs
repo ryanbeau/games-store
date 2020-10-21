@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sprint.Data;
+using Sprint.Enums;
 using Sprint.Models;
 
 namespace Sprint.Controllers
@@ -31,11 +32,43 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
-            var applicationDbContext = await _context.UserGameWishlist
+            var wishlistGames = await _context.UserGameWishlist
                 .Include(w => w.Game)
                 .Where(w => w.UserId == user.Id)
                 .ToListAsync();
-            return View(applicationDbContext);
+
+            return View(new Wishlist
+            {
+                WishlistVisibility = user.WishlistVisibility,
+                Games = wishlistGames
+            });
+        }
+
+        // GET: Wishlist/Edit -- redirect user
+        public IActionResult Edit()
+        {
+            return RedirectToAction("Index");
+        }
+
+        // POST: Wishlist/Edit
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Member")]
+        public async Task<IActionResult> Edit([FromForm] WishlistVisibility wishlistVisibility)
+        {
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            user.WishlistVisibility = wishlistVisibility;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
 
         // GET: Wishlist/Add -- redirect user
@@ -46,7 +79,6 @@ namespace Sprint.Controllers
             {
                 return Redirect(returnUrl);
             }
-
             return RedirectToAction("Index", "Home");
         }
 
