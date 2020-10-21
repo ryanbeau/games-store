@@ -10,7 +10,7 @@ using Sprint.Data;
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201016123233_CreateApplicationSchema")]
+    [Migration("20201021155027_CreateApplicationSchema")]
     partial class CreateApplicationSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -577,14 +577,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "e6ff8a8e-fe92-460d-96ee-83947b6fa30a",
+                            ConcurrencyStamp = "1711a59f-c5a2-444e-a89b-ca93253785c1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "24c332f9-105b-4852-a8f8-208c7b653f81",
+                            ConcurrencyStamp = "552a93bd-b517-4f4a-a2ff-415d26b14ca5",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -675,6 +675,12 @@ namespace Sprint.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<int>("WishlistVisibility")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("WishlistVisibility")
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -692,9 +698,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "fb722425-c655-4970-bd39-a6649a484316",
+                            AccountNum = "764dd499-ed3b-49c2-89e9-160f2b3b6fdd",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "bd3eaf70-5a11-4767-b382-9ee05f3e7761",
+                            ConcurrencyStamp = "f853e60d-f764-445e-93ba-cd06e7884c00",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -702,20 +708,21 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELRww9VzKYOZgl7qSBe44WYVOqoSpuQGVFNcc0TPiUonOmnED/nWeYsEyCPTyV0dIQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENHU7v7nDZ6/oPNyxIUGnq0AwTR/S2XjCs+EvxIVTeEaKy6jMai5wYfv/9z9ARZO9Q==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UserName = "admin"
+                            UserName = "admin",
+                            WishlistVisibility = 0
                         },
                         new
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "9a8010df-e540-4bc1-98dc-f89338d4f0dd",
+                            AccountNum = "bd60cfad-ea23-4794-bce1-ac0162b1523e",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "d3a9c423-afd0-423d-9c57-5b934a16b506",
+                            ConcurrencyStamp = "57f67139-4790-481f-aabb-0c0edbc31bd4",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -723,12 +730,13 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJvXCB7iQo0UDeFkH8YI7rCnR4OMl4BzY9g+8PBhpMcVixjz+Prm2dCqKeMgcVe7Ow==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENr53DBtq/FKEnQEWrAZLJRdvkNqiczJfWlbUa1/03bh4UHojAj4iWV0QWII8tFf/A==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
-                            UserName = "user"
+                            UserName = "user",
+                            WishlistVisibility = 0
                         });
                 });
 
@@ -763,6 +771,40 @@ namespace Sprint.Migrations
                         .IsUnique();
 
                     b.ToTable("UserGameWishlist");
+                });
+
+            modelBuilder.Entity("Sprint.Models.UserRelationship", b =>
+                {
+                    b.Property<int>("UserRelationshipId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("UserRelationshipId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("RelatedUserId")
+                        .HasColumnName("RelatedUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RelatingUserId")
+                        .HasColumnName("RelatingUser")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Type")
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("UserRelationshipId");
+
+                    b.HasIndex("RelatedUserId");
+
+                    b.HasIndex("RelatingUserId", "RelatedUserId")
+                        .IsUnique();
+
+                    b.ToTable("UserRelationship");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -861,6 +903,21 @@ namespace Sprint.Migrations
                         .WithMany("Wishlists")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Wishlist_User")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sprint.Models.UserRelationship", b =>
+                {
+                    b.HasOne("Sprint.Models.User", "RelatedUser")
+                        .WithMany("RelatedRelationships")
+                        .HasForeignKey("RelatedUserId")
+                        .HasConstraintName("FK_User_Related")
+                        .IsRequired();
+
+                    b.HasOne("Sprint.Models.User", "RelatingUser")
+                        .WithMany("RelatingRelationships")
+                        .HasForeignKey("RelatingUserId")
+                        .HasConstraintName("FK_User_Relating")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

@@ -1,29 +1,41 @@
-﻿@model IEnumerable<Sprint.Models.UserGameWishlist>
+﻿@using Sprint.Enums;
+
+@model Sprint.Models.Wishlist
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = $"{Model.Username}'s Wishlist";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Wishlist</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h4 class="text-light font-weight-light text-uppercase">@Model.Username's Wishlist</h4>
+        </div>
+
+        @if (Model.Authorized)
+        {
+            <div class="col-md">
+                <form class="form-inline float-right mb-2" asp-action="Edit">
+                    <label class="text-light text-uppercase font-weight-light mr-4" for="select-visibility">Your wishlist can be seen by:</label>
+                    <select onchange="this.form.submit()" class="form-control right" id="select-visibility" asp-for="WishlistVisibility" asp-items="@Html.GetEnumSelectList<WishlistVisibility>()"></select>
+                </form>
+            </div>
+        }
+    </div>
+</div>
 
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Game.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Game.Developer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddedOn)
-            </th>
+            <th>Name</th>
+            <th>Developer</th>
+            <th>AddedOn</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Games)
         {
             <tr>
                 <td>
@@ -36,9 +48,12 @@
                     @Html.DisplayFor(modelItem => item.AddedOn)
                 </td>
                 <td>
-                    <form class="form-inline" asp-route-gameid="@item.GameId" asp-action="Remove">
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">Remove</button>
-                    </form>
+                    @if (Model.Authorized)
+                    {
+                        <form class="form-inline" asp-route-gameid="@item.GameId" asp-action="Remove">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">Remove</button>
+                        </form>
+                    }
                 </td>
             </tr>
         }
