@@ -1,0 +1,35 @@
+﻿@model Sprint.Models.UserRelationship
+
+@{
+    ViewData["Title"] = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row centered-form">
+    <div class="container col-md-6 col-md-offset-1">
+        <h1>Invite New Friend</h1>
+        <hr />
+        <form asp-action="Add">
+            <div class="form-row">
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label class="control-label sr-only">Username</label>
+                    <input class="form-control" id="add-friend-username" name="username" placeholder="Search for people..." />
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="submit" value="Invite" class="btn btn-primary w-100" />
+                </div>
+            </div>
+        </form>
+
+        <div>
+            <a asp-action="Index">Back to Friends List</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
