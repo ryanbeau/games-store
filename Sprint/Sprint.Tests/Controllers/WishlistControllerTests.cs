@@ -9,18 +9,22 @@ using Xunit;
 
 namespace Sprint.Tests.Controllers
 {
-    public class WishlistControllerTests : DBContextController
+    public class WishlistControllerTests : DBContextController<WishlistController>
     {
+        public override WishlistController CreateControllerSUT()
+        {
+            return new WishlistController(_mockUserManager.Object, _context);
+        }
+
         [Fact]
         public async Task Index_ReturnsViewResult()
         {
-            //// Arrange
-            //WishlistController wishlistController = new WishlistController(_mockUserManager.Object, _context);
+            // Arrange
 
-            //// Act
-            //var result = await wishlistController.Index();
+            // Act
+            //var result = await ControllerSUT.Index();
 
-            //// Assert
+            // Assert
             //var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
             //Assert.IsAssignableFrom<IEnumerable<UserGameWishlist>>(viewResult.ViewData.Model);
         }

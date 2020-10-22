@@ -65,22 +65,23 @@ namespace Sprint.Controllers
                 ModelState.AddModelError("username", $"Username is required");
                 return View();
             }
+
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
             User userInviting = await _userManager.FindByNameAsync(username);
             if (userInviting == null)
             {
                 ModelState.AddModelError("username", $"No results found matching \"{username}\"");
                 return View();
             }
-            else if (userInviting.UserName == User.Identity.Name)
+            else if (userInviting.Id == user.Id)
             {
                 ModelState.AddModelError("username", "Cannot invite yourself");
                 return View();
-            }
-
-            User user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Problem();
             }
 
             TempData["FriendInvite"] = $"A friend invite was sent to {userInviting.UserName}.";
@@ -125,15 +126,21 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
             User userRemoving = await _userManager.FindByNameAsync(username);
-            if (User.Identity.Name == userRemoving.UserName)
+            if (userRemoving.Id == user.Id)
             {
                 return BadRequest();
             }
 
             var relationship = await _context.UserRelationships
                 .Include(r => r.RelatedUser)
-                .FirstOrDefaultAsync(r => r.RelatedUserId == userRemoving.Id);
+                .FirstOrDefaultAsync(r => r.RelatingUserId == user.Id && r.RelatedUserId == userRemoving.Id);
             if (relationship == null)
             {
                 return NotFound();
@@ -146,23 +153,23 @@ namespace Sprint.Controllers
         [HttpPost, ActionName("Remove")]
         [Authorize(Roles = "Admin,Member")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string username)
+        public async Task<IActionResult> RemoveConfirmed(string username)
         {
             if (string.IsNullOrWhiteSpace(username))
             {
                 return NotFound();
             }
 
-            User userRemoving = await _userManager.FindByNameAsync(username);
-            if (User.Identity.Name == userRemoving.UserName)
-            {
-                return BadRequest();
-            }
-
             User user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Problem();
+            }
+
+            User userRemoving = await _userManager.FindByNameAsync(username);
+            if (user.Id == userRemoving.Id)
+            {
+                return BadRequest();
             }
 
             // get relationships

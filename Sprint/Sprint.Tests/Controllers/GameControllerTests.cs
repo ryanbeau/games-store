@@ -9,16 +9,20 @@ using Xunit;
 
 namespace Sprint.Tests.Controllers
 {
-    public class GameControllerTests : DBContextController
+    public class GameControllerTests : DBContextController<GameController>
     {
+        public override GameController CreateControllerSUT()
+        {
+            return new GameController(_mockUserManager.Object, _context);
+        }
+
         [Fact]
         public async Task Index_ReturnsViewResult()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Index();
+            var result = await ControllerSUT.Index();
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
@@ -30,10 +34,9 @@ namespace Sprint.Tests.Controllers
         public async Task Details_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Details(1);
+            var result = await ControllerSUT.Details(1);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
@@ -46,10 +49,9 @@ namespace Sprint.Tests.Controllers
         public async Task Details_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Details(gameId);
+            var result = await ControllerSUT.Details(gameId);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -59,10 +61,9 @@ namespace Sprint.Tests.Controllers
         public void Create_ReturnsViewResult()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
             
             // Act
-            var result = gameController.Create();
+            var result = ControllerSUT.Create();
             
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
@@ -74,10 +75,9 @@ namespace Sprint.Tests.Controllers
         public async Task Create_ReturnsRedirectToActionResult_WhenGameIsCreated()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Create(new Game { Developer = "TEST_DEVELOPER", Name = "NEW_GAME", GameTypeId = 2 });
+            var result = await ControllerSUT.Create(new Game { Developer = "TEST_DEVELOPER", Name = "NEW_GAME", GameTypeId = 2 });
 
             // Assert
             var game = Assert.IsAssignableFrom<Game>(_context.Games.FirstOrDefault(g => g.Name == "NEW_GAME"));
@@ -92,10 +92,9 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Edit(1);
+            var result = await ControllerSUT.Edit(1);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
@@ -111,10 +110,9 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Edit(gameId);
+            var result = await ControllerSUT.Edit(gameId);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -126,10 +124,9 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsNotFound_WhenGameIdDoesNotMatchPostBody(int gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
+            var result = await ControllerSUT.Edit(2, new Game { GameId = gameId, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -139,10 +136,9 @@ namespace Sprint.Tests.Controllers
         public async Task Edit_ReturnsRedirectToActionResult_WhenGameIsUpdated()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Edit(1, new Game { GameId = 1, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
+            var result = await ControllerSUT.Edit(1, new Game { GameId = 1, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
@@ -159,10 +155,9 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsViewResult_WhenGameIdIsFound()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Delete(1);
+            var result = await ControllerSUT.Delete(1);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
@@ -175,10 +170,9 @@ namespace Sprint.Tests.Controllers
         public async Task Delete_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId)
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.Delete(gameId);
+            var result = await ControllerSUT.Delete(gameId);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -188,10 +182,9 @@ namespace Sprint.Tests.Controllers
         public async Task DeleteConfirmed_ReturnsRedirectToActionResult_WhenGameIsDeleted()
         {
             // Arrange
-            GameController gameController = new GameController(_mockUserManager.Object, _context);
 
             // Act
-            var result = await gameController.DeleteConfirmed(1);
+            var result = await ControllerSUT.DeleteConfirmed(1);
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);

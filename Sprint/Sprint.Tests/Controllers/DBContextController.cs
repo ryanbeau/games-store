@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Sprint.Controllers;
 using Sprint.Data;
 using Sprint.Models;
 using System;
@@ -11,39 +13,46 @@ using System.Threading.Tasks;
 
 namespace Sprint.Tests.Controllers
 {
-    public abstract class DBContextController : IDisposable
+    public abstract class DBContextController<TController> : IDisposable where TController : Controller
     {
         protected readonly ApplicationDbContext _context;
-        protected readonly Mock<ILogger<HomeController>> _mockLogger;
+        protected readonly Mock<ILogger<TController>> _mockLogger;
         protected readonly Mock<UserManager<User>> _mockUserManager;
 
-        protected User UserFromUserManager { get; set; } = new User { Id = 1 };
+        protected User GetUserAsyncReturns { get; set; }
+        protected User FindByNameAsyncReturns { get; set; }
+
+        protected TController ControllerSUT { get; }
 
         public DBContextController()
         {
-            var mockStore = new Mock<IUserStore<User>>();
+            _mockLogger = new Mock<ILogger<TController>>();
+            _mockUserManager = new Mock<UserManager<User>>(Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
 
-            _mockLogger = new Mock<ILogger<HomeController>>();
-            _mockUserManager = new Mock<UserManager<User>>(mockStore.Object, null, null, null, null, null, null, null, null);
-
+            // GetUserAsync
             _mockUserManager.Setup(s => s.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
-                .Returns(UserManagerGetUserAsync);
+                .Returns(() => Task.FromResult(GetUserAsyncReturns));
+
+            // FindByNameAsync
+            _mockUserManager.Setup(s => s.FindByNameAsync(It.IsAny<string>()))
+                .Returns(() => Task.FromResult(FindByNameAsyncReturns));
 
             var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "RDSCGameStore")
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             _context = new ApplicationDbContext(contextOptions);
             _context.Database.EnsureCreated();
+
+            ControllerSUT = CreateControllerSUT();
+            ControllerSUT.TempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
         }
 
-        protected virtual Task<User> UserManagerGetUserAsync()
-        {
-            return Task.FromResult(UserFromUserManager);
-        }
+        public abstract TController CreateControllerSUT();
 
         public virtual void Dispose()
         {
+            _context.Database.EnsureDeleted();
             _context.Dispose();
         }
     }
