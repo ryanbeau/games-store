@@ -25,37 +25,44 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Developer</th>
-            <th>AddedOn</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Games)
-        {
+@if (Model.Games.Any())
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Game.Name)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Game.Developer)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AddedOn)
-                </td>
-                <td>
-                    @if (Model.Authorized)
-                    {
-                        <form class="form-inline" asp-route-gameid="@item.GameId" asp-action="Remove">
-                            <button type="submit" class="btn btn-primary btn-block btn-lg">Remove</button>
-                        </form>
-                    }
-                </td>
+                <th>Name</th>
+                <th>Developer</th>
+                <th>AddedOn</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Games)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Game.Name)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Game.Developer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AddedOn)
+                    </td>
+                    <td>
+                        @if (Model.Authorized)
+                        {
+                            <form class="form-inline" asp-route-gameid="@item.GameId" asp-action="Remove">
+                                <button type="submit" class="btn btn-primary btn-block btn-lg">Remove</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4 class="text-light font-weight-light text-uppercase text-center">The wishlist is empty.</h4>
+}

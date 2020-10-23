@@ -160,7 +160,7 @@ namespace Sprint.Controllers
             User user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
-                return await _context.UserGameWishlist.AnyAsync(w => w.GameId == id && w.UserId == user.Id);
+                return await _context.UserGameWishlists.AnyAsync(w => w.GameId == id && w.UserId == user.Id);
             }
             return false;
         }

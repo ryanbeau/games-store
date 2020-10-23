@@ -13,13 +13,11 @@ namespace Sprint.Controllers
 {
     public class WishlistController : Controller
     {
-        private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public WishlistController(SignInManager<User> signInManager, UserManager<User> userManager, ApplicationDbContext context)
+        public WishlistController(UserManager<User> userManager, ApplicationDbContext context)
         {
-            _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
         }
@@ -34,7 +32,7 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
-            var wishlistGames = await _context.UserGameWishlist
+            var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
                 .Where(w => w.UserId == user.Id)
                 .ToListAsync();
@@ -49,7 +47,7 @@ namespace Sprint.Controllers
         }
 
         // GET: Wishlist
-        [HttpGet("Wishlist/{username}")]
+        [HttpGet, Route("Wishlist/{username}"), ActionName("Index")]
         [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> UserWishlist(string username)
         {
@@ -59,13 +57,33 @@ namespace Sprint.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            User wishlistUser = await _signInManager.UserManager.FindByNameAsync(username);
+            User wishlistUser = await _userManager.FindByNameAsync(username);
             if (wishlistUser == null)
             {
                 return NotFound();
             }
 
-            var wishlistGames = await _context.UserGameWishlist
+            // redirect if private wishlist
+            if (wishlistUser.WishlistVisibility == WishlistVisibility.OnlyMe)
+            {
+                return RedirectToAction("Index", "Friends"); // somehow we got here - redirect
+            }
+
+            // redirect if friends-only wishlist & we are either blocked or not friends
+            if (wishlistUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
+            {
+                User user = await _userManager.GetUserAsync(User);
+
+                bool areFriendsOrPending = await _context.UserRelationships
+                    .AnyAsync(r => r.Type != Relationship.Blocked && r.RelatingUserId == wishlistUser.Id && r.RelatedUserId == user.Id);
+
+                if (!areFriendsOrPending)
+                {
+                    return RedirectToAction("Index", "Friends"); // somehow we got here - redirect
+                }
+            }
+
+            var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
                 .Where(w => w.UserId == wishlistUser.Id)
                 .ToListAsync();
@@ -140,10 +158,10 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
-            bool wishlisted = await _context.UserGameWishlist.AnyAsync(w => w.GameId == gameId && w.UserId == user.Id);
+            bool wishlisted = await _context.UserGameWishlists.AnyAsync(w => w.GameId == gameId && w.UserId == user.Id);
             if (!wishlisted)
             {
-                _context.UserGameWishlist.Add(new UserGameWishlist { GameId = gameId.Value, UserId = user.Id, AddedOn = DateTime.Now });
+                _context.UserGameWishlists.Add(new UserGameWishlist { GameId = gameId.Value, UserId = user.Id, AddedOn = DateTime.Now });
                 await _context.SaveChangesAsync();
             }
 
@@ -179,8 +197,8 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
-            var userGameWishlist = await _context.UserGameWishlist.FirstOrDefaultAsync(w => w.GameId == gameId && w.UserId == user.Id);
-            _context.UserGameWishlist.Remove(userGameWishlist);
+            var userGameWishlist = await _context.UserGameWishlists.FirstOrDefaultAsync(w => w.GameId == gameId && w.UserId == user.Id);
+            _context.UserGameWishlists.Remove(userGameWishlist);
             await _context.SaveChangesAsync();
 
             if (!string.IsNullOrEmpty(returnUrl))

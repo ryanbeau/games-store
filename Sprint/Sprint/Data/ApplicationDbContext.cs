@@ -13,6 +13,8 @@ namespace Sprint.Data
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<UserGameWishlist> UserGameWishlists { get; set; }
+        public virtual DbSet<UserRelationship> UserRelationships { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -391,7 +393,5 @@ namespace Sprint.Data
 
             Seed(modelBuilder);
         }
-
-        public DbSet<Sprint.Models.UserGameWishlist> UserGameWishlist { get; set; }
     }
 }

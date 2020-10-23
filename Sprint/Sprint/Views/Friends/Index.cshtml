@@ -1,0 +1,103 @@
+﻿@using Sprint.Enums;
+
+@model Sprint.Models.Friends
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Friends</h1>
+
+@if (TempData["FriendInvite"] is string)
+{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div class="alert alert-success" role="alert">
+        <i class="fa fa-check-square-o mr-2" aria-hidden="true"></i>@TempData["FriendInvite"]
+    </div>
+}
+
+<p>
+    <a asp-action="Add">＋Invite New Friend</a>
+</p>
+@if (Model.PendingRelationships.Any())
+{
+    <hr />
+    <h4 class="text-light font-weight-light mb-3">You have a friend request!</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PendingRelationships)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RelatingUser.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        <form class="w-100" asp-action="Add">
+                            <input type="hidden" name="username" value="@item.RelatingUser.UserName" />
+                            <button type="submit" class="btn btn-primary btn-success w-100">Accept</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form class="w-100" asp-action="Remove">
+                            <input type="hidden" name="username" value="@item.RelatingUser.UserName" />
+                            <button type="submit" class="btn btn-danger w-100">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.FriendRelationships.Any())
+{
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FriendRelationships)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RelatedUser.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @if (item.RelatedUser.WishlistVisibility == WishlistVisibility.Everyone ||
+                      item.RelatedUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
+                        {
+                            <a class="btn btn-primary w-100" role="button" asp-controller="Wishlist" asp-route-username="@item.RelatedUser.UserName">@item.RelatedUser.Name's Wishlist</a>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-primary btn-danger w-100" asp-action="Remove" asp-route-username="@item.RelatedUser.UserName">Unfriend</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (!Model.PendingRelationships.Any())
+{
+    <h4 class="text-light font-weight-light text-uppercase text-center">You haven't added anybody yet</h4>
+}

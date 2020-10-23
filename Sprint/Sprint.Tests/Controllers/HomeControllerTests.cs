@@ -7,16 +7,20 @@ using Xunit;
 
 namespace Sprint.Tests.Controllers
 {
-    public class HomeControllerTests : DBContextController
+    public class HomeControllerTests : DBContextController<HomeController>
     {
+        public override HomeController CreateControllerSUT()
+        {
+            return new HomeController(_mockLogger.Object, _context);
+        }
+
         [Fact]
         public async Task Index_ReturnsViewResult()
         {
             // Arrange
-            HomeController homeController = new HomeController(_mockLogger.Object, _context);
 
             // Act
-            var result = await homeController.Index();
+            var result = await ControllerSUT.Index();
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
