@@ -1,6 +1,4 @@
-using System;
-
-namespace Sprint.Models
+namespace Sprint.ViewModels
 {
     public class ErrorViewModel
     {

@@ -78,61 +78,111 @@ namespace Sprint.Data
             );
 
             modelBuilder.Entity<GameType>().HasData(
-                new GameType { GameTypeId = 1, Name = "Action" },
-                new GameType { GameTypeId = 2, Name = "Action-Adventure" },
-                new GameType { GameTypeId = 3, Name = "Adventure" },
-                new GameType { GameTypeId = 4, Name = "Role-Playing" },
-                new GameType { GameTypeId = 5, Name = "Simulation" },
-                new GameType { GameTypeId = 6, Name = "Strategy" },
-                new GameType { GameTypeId = 7, Name = "Sports" },
-                new GameType { GameTypeId = 8, Name = "MMO" },
-                new GameType { GameTypeId = 9, Name = "Sandbox" }
+                new GameType { GameTypeId = 1, Name = "Action" }, // 3
+                new GameType { GameTypeId = 2, Name = "Action-Adventure" }, // 6
+                new GameType { GameTypeId = 3, Name = "Adventure" }, // 1
+                new GameType { GameTypeId = 4, Name = "Role-Playing" }, // 2
+                new GameType { GameTypeId = 5, Name = "Simulation" }, // 3
+                new GameType { GameTypeId = 6, Name = "Strategy" }, // -
+                new GameType { GameTypeId = 7, Name = "Sports" }, // 2
+                new GameType { GameTypeId = 8, Name = "MMO" }, // 2
+                new GameType { GameTypeId = 9, Name = "Sandbox" } // 2
             );
 
             modelBuilder.Entity<Game>().HasData(
-                new Game { GameId = 1, Name = "Call of Duty: Modern Warfare", Developer = "Activision", GameTypeId = 1 },
-                new Game { GameId = 2, Name = "NBA 2K20", Developer = "2K Sports", GameTypeId = 7 },
-                new Game { GameId = 3, Name = "Madden NFL 20", Developer = "Electronic Arts", GameTypeId = 7 },
-                new Game { GameId = 4, Name = "Borderlands 3", Developer = "2K Games", GameTypeId = 1 },
-                new Game { GameId = 5, Name = "Mortal Kombat II", Developer = "Warner Bros. Interactive Entertainment", GameTypeId = 1 },
-                new Game { GameId = 6, Name = "Star Wars Jedi: Fallen Order", Developer = "Electronic Arts", GameTypeId = 1 },
-                new Game { GameId = 7, Name = "Super Smash Bros", Developer = "Nintendo", GameTypeId = 1 },
-                new Game { GameId = 8, Name = "Kingdom Hearts III", Developer = "Square Enix", GameTypeId = 4 },
-                new Game { GameId = 9, Name = "Tom Clancy's The Division 2", Developer = "Ubisoft", GameTypeId = 1 },
-                new Game { GameId = 10, Name = "Mario Kart 8 Deluxe", Developer = "Nintendo", GameTypeId = 1 },
-                new Game { GameId = 11, Name = "Fortnite", Developer = "Epic Games", GameTypeId = 9 },
-                new Game { GameId = 12, Name = "Minecraft", Developer = "Mojang", GameTypeId = 9 },
-                new Game { GameId = 13, Name = "Roblox", Developer = "Roblox Corporation", GameTypeId = 9 },
-                new Game { GameId = 14, Name = "Super Mario Odyssey", Developer = "Nintendo", GameTypeId = 1 },
-                new Game { GameId = 15, Name = "Grand Theft Auto V", Developer = "Rockstar Games", GameTypeId = 1 },
-                new Game { GameId = 16, Name = "Marvel’s Spider-Man", Developer = "Sony Interactive Entertainment", GameTypeId = 1 },
-                new Game { GameId = 17, Name = "Rocket League", Developer = "Psyonix", GameTypeId = 1 },
-                new Game { GameId = 18, Name = "League of Legends", Developer = "Riot Games", GameTypeId = 8 },
-                new Game { GameId = 19, Name = "The Legend of Zelda: Breath of the Wild", Developer = "Nintendo", GameTypeId = 2 },
-                new Game { GameId = 20, Name = "Call of Duty: Black Ops 4", Developer = "Activision", GameTypeId = 1 }
+                new Game { GameId = 1, Name = "Euro Truck Simulator 2", Developer = "SCS Software", RegularPrice = 21.99m, GameTypeId = 5 }, // simulation
+                new Game { GameId = 2, Name = "Madden NFL 20", Developer = "EA Sports", RegularPrice = 29.99m, GameTypeId = 7 }, // sports
+                new Game { GameId = 3, Name = "Don't Starve", Developer = "Klei Entertainment", RegularPrice = 11.49m, GameTypeId = 3 }, // adventure
+                new Game { GameId = 4, Name = "Borderlands 3", Developer = "2K Games", RegularPrice = 79.99m, GameTypeId = 1 }, // action
+                new Game { GameId = 5, Name = "Tomb Raider", Developer = "Crystal Dynamics", RegularPrice = 19.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 6, Name = "Fallout: New Vegas", Developer = "Bethesda", RegularPrice = 10.99m, GameTypeId = 4 }, // role-playing
+                new Game { GameId = 7, Name = "Besiege", Developer = "Spiderling Studios", RegularPrice = 17.49m, GameTypeId = 5 }, // simulation
+                new Game { GameId = 8, Name = "Kerbal Space Program", Developer = "Squad", RegularPrice = 43.99m, GameTypeId = 5 }, // simulation
+                new Game { GameId = 9, Name = "Dragon Age: Origins", Developer = "Electronic Arts", RegularPrice = 26.99m, GameTypeId = 4 }, // role-playing
+                new Game { GameId = 10, Name = "Far Cry 3", Developer = "Ubisoft", RegularPrice = 39.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 11, Name = "Far Cry 3 - Blood Dragon", Developer = "Ubisoft", RegularPrice = 14.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 12, Name = "Minecraft", Developer = "Mojang", RegularPrice = 26.95m, GameTypeId = 9 }, // sandbox
+                new Game { GameId = 13, Name = "Roblox", Developer = "Roblox Corporation", RegularPrice = 0.0m, GameTypeId = 9 }, // sandbox
+                new Game { GameId = 14, Name = "Super Mario Odyssey", Developer = "Nintendo", RegularPrice = 59.99m, GameTypeId = 1 }, // action
+                new Game { GameId = 15, Name = "Grand Theft Auto V", Developer = "Rockstar Games", RegularPrice = 29.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 16, Name = "Slime Rancher", Developer = "Monomi Park", RegularPrice = 21.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 17, Name = "Rocket League", Developer = "Psyonix", RegularPrice = 35.99m, GameTypeId = 1 }, // action
+                new Game { GameId = 18, Name = "Mortal Kombat 11", Developer = "NetherRealm Studios", RegularPrice = 69.99m, GameTypeId = 1 }, // action
+                new Game { GameId = 19, Name = "The Legend of Zelda: Breath of the Wild", RegularPrice = 79.99m, Developer = "Nintendo", GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 20, Name = "Call of Duty: Black Ops 4", Developer = "Activision", RegularPrice = 79.99m, GameTypeId = 1 }, // action
+                new Game { GameId = 21, Name = "Destiny 2", Developer = "Bungie", RegularPrice = 0, GameTypeId = 8 }, // mmo
+                new Game { GameId = 22, Name = "The Elder Scrolls® Online", Developer = "Zenimax Online Studios", RegularPrice = 0, GameTypeId = 8 }, // mmo
+                new Game { GameId = 23, Name = "WRC 3: FIA World Rally Championship", Developer = "Milestone", RegularPrice = 39.99m, GameTypeId = 7 }, // sports
+                new Game { GameId = 24, Name = "Need for Speed: Carbon", Developer = "EA Black Box", RegularPrice = 19.99m, GameTypeId = 7 }, // sports
+                new Game { GameId = 25, Name = "Tropico 5", Developer = "Haemimont Games", RegularPrice = 22.79m, GameTypeId = 6 }, // strategy
+                new Game { GameId = 26, Name = "Among Us", Developer = "Innersloth", RegularPrice = 5.69m, GameTypeId = 5 }, // simulation
+                new Game { GameId = 27, Name = "Red Dead Redemption II", Developer = "Rockstar Games", RegularPrice = 79.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 28, Name = "Sid Meier's Civilization VI", Developer = "Firaxis Games", RegularPrice = 79.99m, GameTypeId = 6 }, // strategy
+                new Game { GameId = 29, Name = "Horizon Zero Dawn", Developer = "Guerrilla", RegularPrice = 59.99m, GameTypeId = 2 }, // action-adventure
+                new Game { GameId = 30, Name = "Fallout 4", Developer = "Bethesda", RegularPrice = 39.99m, GameTypeId = 4 } // role-playing
             );
 
             modelBuilder.Entity<GameImage>().HasData(
-                new GameImage { GameImageId = 1, GameId = 1, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/d5c91983451d0fa52a7ce530a3714ab7.png" },
-                new GameImage { GameImageId = 2, GameId = 2, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/767b2cc82cecc0385fe6f1086dd2c748.png" },
-                new GameImage { GameImageId = 3, GameId = 3, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/94cd0468d6f321ec192c9e301ba30e85.png" },
+                // Euro Truck Simulator 2
+                new GameImage { GameImageId = 1, GameId = 1, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/4c22bd444899d3b6047a10b20a2f26db.png" },
+                // Madden NFL 20
+                new GameImage { GameImageId = 2, GameId = 2, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/097e232de59f809f5a1cdf88e1240b08.png" },
+                // Don't Starve
+                new GameImage { GameImageId = 3, GameId = 3, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/b16a06a5ea94028944a81ad5bbdbb8ca.png" },
+                // Borderlands 3
                 new GameImage { GameImageId = 4, GameId = 4, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png" },
-                new GameImage { GameImageId = 5, GameId = 5, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/9a3bd37a71b632e7726f149bbd771052.png" },
-                //new GameImage { GameImageId = 6, GameId = 6, ImageType = ImageType.Banner, ImageURL = "" },
-                new GameImage { GameImageId = 7, GameId = 7, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/71e9c6620d381d60196ebe694840aaaa.png" },
-                //new GameImage { GameImageId = 8, GameId = 8, ImageType = ImageType.Banner, ImageURL = "" },
-                new GameImage { GameImageId = 9, GameId = 9, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/29ddbdb402491a6aa97964a8139a1356.png" },
-                new GameImage { GameImageId = 10, GameId = 10, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/c6d4eb15f1e84a36eff58eca3627c82e.png" },
-                //new GameImage { GameImageId = 11, GameId = 11, ImageType = ImageType.Banner, ImageURL = "" },
+                // Tomb Raider
+                new GameImage { GameImageId = 5, GameId = 5, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/6be910cdb73c47cb973a944c03f5c7b1.png" },
+                // Fallout: New Vegas
+                new GameImage { GameImageId = 6, GameId = 6, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/5248e5118c84beea359b6ea385393661.png" },
+                // Besiege
+                new GameImage { GameImageId = 7, GameId = 7, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/a3171cc0f610fdfdf460831fb25a3dc7.png" },
+                // Kerbal Space Program
+                new GameImage { GameImageId = 8, GameId = 8, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/5e26566dffe850373e9a5121703034a1.png" },
+                // Dragon Age: Origins
+                new GameImage { GameImageId = 9, GameId = 9, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/c1537c9ed39baee3476c6fdd666b5fd8.png" },
+                // Far Cry 3
+                new GameImage { GameImageId = 10, GameId = 10, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/84b3f2becbf70a03239d7fae55dcaa40.png" },
+                // Far Cry 3 - Blood Dragon
+                new GameImage { GameImageId = 11, GameId = 11, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/1051f72ed869290c51ee34a72b1d01df.png" },
+                // Minecraft
                 new GameImage { GameImageId = 12, GameId = 12, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png" },
+                // Roblox
                 new GameImage { GameImageId = 13, GameId = 13, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/2a574bcb25a0ae1faad7c630370e6234.png" },
+                // Super Mario Odyssey
                 new GameImage { GameImageId = 14, GameId = 14, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png" },
-                //new GameImage { GameImageId = 15, GameId = 15, ImageType = ImageType.Banner, ImageURL = "" },
-                //new GameImage { GameImageId = 16, GameId = 16, ImageType = ImageType.Banner, ImageURL = "" },
+                // Grand Theft Auto V
+                new GameImage { GameImageId = 15, GameId = 15, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/3aa4cb2017fe681acd92bbea6b9f6015.png" },
+                // Slime Rancher
+                new GameImage { GameImageId = 16, GameId = 16, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/5f65c233d57a4b31b1e4edbaa79bf6ca.png" },
+                // Rocket League
                 new GameImage { GameImageId = 17, GameId = 17, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png" },
-                new GameImage { GameImageId = 18, GameId = 18, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/f4a331b7a22d1b237565d8813a34d8ac.png" },
+                // Mortal Kombat 11
+                new GameImage { GameImageId = 18, GameId = 18, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/884738b4332ababd678ca505f4e04f4d.png" },
+                // The Legend of Zelda: Breath of the Wild
                 new GameImage { GameImageId = 19, GameId = 19, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/2da535ad78bb2e93aa448b1a4a61134e.png" },
-                new GameImage { GameImageId = 20, GameId = 20, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png" }
+                // Call of Duty: Black Ops 4
+                new GameImage { GameImageId = 20, GameId = 20, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png" },
+                // Destiny 2
+                new GameImage { GameImageId = 21, GameId = 21, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/f5e083092550d2f93898e9829e677e39.png" },
+                // The Elder Scrolls® Online
+                new GameImage { GameImageId = 22, GameId = 22, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/56c12a4512e84416de450db11ab040c3.png" },
+                // WRC 3: FIA World Rally Championship
+                new GameImage { GameImageId = 23, GameId = 23, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/4a8520defd77a137222438d72ed7afd2.png" },
+                // Need for Speed: Carbon
+                new GameImage { GameImageId = 24, GameId = 24, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/ee955e252af3c85e66e15864e31174fe.png" },
+                // Tropico 5
+                new GameImage { GameImageId = 25, GameId = 25, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/c967fb654df41177901d1f5f135bf9e6.png" },
+                // Among Us
+                new GameImage { GameImageId = 26, GameId = 26, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/75c0aa52af187c4cd20744efafa1c7c7.png" },
+                // Red Dead Redemption II
+                new GameImage { GameImageId = 27, GameId = 27, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/41b28a11da13a0384a9b75f95244e8e8.png" },
+                // Sid Meier's Civilization VI
+                new GameImage { GameImageId = 28, GameId = 28, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/c9ee6a825655d889ae6a84bde2802bc2.png" },
+                // Horizon Zero Dawn
+                new GameImage { GameImageId = 29, GameId = 29, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/5ec5d5702a083583b268f32dde14b419.png" },
+                // Fallout 4
+                new GameImage { GameImageId = 30, GameId = 30, ImageType = ImageType.Banner, ImageURL = "https://cdn.steamgriddb.com/grid/60c60a4ffa03bde6f8c83533d465ef5c.png" }
             );
         }
 
@@ -196,6 +246,11 @@ namespace Sprint.Data
                     .HasColumnName("Name")
                     .HasMaxLength(48)
                     .IsUnicode(false);
+
+                entity.Property(e => e.RegularPrice)
+                    .IsRequired()
+                    .HasColumnName("RegularPrice")
+                    .HasDefaultValue(0);
 
                 entity.Property(e => e.GameTypeId).HasColumnName("GameTypeId");
 

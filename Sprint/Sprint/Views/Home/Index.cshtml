@@ -19,12 +19,15 @@
                     <div class="carousel-item @(i == 0 ? "active" : "")">
                         <a asp-controller="Game" asp-action="Details" asp-route-id="@ViewBag.BannerImages[i].GameId">
                             <div class="carousel-image">
-                                <img class="d-block carouselSize" src="@ViewBag.BannerImages[i].ImageURL" alt="@ViewBag.BannerImages[i].Game.Name" >
+                                <img class="d-block carouselSize" src="@ViewBag.BannerImages[i].ImageURL" alt="@ViewBag.BannerImages[i].Game.Name">
                             </div>
                         </a>
                         <div class="carousel-info">
                             <h3 class="float-left">@ViewBag.BannerImages[i].Game.Name</h3>
-                            <h3 class="float-right">$69.99</h3>
+                            @if (ViewBag.BannerImages[i].Game.RegularPrice > 0)
+                            {
+                                <h3 class="float-right">$@ViewBag.BannerImages[i].Game.RegularPrice</h3>
+                            }
                         </div>
                     </div>
                 }

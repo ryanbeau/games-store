@@ -15,7 +15,7 @@ namespace Sprint.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -150,6 +150,12 @@ namespace Sprint.Migrations
                         .HasMaxLength(48)
                         .IsUnicode(false);
 
+                    b.Property<decimal>("RegularPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("RegularPrice")
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.HasKey("GameId");
 
                     b.HasIndex("GameTypeId");
@@ -160,142 +166,242 @@ namespace Sprint.Migrations
                         new
                         {
                             GameId = 1,
-                            Developer = "Activision",
-                            GameTypeId = 1,
-                            Name = "Call of Duty: Modern Warfare"
+                            Developer = "SCS Software",
+                            GameTypeId = 5,
+                            Name = "Euro Truck Simulator 2",
+                            RegularPrice = 21.99m
                         },
                         new
                         {
                             GameId = 2,
-                            Developer = "2K Sports",
+                            Developer = "EA Sports",
                             GameTypeId = 7,
-                            Name = "NBA 2K20"
+                            Name = "Madden NFL 20",
+                            RegularPrice = 29.99m
                         },
                         new
                         {
                             GameId = 3,
-                            Developer = "Electronic Arts",
-                            GameTypeId = 7,
-                            Name = "Madden NFL 20"
+                            Developer = "Klei Entertainment",
+                            GameTypeId = 3,
+                            Name = "Don't Starve",
+                            RegularPrice = 11.49m
                         },
                         new
                         {
                             GameId = 4,
                             Developer = "2K Games",
                             GameTypeId = 1,
-                            Name = "Borderlands 3"
+                            Name = "Borderlands 3",
+                            RegularPrice = 79.99m
                         },
                         new
                         {
                             GameId = 5,
-                            Developer = "Warner Bros. Interactive Entertainment",
-                            GameTypeId = 1,
-                            Name = "Mortal Kombat II"
+                            Developer = "Crystal Dynamics",
+                            GameTypeId = 2,
+                            Name = "Tomb Raider",
+                            RegularPrice = 19.99m
                         },
                         new
                         {
                             GameId = 6,
-                            Developer = "Electronic Arts",
-                            GameTypeId = 1,
-                            Name = "Star Wars Jedi: Fallen Order"
+                            Developer = "Bethesda",
+                            GameTypeId = 4,
+                            Name = "Fallout: New Vegas",
+                            RegularPrice = 10.99m
                         },
                         new
                         {
                             GameId = 7,
-                            Developer = "Nintendo",
-                            GameTypeId = 1,
-                            Name = "Super Smash Bros"
+                            Developer = "Spiderling Studios",
+                            GameTypeId = 5,
+                            Name = "Besiege",
+                            RegularPrice = 17.49m
                         },
                         new
                         {
                             GameId = 8,
-                            Developer = "Square Enix",
-                            GameTypeId = 4,
-                            Name = "Kingdom Hearts III"
+                            Developer = "Squad",
+                            GameTypeId = 5,
+                            Name = "Kerbal Space Program",
+                            RegularPrice = 43.99m
                         },
                         new
                         {
                             GameId = 9,
-                            Developer = "Ubisoft",
-                            GameTypeId = 1,
-                            Name = "Tom Clancy's The Division 2"
+                            Developer = "Electronic Arts",
+                            GameTypeId = 4,
+                            Name = "Dragon Age: Origins",
+                            RegularPrice = 26.99m
                         },
                         new
                         {
                             GameId = 10,
-                            Developer = "Nintendo",
-                            GameTypeId = 1,
-                            Name = "Mario Kart 8 Deluxe"
+                            Developer = "Ubisoft",
+                            GameTypeId = 2,
+                            Name = "Far Cry 3",
+                            RegularPrice = 39.99m
                         },
                         new
                         {
                             GameId = 11,
-                            Developer = "Epic Games",
-                            GameTypeId = 9,
-                            Name = "Fortnite"
+                            Developer = "Ubisoft",
+                            GameTypeId = 2,
+                            Name = "Far Cry 3 - Blood Dragon",
+                            RegularPrice = 14.99m
                         },
                         new
                         {
                             GameId = 12,
                             Developer = "Mojang",
                             GameTypeId = 9,
-                            Name = "Minecraft"
+                            Name = "Minecraft",
+                            RegularPrice = 26.95m
                         },
                         new
                         {
                             GameId = 13,
                             Developer = "Roblox Corporation",
                             GameTypeId = 9,
-                            Name = "Roblox"
+                            Name = "Roblox",
+                            RegularPrice = 0.0m
                         },
                         new
                         {
                             GameId = 14,
                             Developer = "Nintendo",
                             GameTypeId = 1,
-                            Name = "Super Mario Odyssey"
+                            Name = "Super Mario Odyssey",
+                            RegularPrice = 59.99m
                         },
                         new
                         {
                             GameId = 15,
                             Developer = "Rockstar Games",
-                            GameTypeId = 1,
-                            Name = "Grand Theft Auto V"
+                            GameTypeId = 2,
+                            Name = "Grand Theft Auto V",
+                            RegularPrice = 29.99m
                         },
                         new
                         {
                             GameId = 16,
-                            Developer = "Sony Interactive Entertainment",
-                            GameTypeId = 1,
-                            Name = "Marvel’s Spider-Man"
+                            Developer = "Monomi Park",
+                            GameTypeId = 2,
+                            Name = "Slime Rancher",
+                            RegularPrice = 21.99m
                         },
                         new
                         {
                             GameId = 17,
                             Developer = "Psyonix",
                             GameTypeId = 1,
-                            Name = "Rocket League"
+                            Name = "Rocket League",
+                            RegularPrice = 35.99m
                         },
                         new
                         {
                             GameId = 18,
-                            Developer = "Riot Games",
-                            GameTypeId = 8,
-                            Name = "League of Legends"
+                            Developer = "NetherRealm Studios",
+                            GameTypeId = 1,
+                            Name = "Mortal Kombat 11",
+                            RegularPrice = 69.99m
                         },
                         new
                         {
                             GameId = 19,
                             Developer = "Nintendo",
                             GameTypeId = 2,
-                            Name = "The Legend of Zelda: Breath of the Wild"
+                            Name = "The Legend of Zelda: Breath of the Wild",
+                            RegularPrice = 79.99m
                         },
                         new
                         {
                             GameId = 20,
                             Developer = "Activision",
                             GameTypeId = 1,
-                            Name = "Call of Duty: Black Ops 4"
+                            Name = "Call of Duty: Black Ops 4",
+                            RegularPrice = 79.99m
+                        },
+                        new
+                        {
+                            GameId = 21,
+                            Developer = "Bungie",
+                            GameTypeId = 8,
+                            Name = "Destiny 2",
+                            RegularPrice = 0m
+                        },
+                        new
+                        {
+                            GameId = 22,
+                            Developer = "Zenimax Online Studios",
+                            GameTypeId = 8,
+                            Name = "The Elder Scrolls® Online",
+                            RegularPrice = 0m
+                        },
+                        new
+                        {
+                            GameId = 23,
+                            Developer = "Milestone",
+                            GameTypeId = 7,
+                            Name = "WRC 3: FIA World Rally Championship",
+                            RegularPrice = 39.99m
+                        },
+                        new
+                        {
+                            GameId = 24,
+                            Developer = "EA Black Box",
+                            GameTypeId = 7,
+                            Name = "Need for Speed: Carbon",
+                            RegularPrice = 19.99m
+                        },
+                        new
+                        {
+                            GameId = 25,
+                            Developer = "Haemimont Games",
+                            GameTypeId = 6,
+                            Name = "Tropico 5",
+                            RegularPrice = 22.79m
+                        },
+                        new
+                        {
+                            GameId = 26,
+                            Developer = "Innersloth",
+                            GameTypeId = 5,
+                            Name = "Among Us",
+                            RegularPrice = 5.69m
+                        },
+                        new
+                        {
+                            GameId = 27,
+                            Developer = "Rockstar Games",
+                            GameTypeId = 2,
+                            Name = "Red Dead Redemption II",
+                            RegularPrice = 79.99m
+                        },
+                        new
+                        {
+                            GameId = 28,
+                            Developer = "Firaxis Games",
+                            GameTypeId = 6,
+                            Name = "Sid Meier's Civilization VI",
+                            RegularPrice = 79.99m
+                        },
+                        new
+                        {
+                            GameId = 29,
+                            Developer = "Guerrilla",
+                            GameTypeId = 2,
+                            Name = "Horizon Zero Dawn",
+                            RegularPrice = 59.99m
+                        },
+                        new
+                        {
+                            GameId = 30,
+                            Developer = "Bethesda",
+                            GameTypeId = 4,
+                            Name = "Fallout 4",
+                            RegularPrice = 39.99m
                         });
                 });
 
@@ -334,21 +440,21 @@ namespace Sprint.Migrations
                             GameImageId = 1,
                             GameId = 1,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/d5c91983451d0fa52a7ce530a3714ab7.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/4c22bd444899d3b6047a10b20a2f26db.png"
                         },
                         new
                         {
                             GameImageId = 2,
                             GameId = 2,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/767b2cc82cecc0385fe6f1086dd2c748.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/097e232de59f809f5a1cdf88e1240b08.png"
                         },
                         new
                         {
                             GameImageId = 3,
                             GameId = 3,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/94cd0468d6f321ec192c9e301ba30e85.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/b16a06a5ea94028944a81ad5bbdbb8ca.png"
                         },
                         new
                         {
@@ -362,28 +468,49 @@ namespace Sprint.Migrations
                             GameImageId = 5,
                             GameId = 5,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/9a3bd37a71b632e7726f149bbd771052.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/6be910cdb73c47cb973a944c03f5c7b1.png"
+                        },
+                        new
+                        {
+                            GameImageId = 6,
+                            GameId = 6,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/5248e5118c84beea359b6ea385393661.png"
                         },
                         new
                         {
                             GameImageId = 7,
                             GameId = 7,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/71e9c6620d381d60196ebe694840aaaa.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/a3171cc0f610fdfdf460831fb25a3dc7.png"
+                        },
+                        new
+                        {
+                            GameImageId = 8,
+                            GameId = 8,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/5e26566dffe850373e9a5121703034a1.png"
                         },
                         new
                         {
                             GameImageId = 9,
                             GameId = 9,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/29ddbdb402491a6aa97964a8139a1356.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/c1537c9ed39baee3476c6fdd666b5fd8.png"
                         },
                         new
                         {
                             GameImageId = 10,
                             GameId = 10,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/c6d4eb15f1e84a36eff58eca3627c82e.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/84b3f2becbf70a03239d7fae55dcaa40.png"
+                        },
+                        new
+                        {
+                            GameImageId = 11,
+                            GameId = 11,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/1051f72ed869290c51ee34a72b1d01df.png"
                         },
                         new
                         {
@@ -408,6 +535,20 @@ namespace Sprint.Migrations
                         },
                         new
                         {
+                            GameImageId = 15,
+                            GameId = 15,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/3aa4cb2017fe681acd92bbea6b9f6015.png"
+                        },
+                        new
+                        {
+                            GameImageId = 16,
+                            GameId = 16,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/5f65c233d57a4b31b1e4edbaa79bf6ca.png"
+                        },
+                        new
+                        {
                             GameImageId = 17,
                             GameId = 17,
                             ImageType = 1,
@@ -418,7 +559,7 @@ namespace Sprint.Migrations
                             GameImageId = 18,
                             GameId = 18,
                             ImageType = 1,
-                            ImageURL = "https://cdn.steamgriddb.com/grid/f4a331b7a22d1b237565d8813a34d8ac.png"
+                            ImageURL = "https://cdn.steamgriddb.com/grid/884738b4332ababd678ca505f4e04f4d.png"
                         },
                         new
                         {
@@ -433,6 +574,76 @@ namespace Sprint.Migrations
                             GameId = 20,
                             ImageType = 1,
                             ImageURL = "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png"
+                        },
+                        new
+                        {
+                            GameImageId = 21,
+                            GameId = 21,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/f5e083092550d2f93898e9829e677e39.png"
+                        },
+                        new
+                        {
+                            GameImageId = 22,
+                            GameId = 22,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/56c12a4512e84416de450db11ab040c3.png"
+                        },
+                        new
+                        {
+                            GameImageId = 23,
+                            GameId = 23,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/4a8520defd77a137222438d72ed7afd2.png"
+                        },
+                        new
+                        {
+                            GameImageId = 24,
+                            GameId = 24,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/ee955e252af3c85e66e15864e31174fe.png"
+                        },
+                        new
+                        {
+                            GameImageId = 25,
+                            GameId = 25,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/c967fb654df41177901d1f5f135bf9e6.png"
+                        },
+                        new
+                        {
+                            GameImageId = 26,
+                            GameId = 26,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/75c0aa52af187c4cd20744efafa1c7c7.png"
+                        },
+                        new
+                        {
+                            GameImageId = 27,
+                            GameId = 27,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/41b28a11da13a0384a9b75f95244e8e8.png"
+                        },
+                        new
+                        {
+                            GameImageId = 28,
+                            GameId = 28,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/c9ee6a825655d889ae6a84bde2802bc2.png"
+                        },
+                        new
+                        {
+                            GameImageId = 29,
+                            GameId = 29,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/5ec5d5702a083583b268f32dde14b419.png"
+                        },
+                        new
+                        {
+                            GameImageId = 30,
+                            GameId = 30,
+                            ImageType = 1,
+                            ImageURL = "https://cdn.steamgriddb.com/grid/60c60a4ffa03bde6f8c83533d465ef5c.png"
                         });
                 });
 
@@ -575,14 +786,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "1711a59f-c5a2-444e-a89b-ca93253785c1",
+                            ConcurrencyStamp = "50fe4003-658d-4d96-927c-6f8838573bdf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "552a93bd-b517-4f4a-a2ff-415d26b14ca5",
+                            ConcurrencyStamp = "5cffdee3-b649-45f3-b80a-a6bd09e90a4a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -696,9 +907,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "764dd499-ed3b-49c2-89e9-160f2b3b6fdd",
+                            AccountNum = "5e80d118-ad59-42bf-9c66-ba48af2aeec7",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "f853e60d-f764-445e-93ba-cd06e7884c00",
+                            ConcurrencyStamp = "952ecb33-7200-498d-a3b7-d4e1228886ca",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -706,7 +917,7 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENHU7v7nDZ6/oPNyxIUGnq0AwTR/S2XjCs+EvxIVTeEaKy6jMai5wYfv/9z9ARZO9Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPOaerGnl6OklqD1FhLN9MUw1hq46N5mvk1eudjRzWP+e0I8v2CekhaH4mKexrIvSg==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -718,9 +929,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "bd60cfad-ea23-4794-bce1-ac0162b1523e",
+                            AccountNum = "b7f668ab-78b7-4634-941a-7a0d028eb1f6",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "57f67139-4790-481f-aabb-0c0edbc31bd4",
+                            ConcurrencyStamp = "811f7929-90e3-4496-8380-7bb4755f86e3",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -728,7 +939,7 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAENr53DBtq/FKEnQEWrAZLJRdvkNqiczJfWlbUa1/03bh4UHojAj4iWV0QWII8tFf/A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEhqbKcC5l4IvGVTw/L0dgXwGezmpB2iyzmQcWXTILMFLu/PWReW9fsPOCqQIARz0A==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",

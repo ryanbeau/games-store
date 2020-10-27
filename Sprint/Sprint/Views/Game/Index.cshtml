@@ -1,48 +1,149 @@
-﻿@using Microsoft.AspNetCore.Html
+﻿@using Sprint.ViewModels
 
-@model IList<Sprint.Models.Game>
+@model Sprint.ViewModels.GameIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
+<script>
+    function clearRadios(groupName) {
+        var r = document.getElementsByName(groupName);
+        for (var i = 0; i < r.length; i++) {
+            r[i].checked = false;
+        }
+    }
+</script>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<h1>Available Games</h1>
-
-@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-{
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-}
 
 <div class="container">
     <div class="row">
+        <div class="col-sm-3 mt-2">
+            <h5 class="text-light text-left font-weight-light">Games</h5>
+        </div>
+
+        <div class="col-sm-9">
+            <form class="form-inline" asp-action="Filter">
+                <div class="input-group w-100">
+                    @if (@Model.FilterPrice != null)
+                    {<input type="hidden" name="price" value="@Model.FilterPrice" />}
+                    @if (@Model.FilterCategory != null)
+                    {<input type="hidden" name="category" value="@Model.FilterCategory" />}
+                    @if (@Model.FilterSearch != null)
+                    {
+                        <div class="input-group-append">
+                            <button type="button" onclick="document.getElementById('gameSearch').value = ''; this.form.submit()" class="btn btn-danger">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    }
+                    <input type="text" class="form-control" name="search" id="gameSearch" placeholder="Search for..." value="@Model.FilterSearch" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <p>
+                <a asp-action="Create">Create New</a>
+            </p>
+        }
+    </div>
+
+    <hr />
+
+    <div class="row">
         @* Filter *@
         <div class="col-sm-3">
-            <p>Filter TODO</p>
+            <form class="w-100" asp-action="Filter">
+                @if (@Model.FilterSearch != null)
+                {<input type="hidden" name="search" value="@Model.FilterSearch" />}
+
+                @foreach (var group in Model.FilterGroups)
+                {
+                    <div class="mb-2">
+                        @if (group.Filters.Any(f => f.IsSelected))
+                        {
+                            // reset radio values
+                            <button type="button" onclick="clearRadios('@group.FormName'); this.form.submit()"
+                                    class="btn btn-sm btn-danger mb-2">
+                                <i class="fa fa-times text-light" aria-hidden="true"></i>
+                            </button>
+                        }
+                        <h5 class="text-light text-left font-weight-light d-inline-block">@group.Name</h5>
+                    </div>
+                    foreach (var filter in group.Filters)
+                    {
+                        <div class="form-check">
+                            @{string id = $"filter{filter.Name}"; }
+
+                            <input onchange="this.form.submit()"
+                                   type="radio"
+                                   class="form-check-input"
+                                   name="@group.FormName"
+                                   value="@filter.Value"
+                                   @if (filter.IsSelected) { <text> checked</text> }>
+                            <label class="form-check-label" for="@id">
+                                @filter.Name @if (filter.Count != null)
+                                {<i>@filter.Count</i>}
+                            </label>
+                        </div>
+                    }
+                    <hr />
+                }
+            </form>
         </div>
 
         @* Games *@
         <div class="col-sm-9">
-            @for (int i = 0; i < Model.Count; i += 3)
+            @for (int i = 0; i < Model.Games.Count; i += 3)
             {
                 <div class="row">
-                    @for (int j = 0; j < 3 && i + j < Model.Count; j++)
+                    @for (int j = 0; j < 3 && i + j < Model.Games.Count; j++)
                     {
+                        GameItemViewModel item = Model.Games[i + j];
+
                         <div class="col-md-4 mb-4">
-                            <a asp-action="Details" asp-route-id="@Model[i+j].GameId" class="text-decoration-none">
+                            <a asp-action="Details" asp-route-id="@item.Game.GameId" class="text-decoration-none">
                                 <div class="moist-card moist-shadow rounded h-100">
-                                    <img class="card-img-top moist-card-img" data-src="holder.js/100px117?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22348%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20348%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_17547732eb0%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A17pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_17547732eb0%22%3E%3Crect%20width%3D%22348%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22116.7109375%22%20y%3D%22120.15%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+                                    @if (item.Image == null)
+                                    {
+                                        <img class="card-img-top moist-card-img" data-src="holder.js/100px117?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22348%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20348%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_17547732eb0%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A17pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_17547732eb0%22%3E%3Crect%20width%3D%22348%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22116.7109375%22%20y%3D%22120.15%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+                                    }
+                                    else
+                                    {
+                                        <img class="card-img-top moist-card-img" src="@Url.Content(item.Image.ImageURL)" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;">
+                                    }
                                     <div class="card-body gradient-buttons">
-                                        <p class="card-text text-dark">@Model[i + j].Name</p>
+                                        <p class="card-text text-dark">@item.Game.Name</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group hide">
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark"></i></button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark"></i></button>
+                                                @if (item.IsWishlisted)
+                                                {
+                                                    <form class="w-100" asp-route-gameid="@item.Game.GameId" asp-controller="Wishlist" asp-action="Remove">
+                                                        <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <form class="w-100" asp-route-gameid="@item.Game.GameId" asp-controller="Wishlist" asp-action="Add">
+                                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark" aria-hidden="true"></i></button>
+                                                    </form>
+                                                }
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
                                             </div>
-                                            <p class="text-dark font-weight-bold mt-1 mb-0">$69.99</p>
+                                            @if (item.Game.RegularPrice > 0)
+                                            {
+                                                <p class="text-dark font-weight-bold mt-1 mb-0">@item.Game.RegularPrice</p>
+                                            }
                                         </div>
                                     </div>
                                 </div>

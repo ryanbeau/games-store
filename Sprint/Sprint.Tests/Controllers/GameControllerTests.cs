@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sprint.Controllers;
 using Sprint.Models;
+using Sprint.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,12 +23,13 @@ namespace Sprint.Tests.Controllers
             // Arrange
 
             // Act
-            var result = await ControllerSUT.Index();
+            var result = await ControllerSUT.Index(null, null, null);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<Game>>(viewResult.ViewData.Model);
-            Assert.NotEmpty(model);
+            var model = Assert.IsAssignableFrom<GameIndexViewModel>(viewResult.ViewData.Model);
+            Assert.NotEmpty(model.FilterGroups);
+            Assert.NotEmpty(model.Games);
         }
 
         [Fact]

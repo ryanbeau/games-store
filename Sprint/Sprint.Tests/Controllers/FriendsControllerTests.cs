@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Sprint.Controllers;
 using Sprint.Models;
+using Sprint.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -26,7 +27,7 @@ namespace Sprint.Tests.Controllers
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var friends = Assert.IsAssignableFrom<Friends>(viewResult.ViewData.Model);
+            var friends = Assert.IsAssignableFrom<FriendsViewModel>(viewResult.ViewData.Model);
             Assert.IsAssignableFrom<IEnumerable<UserRelationship>>(friends.FriendRelationships);
             Assert.IsAssignableFrom<IEnumerable<UserRelationship>>(friends.PendingRelationships);
         }

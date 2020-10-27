@@ -74,7 +74,8 @@ namespace Sprint.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GameTypeId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(unicode: false, maxLength: 48, nullable: false),
-                    Developer = table.Column<string>(unicode: false, maxLength: 48, nullable: false)
+                    Developer = table.Column<string>(unicode: false, maxLength: 48, nullable: false),
+                    RegularPrice = table.Column<decimal>(nullable: false, defaultValue: 0m)
                 },
                 constraints: table =>
                 {
@@ -315,8 +316,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "1711a59f-c5a2-444e-a89b-ca93253785c1", "Admin", "ADMIN" },
-                    { 2, "552a93bd-b517-4f4a-a2ff-415d26b14ca5", "Member", "MEMBER" }
+                    { 1, "50fe4003-658d-4d96-927c-6f8838573bdf", "Admin", "ADMIN" },
+                    { 2, "5cffdee3-b649-45f3-b80a-a6bd09e90a4a", "Member", "MEMBER" }
                 });
 
             migrationBuilder.InsertData(
@@ -324,35 +325,64 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "Gender", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "764dd499-ed3b-49c2-89e9-160f2b3b6fdd", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "f853e60d-f764-445e-93ba-cd06e7884c00", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAENHU7v7nDZ6/oPNyxIUGnq0AwTR/S2XjCs+EvxIVTeEaKy6jMai5wYfv/9z9ARZO9Q==", "555-555-5555", false, "", false, "admin" },
-                    { 2, 0, "bd60cfad-ea23-4794-bce1-ac0162b1523e", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "57f67139-4790-481f-aabb-0c0edbc31bd4", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAENr53DBtq/FKEnQEWrAZLJRdvkNqiczJfWlbUa1/03bh4UHojAj4iWV0QWII8tFf/A==", "555-555-5555", false, "", false, "user" }
+                    { 1, 0, "5e80d118-ad59-42bf-9c66-ba48af2aeec7", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "952ecb33-7200-498d-a3b7-d4e1228886ca", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEPOaerGnl6OklqD1FhLN9MUw1hq46N5mvk1eudjRzWP+e0I8v2CekhaH4mKexrIvSg==", "555-555-5555", false, "", false, "admin" },
+                    { 2, 0, "b7f668ab-78b7-4634-941a-7a0d028eb1f6", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "811f7929-90e3-4496-8380-7bb4755f86e3", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEEhqbKcC5l4IvGVTw/L0dgXwGezmpB2iyzmQcWXTILMFLu/PWReW9fsPOCqQIARz0A==", "555-555-5555", false, "", false, "user" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Game",
+                columns: new[] { "GameId", "Developer", "GameTypeId", "Name", "RegularPrice" },
+                values: new object[] { 4, "2K Games", 1, "Borderlands 3", 79.99m });
+
+            migrationBuilder.InsertData(
+                table: "Game",
+                columns: new[] { "GameId", "Developer", "GameTypeId", "Name" },
+                values: new object[] { 13, "Roblox Corporation", 9, "Roblox" });
+
+            migrationBuilder.InsertData(
+                table: "Game",
+                columns: new[] { "GameId", "Developer", "GameTypeId", "Name", "RegularPrice" },
+                values: new object[] { 12, "Mojang", 9, "Minecraft", 26.95m });
 
             migrationBuilder.InsertData(
                 table: "Game",
                 columns: new[] { "GameId", "Developer", "GameTypeId", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Activision", 1, "Call of Duty: Modern Warfare" },
-                    { 13, "Roblox Corporation", 9, "Roblox" },
-                    { 12, "Mojang", 9, "Minecraft" },
-                    { 11, "Epic Games", 9, "Fortnite" },
-                    { 18, "Riot Games", 8, "League of Legends" },
-                    { 3, "Electronic Arts", 7, "Madden NFL 20" },
-                    { 2, "2K Sports", 7, "NBA 2K20" },
-                    { 8, "Square Enix", 4, "Kingdom Hearts III" },
-                    { 19, "Nintendo", 2, "The Legend of Zelda: Breath of the Wild" },
-                    { 20, "Activision", 1, "Call of Duty: Black Ops 4" },
-                    { 17, "Psyonix", 1, "Rocket League" },
-                    { 16, "Sony Interactive Entertainment", 1, "Marvel’s Spider-Man" },
-                    { 15, "Rockstar Games", 1, "Grand Theft Auto V" },
-                    { 14, "Nintendo", 1, "Super Mario Odyssey" },
-                    { 10, "Nintendo", 1, "Mario Kart 8 Deluxe" },
-                    { 9, "Ubisoft", 1, "Tom Clancy's The Division 2" },
-                    { 7, "Nintendo", 1, "Super Smash Bros" },
-                    { 6, "Electronic Arts", 1, "Star Wars Jedi: Fallen Order" },
-                    { 5, "Warner Bros. Interactive Entertainment", 1, "Mortal Kombat II" },
-                    { 4, "2K Games", 1, "Borderlands 3" }
+                    { 22, "Zenimax Online Studios", 8, "The Elder Scrolls® Online" },
+                    { 21, "Bungie", 8, "Destiny 2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Game",
+                columns: new[] { "GameId", "Developer", "GameTypeId", "Name", "RegularPrice" },
+                values: new object[,]
+                {
+                    { 24, "EA Black Box", 7, "Need for Speed: Carbon", 19.99m },
+                    { 23, "Milestone", 7, "WRC 3: FIA World Rally Championship", 39.99m },
+                    { 2, "EA Sports", 7, "Madden NFL 20", 29.99m },
+                    { 28, "Firaxis Games", 6, "Sid Meier's Civilization VI", 79.99m },
+                    { 25, "Haemimont Games", 6, "Tropico 5", 22.79m },
+                    { 26, "Innersloth", 5, "Among Us", 5.69m },
+                    { 8, "Squad", 5, "Kerbal Space Program", 43.99m },
+                    { 7, "Spiderling Studios", 5, "Besiege", 17.49m },
+                    { 1, "SCS Software", 5, "Euro Truck Simulator 2", 21.99m },
+                    { 30, "Bethesda", 4, "Fallout 4", 39.99m },
+                    { 9, "Electronic Arts", 4, "Dragon Age: Origins", 26.99m },
+                    { 6, "Bethesda", 4, "Fallout: New Vegas", 10.99m },
+                    { 3, "Klei Entertainment", 3, "Don't Starve", 11.49m },
+                    { 29, "Guerrilla", 2, "Horizon Zero Dawn", 59.99m },
+                    { 27, "Rockstar Games", 2, "Red Dead Redemption II", 79.99m },
+                    { 19, "Nintendo", 2, "The Legend of Zelda: Breath of the Wild", 79.99m },
+                    { 16, "Monomi Park", 2, "Slime Rancher", 21.99m },
+                    { 15, "Rockstar Games", 2, "Grand Theft Auto V", 29.99m },
+                    { 11, "Ubisoft", 2, "Far Cry 3 - Blood Dragon", 14.99m },
+                    { 10, "Ubisoft", 2, "Far Cry 3", 39.99m },
+                    { 5, "Crystal Dynamics", 2, "Tomb Raider", 19.99m },
+                    { 20, "Activision", 1, "Call of Duty: Black Ops 4", 79.99m },
+                    { 18, "NetherRealm Studios", 1, "Mortal Kombat 11", 69.99m },
+                    { 17, "Psyonix", 1, "Rocket League", 35.99m },
+                    { 14, "Nintendo", 1, "Super Mario Odyssey", 59.99m }
                 });
 
             migrationBuilder.InsertData(
@@ -369,19 +399,34 @@ namespace Sprint.Migrations
                 columns: new[] { "GameImageId", "GameId", "ImageType", "ImageURL" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, "https://cdn.steamgriddb.com/grid/d5c91983451d0fa52a7ce530a3714ab7.png" },
                     { 4, 4, 1, "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png" },
-                    { 5, 5, 1, "https://cdn.steamgriddb.com/grid/9a3bd37a71b632e7726f149bbd771052.png" },
-                    { 7, 7, 1, "https://cdn.steamgriddb.com/grid/71e9c6620d381d60196ebe694840aaaa.png" },
-                    { 9, 9, 1, "https://cdn.steamgriddb.com/grid/29ddbdb402491a6aa97964a8139a1356.png" },
-                    { 10, 10, 1, "https://cdn.steamgriddb.com/grid/c6d4eb15f1e84a36eff58eca3627c82e.png" },
-                    { 14, 14, 1, "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png" },
-                    { 17, 17, 1, "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png" },
-                    { 20, 20, 1, "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png" },
+                    { 22, 22, 1, "https://cdn.steamgriddb.com/grid/56c12a4512e84416de450db11ab040c3.png" },
+                    { 21, 21, 1, "https://cdn.steamgriddb.com/grid/f5e083092550d2f93898e9829e677e39.png" },
+                    { 24, 24, 1, "https://cdn.steamgriddb.com/grid/ee955e252af3c85e66e15864e31174fe.png" },
+                    { 23, 23, 1, "https://cdn.steamgriddb.com/grid/4a8520defd77a137222438d72ed7afd2.png" },
+                    { 2, 2, 1, "https://cdn.steamgriddb.com/grid/097e232de59f809f5a1cdf88e1240b08.png" },
+                    { 28, 28, 1, "https://cdn.steamgriddb.com/grid/c9ee6a825655d889ae6a84bde2802bc2.png" },
+                    { 25, 25, 1, "https://cdn.steamgriddb.com/grid/c967fb654df41177901d1f5f135bf9e6.png" },
+                    { 26, 26, 1, "https://cdn.steamgriddb.com/grid/75c0aa52af187c4cd20744efafa1c7c7.png" },
+                    { 8, 8, 1, "https://cdn.steamgriddb.com/grid/5e26566dffe850373e9a5121703034a1.png" },
+                    { 7, 7, 1, "https://cdn.steamgriddb.com/grid/a3171cc0f610fdfdf460831fb25a3dc7.png" },
+                    { 1, 1, 1, "https://cdn.steamgriddb.com/grid/4c22bd444899d3b6047a10b20a2f26db.png" },
+                    { 30, 30, 1, "https://cdn.steamgriddb.com/grid/60c60a4ffa03bde6f8c83533d465ef5c.png" },
+                    { 9, 9, 1, "https://cdn.steamgriddb.com/grid/c1537c9ed39baee3476c6fdd666b5fd8.png" },
+                    { 6, 6, 1, "https://cdn.steamgriddb.com/grid/5248e5118c84beea359b6ea385393661.png" },
+                    { 3, 3, 1, "https://cdn.steamgriddb.com/grid/b16a06a5ea94028944a81ad5bbdbb8ca.png" },
+                    { 29, 29, 1, "https://cdn.steamgriddb.com/grid/5ec5d5702a083583b268f32dde14b419.png" },
+                    { 27, 27, 1, "https://cdn.steamgriddb.com/grid/41b28a11da13a0384a9b75f95244e8e8.png" },
                     { 19, 19, 1, "https://cdn.steamgriddb.com/grid/2da535ad78bb2e93aa448b1a4a61134e.png" },
-                    { 2, 2, 1, "https://cdn.steamgriddb.com/grid/767b2cc82cecc0385fe6f1086dd2c748.png" },
-                    { 3, 3, 1, "https://cdn.steamgriddb.com/grid/94cd0468d6f321ec192c9e301ba30e85.png" },
-                    { 18, 18, 1, "https://cdn.steamgriddb.com/grid/f4a331b7a22d1b237565d8813a34d8ac.png" },
+                    { 16, 16, 1, "https://cdn.steamgriddb.com/grid/5f65c233d57a4b31b1e4edbaa79bf6ca.png" },
+                    { 15, 15, 1, "https://cdn.steamgriddb.com/grid/3aa4cb2017fe681acd92bbea6b9f6015.png" },
+                    { 11, 11, 1, "https://cdn.steamgriddb.com/grid/1051f72ed869290c51ee34a72b1d01df.png" },
+                    { 10, 10, 1, "https://cdn.steamgriddb.com/grid/84b3f2becbf70a03239d7fae55dcaa40.png" },
+                    { 5, 5, 1, "https://cdn.steamgriddb.com/grid/6be910cdb73c47cb973a944c03f5c7b1.png" },
+                    { 20, 20, 1, "https://cdn.steamgriddb.com/grid/cb0fb5b71dd8266417731afb0e7a0864.png" },
+                    { 18, 18, 1, "https://cdn.steamgriddb.com/grid/884738b4332ababd678ca505f4e04f4d.png" },
+                    { 17, 17, 1, "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png" },
+                    { 14, 14, 1, "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png" },
                     { 12, 12, 1, "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png" },
                     { 13, 13, 1, "https://cdn.steamgriddb.com/grid/2a574bcb25a0ae1faad7c630370e6234.png" }
                 });

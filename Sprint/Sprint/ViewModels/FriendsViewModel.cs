@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Sprint.Models;
+using System.Collections.Generic;
 
-namespace Sprint.Models
+namespace Sprint.ViewModels
 {
-    public class Friends
+    public class FriendsViewModel
     {
         public List<UserRelationship> PendingRelationships { get; set; }
         public List<UserRelationship> FriendRelationships { get; set; }
