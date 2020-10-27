@@ -73,7 +73,7 @@
                         @if (group.Filters.Any(f => f.IsSelected))
                         {
                             // reset radio values
-                            <button type="button" onclick="clearRadios('@group.FormName'); this.form.submit()" 
+                            <button type="button" onclick="clearRadios('@group.FormName'); this.form.submit()"
                                     class="btn btn-sm btn-danger mb-2">
                                 <i class="fa fa-times text-light" aria-hidden="true"></i>
                             </button>
@@ -140,7 +140,10 @@
                                                 }
                                                 <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
                                             </div>
-                                            <p class="text-dark font-weight-bold mt-1 mb-0">$69.99</p>
+                                            @if (item.Game.RegularPrice > 0)
+                                            {
+                                                <p class="text-dark font-weight-bold mt-1 mb-0">@item.Game.RegularPrice</p>
+                                            }
                                         </div>
                                     </div>
                                 </div>

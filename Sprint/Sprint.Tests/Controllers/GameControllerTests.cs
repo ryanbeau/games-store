@@ -22,7 +22,7 @@ namespace Sprint.Tests.Controllers
             // Arrange
 
             // Act
-            var result = await ControllerSUT.Index();
+            var result = await ControllerSUT.Index(null, null, null);
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
