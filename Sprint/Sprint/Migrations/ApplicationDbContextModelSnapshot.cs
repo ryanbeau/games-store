@@ -15,7 +15,7 @@ namespace Sprint.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -150,6 +150,12 @@ namespace Sprint.Migrations
                         .HasMaxLength(48)
                         .IsUnicode(false);
 
+                    b.Property<decimal>("RegularPrice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("RegularPrice")
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.HasKey("GameId");
 
                     b.HasIndex("GameTypeId");
@@ -162,140 +168,160 @@ namespace Sprint.Migrations
                             GameId = 1,
                             Developer = "Activision",
                             GameTypeId = 1,
-                            Name = "Call of Duty: Modern Warfare"
+                            Name = "Call of Duty: Modern Warfare",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 2,
                             Developer = "2K Sports",
                             GameTypeId = 7,
-                            Name = "NBA 2K20"
+                            Name = "NBA 2K20",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 3,
                             Developer = "Electronic Arts",
                             GameTypeId = 7,
-                            Name = "Madden NFL 20"
+                            Name = "Madden NFL 20",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 4,
                             Developer = "2K Games",
                             GameTypeId = 1,
-                            Name = "Borderlands 3"
+                            Name = "Borderlands 3",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 5,
                             Developer = "Warner Bros. Interactive Entertainment",
                             GameTypeId = 1,
-                            Name = "Mortal Kombat II"
+                            Name = "Mortal Kombat II",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 6,
                             Developer = "Electronic Arts",
                             GameTypeId = 1,
-                            Name = "Star Wars Jedi: Fallen Order"
+                            Name = "Star Wars Jedi: Fallen Order",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 7,
                             Developer = "Nintendo",
                             GameTypeId = 1,
-                            Name = "Super Smash Bros"
+                            Name = "Super Smash Bros",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 8,
                             Developer = "Square Enix",
                             GameTypeId = 4,
-                            Name = "Kingdom Hearts III"
+                            Name = "Kingdom Hearts III",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 9,
                             Developer = "Ubisoft",
                             GameTypeId = 1,
-                            Name = "Tom Clancy's The Division 2"
+                            Name = "Tom Clancy's The Division 2",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 10,
                             Developer = "Nintendo",
                             GameTypeId = 1,
-                            Name = "Mario Kart 8 Deluxe"
+                            Name = "Mario Kart 8 Deluxe",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 11,
                             Developer = "Epic Games",
                             GameTypeId = 9,
-                            Name = "Fortnite"
+                            Name = "Fortnite",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 12,
                             Developer = "Mojang",
                             GameTypeId = 9,
-                            Name = "Minecraft"
+                            Name = "Minecraft",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 13,
                             Developer = "Roblox Corporation",
                             GameTypeId = 9,
-                            Name = "Roblox"
+                            Name = "Roblox",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 14,
                             Developer = "Nintendo",
                             GameTypeId = 1,
-                            Name = "Super Mario Odyssey"
+                            Name = "Super Mario Odyssey",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 15,
                             Developer = "Rockstar Games",
                             GameTypeId = 1,
-                            Name = "Grand Theft Auto V"
+                            Name = "Grand Theft Auto V",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 16,
                             Developer = "Sony Interactive Entertainment",
                             GameTypeId = 1,
-                            Name = "Marvel’s Spider-Man"
+                            Name = "Marvel’s Spider-Man",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 17,
                             Developer = "Psyonix",
                             GameTypeId = 1,
-                            Name = "Rocket League"
+                            Name = "Rocket League",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 18,
                             Developer = "Riot Games",
                             GameTypeId = 8,
-                            Name = "League of Legends"
+                            Name = "League of Legends",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 19,
                             Developer = "Nintendo",
                             GameTypeId = 2,
-                            Name = "The Legend of Zelda: Breath of the Wild"
+                            Name = "The Legend of Zelda: Breath of the Wild",
+                            RegularPrice = 0m
                         },
                         new
                         {
                             GameId = 20,
                             Developer = "Activision",
                             GameTypeId = 1,
-                            Name = "Call of Duty: Black Ops 4"
+                            Name = "Call of Duty: Black Ops 4",
+                            RegularPrice = 0m
                         });
                 });
 
@@ -575,14 +601,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "1711a59f-c5a2-444e-a89b-ca93253785c1",
+                            ConcurrencyStamp = "777d4e06-4a5e-4e8e-bf57-199e18ef7af5",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "552a93bd-b517-4f4a-a2ff-415d26b14ca5",
+                            ConcurrencyStamp = "8df90ac2-5a85-4adf-af12-1988182dcc0c",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -696,9 +722,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "764dd499-ed3b-49c2-89e9-160f2b3b6fdd",
+                            AccountNum = "a5ff6077-6374-49c4-a798-b99f81cdcd42",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "f853e60d-f764-445e-93ba-cd06e7884c00",
+                            ConcurrencyStamp = "183df269-07dd-4cac-a761-2bb189863cc7",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -706,7 +732,7 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENHU7v7nDZ6/oPNyxIUGnq0AwTR/S2XjCs+EvxIVTeEaKy6jMai5wYfv/9z9ARZO9Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBhS+bmz1CeDWmEaVtWywtUh5uaeKVDYX0e8W5CXWBDBMbVk1DWfz6VCXYjUrJJJug==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -718,9 +744,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "bd60cfad-ea23-4794-bce1-ac0162b1523e",
+                            AccountNum = "49b68647-fcc7-4e2c-b21e-745d3927a161",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "57f67139-4790-481f-aabb-0c0edbc31bd4",
+                            ConcurrencyStamp = "d61b68f3-c939-4b94-8c4e-a7c21ccc855c",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -728,7 +754,7 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAENr53DBtq/FKEnQEWrAZLJRdvkNqiczJfWlbUa1/03bh4UHojAj4iWV0QWII8tFf/A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPiJhiji4SjqUlJCGsh+PME780zC56unyNiFJS0jUF0mMrKpLAVhq8+2C0cZPFgV8w==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Sprint.Data;
 using Sprint.Enums;
 using Sprint.Models;
+using Sprint.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace Sprint.Controllers
                 .Where(r => r.RelatedUserId == user.Id && r.Type == Relationship.Pending)
                 .ToListAsync();
 
-            return View(new Friends
+            return View(new FriendsViewModel
             {
                 FriendRelationships = friends,
                 PendingRelationships = pendings,

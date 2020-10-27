@@ -197,6 +197,11 @@ namespace Sprint.Data
                     .HasMaxLength(48)
                     .IsUnicode(false);
 
+                entity.Property(e => e.RegularPrice)
+                    .IsRequired()
+                    .HasColumnName("RegularPrice")
+                    .HasDefaultValue(0);
+
                 entity.Property(e => e.GameTypeId).HasColumnName("GameTypeId");
 
                 entity.HasOne(d => d.GameType)

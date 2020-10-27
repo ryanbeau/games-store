@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Sprint.Data;
 using Sprint.Enums;
 using Sprint.Models;
+using Sprint.ViewModels;
 
 namespace Sprint.Controllers
 {

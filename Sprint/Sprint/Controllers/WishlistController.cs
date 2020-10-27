@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Sprint.Data;
 using Sprint.Enums;
 using Sprint.Models;
+using Sprint.ViewModels;
 
 namespace Sprint.Controllers
 {
@@ -37,7 +38,7 @@ namespace Sprint.Controllers
                 .Where(w => w.UserId == user.Id)
                 .ToListAsync();
 
-            return View(new Wishlist
+            return View(new WishlistViewModel
             {
                 Authorized = true,
                 Username = User.Identity.Name,
@@ -88,7 +89,7 @@ namespace Sprint.Controllers
                 .Where(w => w.UserId == wishlistUser.Id)
                 .ToListAsync();
 
-            return View("Index", new Wishlist
+            return View("Index", new WishlistViewModel
             {
                 Authorized = false,
                 Username = wishlistUser.Name,
@@ -146,8 +147,8 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            bool gameExists = await _context.Games.AnyAsync(g => g.GameId == gameId);
-            if (!gameExists)
+            Game game = await _context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+            if (game == null)
             {
                 return NotFound();
             }
@@ -165,6 +166,8 @@ namespace Sprint.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            TempData["WishlistAdded"] = $"Added {game.Name} to wishlist";
+
             if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
@@ -181,7 +184,7 @@ namespace Sprint.Controllers
             {
                 return Redirect(returnUrl);
             }
-            
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -204,6 +207,12 @@ namespace Sprint.Controllers
             if (!string.IsNullOrEmpty(returnUrl))
             {
                 return Redirect(returnUrl);
+            }
+
+            Game game = await _context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
+            if (game != null)
+            {
+                TempData["WishlistRemoved"] = $"Removed {game.Name} from wishlist";
             }
 
             return RedirectToAction(nameof(Index));

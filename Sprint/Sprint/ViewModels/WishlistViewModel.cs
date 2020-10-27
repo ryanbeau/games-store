@@ -1,9 +1,10 @@
 ﻿using Sprint.Enums;
+using Sprint.Models;
 using System.Collections.Generic;
 
-namespace Sprint.Models
+namespace Sprint.ViewModels
 {
-    public class Wishlist
+    public class WishlistViewModel
     {
         public bool Authorized { get; set; }
         public string Username { get; set; }
