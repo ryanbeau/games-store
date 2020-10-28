@@ -66,7 +66,8 @@ namespace Sprint.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]            
+            [Required]        
+            [Display(Name = "Gender")]
             public string Gender { get; set; }
 
             [Required]

@@ -53,19 +53,19 @@
             </div>
             <div class="text-center">
                 <label for="male" class="radio-inline">
-                    <input type="radio" id="male" name="gender" value="male">
+                    <input asp-for="Input.Gender" value="male" type="radio" >
                     Male
                 </label>
                 <label for="Female" class="radio-inline">
-                    <input type="radio" id="female" name="gender" value="female">
+                    <input asp-for="Input.Gender" value="female" type="radio">
                     Female
                 </label>
                 <label for="non-binary" class="radio-inline">
-                    <input type="radio" id="non-binary" name="gender" value="non-binary">
+                    <input asp-for="Input.Gender" value="non-binary" type="radio">
                     Non-binary
                 </label>
                 <label for="other" class="radio-inline">
-                    <input type="radio" id="other" name="gender" value="other">
+                    <input asp-for="Input.Gender" value="other" type="radio">
                     Other
                 </label>
                 <span asp-validation-for="Input.Gender" class="text-danger"></span>
