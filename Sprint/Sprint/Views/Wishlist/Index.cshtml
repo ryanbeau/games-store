@@ -1,4 +1,5 @@
 ﻿@using Sprint.Enums;
+@using Sprint.Data;
 
 @model Sprint.ViewModels.WishlistViewModel
 
@@ -43,33 +44,42 @@
 
 @if (Model.Games.Any())
 {
+
     <table class="table">
         <thead>
             <tr>
+                <th></th>
                 <th>Name</th>
                 <th>Developer</th>
-                <th>AddedOn</th>
+                <th>Date Added</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Games)
             {
+                string dateAdded = ((DateTime)item.AddedOn).ToString("MMM dd yyyy h:mm tt");
+
                 <tr>
                     <td>
-                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.Game.Name)</a>
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.Game.GameId">
+                            <img height="50" width="100" src="@item.Game.GameImages.Where(i => i.GameId == item.GameId && i.ImageType == ImageType.Banner).FirstOrDefault().ImageURL">
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId"  class="text-decoration-none" style="color:white">@Html.DisplayFor(modelItem => item.Game.Name)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Game.Developer)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AddedOn)
+                        @Html.DisplayFor(modelItem => dateAdded)
                     </td>
                     <td>
                         @if (Model.Authorized)
                         {
                             <form class="form-inline" asp-route-gameid="@item.GameId" asp-action="Remove">
-                                <button type="submit" class="btn btn-primary btn-block btn-lg">Remove</button>
+                                <button type="submit" class="btn btn-primary btn-block btn-sm">Remove</button>
                             </form>
                         }
                     </td>

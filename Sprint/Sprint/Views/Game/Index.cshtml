@@ -17,6 +17,22 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+@if (TempData["WishlistAdded"] is string)
+{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div class="alert alert-success" role="alert">
+        <i class="fa fa-heart mr-2" aria-hidden="true"></i>@TempData["WishlistAdded"]
+    </div>
+}
+
+@if (TempData["WishlistRemoved"] is string)
+{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div class="alert alert-secondary" role="alert">
+        <i class="fa fa-times-circle mr-2" aria-hidden="true"></i>@TempData["WishlistRemoved"]
+    </div>
+}
+
 <div class="container">
     <div class="row">
         <div class="col-sm-3 mt-2">

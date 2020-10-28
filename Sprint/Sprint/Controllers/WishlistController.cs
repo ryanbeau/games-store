@@ -38,6 +38,11 @@ namespace Sprint.Controllers
                 .Where(w => w.UserId == user.Id)
                 .ToListAsync();
 
+            foreach (var item in wishlistGames)
+            {
+                item.Game.GameImages.Add(_context.GameImages.FirstOrDefault(i => i.GameId == item.GameId && i.ImageType == ImageType.Banner));
+            }
+
             return View(new WishlistViewModel
             {
                 Authorized = true,
@@ -173,7 +178,7 @@ namespace Sprint.Controllers
                 return Redirect(returnUrl);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Game");
         }
 
         // GET: Wishlist/Remove -- redirect user
