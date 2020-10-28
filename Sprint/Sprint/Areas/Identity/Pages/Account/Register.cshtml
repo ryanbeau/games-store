@@ -1,80 +1,76 @@
 ﻿@page
 @model RegisterModel
+
 @{
     ViewData["Title"] = "Register";
 }
 
-<section>
-
     <h1 class="text-center">@ViewData["Title"]</h1>
-
-    <div class="row">
-
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4 class="text-center">Create a new account.</h4>
-            <hr />
-            <div class="col-md-12">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Input.Name"></label>
-                    <input asp-for="Input.Name" class="form-control" />
-                    <span asp-validation-for="Input.Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Birthdate"></label>
-                    <input asp-for="Input.Birthdate" class="form-control" />
-                    <span asp-validation-for="Input.Birthdate" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Username"></label>
-                    <input asp-for="Input.Username" class="form-control" />
-                    <span asp-validation-for="Input.Username" class="text-danger"></span>
-                </div>
+            <div align="center" style="min-height:440px;">
+                <form asp-route-returnUrl="@Model.ReturnUrl" method="post" style="width:500px">
+                    <h4 class="text-center">Create a new account.</h4>
+                    <hr />
+                    <div class="col-md-12">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <label style="float:left" asp-for="Input.Name"></label>
+                            <input asp-for="Input.Name" class="form-control" />
+                            <span asp-validation-for="Input.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label style="float:left" asp-for="Input.Birthdate"></label>
+                            <input asp-for="Input.Birthdate" class="form-control" />
+                            <span asp-validation-for="Input.Birthdate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label style="float:left" asp-for="Input.Username"></label>
+                            <input asp-for="Input.Username" class="form-control" />
+                            <span asp-validation-for="Input.Username" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label style="padding-top:15px;float:left" asp-for="Input.Email"></label>
+                            <input asp-for="Input.Email" class="form-control" />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" >
+                            <label style="float:left" asp-for="Input.Password"></label>
+                            <input asp-for="Input.Password" class="form-control" />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label style="float:left;" asp-for="Input.ConfirmPassword"></label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row" style="width:60%;padding-left:25%;padding-top:10px;">
+                        <label asp-for="Input.Gender"></label>
+                    </div>
+                    <div class="text-center">
+                        <label for="male" class="radio-inline">
+                            <input asp-for="Input.Gender" value="male" type="radio">
+                            Male
+                        </label>
+                        <label for="Female" class="radio-inline">
+                            <input asp-for="Input.Gender" value="female" type="radio">
+                            Female
+                        </label>
+                        <label for="non-binary" class="radio-inline">
+                            <input asp-for="Input.Gender" value="non-binary" type="radio">
+                            Non-binary
+                        </label>
+                        <label for="other" class="radio-inline">
+                            <input asp-for="Input.Gender" value="other" type="radio">
+                            Other
+                        </label>
+                        <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary button" style="position:relative">Register</button>
+                </form>
             </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label style="padding-top:15px" asp-for="Input.Email"></label>
-                    <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Password"></label>
-                    <input asp-for="Input.Password" class="form-control" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.ConfirmPassword"></label>
-                    <input asp-for="Input.ConfirmPassword" class="form-control" />
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="row" style="width:60%;padding-left:48%">
-                <label style="float:right;" asp-for="Input.Gender"></label>
-            </div>
-            <div class="text-center">
-                <label for="male" class="radio-inline">
-                    <input asp-for="Input.Gender" value="male" type="radio" >
-                    Male
-                </label>
-                <label for="Female" class="radio-inline">
-                    <input asp-for="Input.Gender" value="female" type="radio">
-                    Female
-                </label>
-                <label for="non-binary" class="radio-inline">
-                    <input asp-for="Input.Gender" value="non-binary" type="radio">
-                    Non-binary
-                </label>
-                <label for="other" class="radio-inline">
-                    <input asp-for="Input.Gender" value="other" type="radio">
-                    Other
-                </label>
-                <span asp-validation-for="Input.Gender" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary button" style="position:relative">Register</button>
-        </form>
-    </div>
-</section>
-
+       
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
