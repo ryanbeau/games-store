@@ -111,16 +111,28 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating,GameImages")] Game game)
         {
             if (ModelState.IsValid)
             {
+
+                game.GameImages.FirstOrDefault().ImageType = ImageType.Banner;
                 _context.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
             return View(game);
+            //if (ModelState.IsValid)
+            //{
+            //    game.GameImages.Add(_context.GameImages.FirstOrDefault(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner));
+            //    game.GameImages.Add(game.GameImages.FirstOrDefault());
+            //    _context.Add(game);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
+            //return View(game);
         }
 
         // GET: Game/Edit/5
@@ -131,7 +143,12 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            var game = await _context.Games.FindAsync(id);
+            Game game = await _context.Games
+    .Include(g => g.GameType)
+    .Include(g => g.GameImages)
+    .FirstOrDefaultAsync(m => m.GameId == id);
+
+
             if (game == null)
             {
                 return NotFound();
@@ -145,7 +162,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameTypeId,Name,Developer,Rating")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameTypeId,Name,Developer,Rating,GameImages")] Game game)
         {
             if (id != game.GameId)
             {
@@ -155,9 +172,11 @@ namespace Sprint.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
-                    _context.Update(game);
+                {   
+                    _context.Entry(game).State = EntityState.Modified;
+                    _context.Update(game.GameImages);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -201,7 +220,10 @@ namespace Sprint.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var game = await _context.Games.FindAsync(id);
+            var gameImage = await _context.GameImages.FindAsync(id);
+            _context.GameImages.Remove(gameImage);
             _context.Games.Remove(game);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -277,11 +299,11 @@ namespace Sprint.Controllers
                     .Include(t => t.Games)
                     .OrderBy(t => t.Name)
                     .Where(t => t.Games.Count > 0)
-                    .Select(t => new FilterItemViewModel 
-                    { 
+                    .Select(t => new FilterItemViewModel
+                    {
                         Name = t.Name,
                         Count = t.Games.Count,
-                        Value = t.Name.ToLower(), 
+                        Value = t.Name.ToLower(),
                         IsSelected = t.Name == category,
                     })
                     .ToListAsync(),
