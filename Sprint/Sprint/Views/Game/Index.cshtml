@@ -109,7 +109,7 @@
                                    @if (filter.IsSelected) { <text> checked</text> }>
                             <label class="form-check-label" for="@id">
                                 @filter.Name @if (filter.Count != null)
-                                {<i>@filter.Count</i>}
+                                {<i>(@filter.Count)</i>}
                             </label>
                         </div>
                     }
