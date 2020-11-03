@@ -209,7 +209,7 @@ namespace Sprint.Controllers
             _context.UserGameWishlists.Remove(userGameWishlist);
             await _context.SaveChangesAsync();
 
-            if (!string.IsNullOrEmpty(returnUrl))
+            if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "GameIndex")
             {
                 return Redirect(returnUrl);
             }
@@ -220,7 +220,14 @@ namespace Sprint.Controllers
                 TempData["WishlistRemoved"] = $"Removed {game.Name} from wishlist";
             }
 
-            return RedirectToAction(nameof(Index));
+            if (!string.IsNullOrEmpty(returnUrl) && returnUrl == "GameIndex")
+            {
+                return RedirectToAction("Index", "Game");
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

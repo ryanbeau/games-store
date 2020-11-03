@@ -144,7 +144,7 @@
                                             <div class="btn-group hide">
                                                 @if (item.IsWishlisted)
                                                 {
-                                                    <form class="w-100" asp-route-gameid="@item.Game.GameId" asp-controller="Wishlist" asp-action="Remove">
+                                                    <form class="w-100" asp-route-gameid="@item.Game.GameId" asp-route-returnUrl="GameIndex" asp-controller="Wishlist" asp-action="Remove">
                                                         <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
                                                     </form>
                                                 }
