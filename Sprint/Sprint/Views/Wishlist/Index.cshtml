@@ -1,5 +1,4 @@
 ﻿@using Sprint.Enums;
-@using Sprint.Data;
 
 @model Sprint.ViewModels.WishlistViewModel
 
@@ -58,19 +57,20 @@
         <tbody>
             @foreach (var item in Model.Games)
             {
-                string dateAdded = ((DateTime)item.AddedOn).ToString("MMM dd yyyy h:mm tt");
+                string dateAdded = ((DateTime)item.WishlistItem.AddedOn).ToString("MMM dd yyyy h:mm tt");
 
                 <tr>
                     <td>
-                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.Game.GameId">
-                            <img height="50" width="100" src="@item.Game.GameImages.Where(i => i.GameId == item.GameId && i.ImageType == ImageType.Banner).FirstOrDefault().ImageURL">
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.WishlistItem.Game.GameId">
+                            @if (item.Image != null)
+                            {<img height="50" width="100" src="@item.Image.ImageURL">}
                         </a>
                     </td>
                     <td>
-                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId"  class="text-decoration-none" style="color:white">@Html.DisplayFor(modelItem => item.Game.Name)</a>
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.WishlistItem.Game.GameId"  class="text-decoration-none" style="color:white">@Html.DisplayFor(modelItem => item.WishlistItem.Game.Name)</a>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Game.Developer)
+                        @Html.DisplayFor(modelItem => item.WishlistItem.Game.Developer)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => dateAdded)
@@ -78,7 +78,7 @@
                     <td>
                         @if (Model.Authorized)
                         {
-                            <form class="form-inline" asp-route-gameid="@item.GameId" asp-action="Remove">
+                            <form class="form-inline" asp-route-gameid="@item.WishlistItem.Game.GameId" asp-action="Remove">
                                 <button type="submit" class="btn btn-primary btn-block btn-sm">Remove</button>
                             </form>
                         }

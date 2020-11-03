@@ -1,5 +1,4 @@
 ﻿using Sprint.Enums;
-using Sprint.Models;
 using System.Collections.Generic;
 
 namespace Sprint.ViewModels
@@ -9,6 +8,6 @@ namespace Sprint.ViewModels
         public bool Authorized { get; set; }
         public string Username { get; set; }
         public WishlistVisibility WishlistVisibility { get; set; }
-        public List<UserGameWishlist> Games { get; set; }
+        public List<WishlistItemViewModel> Games { get; set; }
     }
 }

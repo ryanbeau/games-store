@@ -36,12 +36,13 @@ namespace Sprint.Controllers
             var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
                 .Where(w => w.UserId == user.Id)
+                .Select(w => new WishlistItemViewModel
+                {
+                    Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
+                    IsInCart = false, // TODO : modify this when cart is developed
+                    WishlistItem = w,
+                })
                 .ToListAsync();
-
-            foreach (var item in wishlistGames)
-            {
-                item.Game.GameImages.Add(_context.GameImages.FirstOrDefault(i => i.GameId == item.GameId && i.ImageType == ImageType.Banner));
-            }
 
             return View(new WishlistViewModel
             {
@@ -92,6 +93,12 @@ namespace Sprint.Controllers
             var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
                 .Where(w => w.UserId == wishlistUser.Id)
+                .Select(w => new WishlistItemViewModel
+                {
+                    Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
+                    IsInCart = false, // TODO : modify this when cart is developed
+                    WishlistItem = w,
+                })
                 .ToListAsync();
 
             return View("Index", new WishlistViewModel
