@@ -112,17 +112,14 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating,RegularPrice,GameImages")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating,RegularPrice")] Game game)
         {
             if (ModelState.IsValid)
             {
-
-                game.GameImages.FirstOrDefault().ImageType = ImageType.Banner;
                 _context.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
             ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
             return View(game);
         }
@@ -135,10 +132,7 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            Game game = await _context.Games
-            .Include(g => g.GameType)
-            .Include(g => g.GameImages)
-            .FirstOrDefaultAsync(m => m.GameId == id);
+            var game = await _context.Games.FindAsync(id);
 
             if (game == null)
             {
@@ -154,7 +148,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameTypeId,Name,Developer,Rating,GameImages")] Game game)
+        public async Task<IActionResult> Edit(int id, [Bind("GameId,GameTypeId,Name,Developer,Rating")] Game game)
         {
             if (id != game.GameId)
             {
@@ -165,10 +159,8 @@ namespace Sprint.Controllers
             {
                 try
                 {
-                    _context.Entry(game).State = EntityState.Modified;
-                    _context.Update(game.GameImages);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    _context.Update(game);
+                    await _context.SaveChangesAsync();  
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -214,8 +206,6 @@ namespace Sprint.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var game = await _context.Games.FindAsync(id);
-            var gameImage = await _context.GameImages.FindAsync(id);
-            _context.GameImages.Remove(gameImage);
             _context.Games.Remove(game);
 
             await _context.SaveChangesAsync();

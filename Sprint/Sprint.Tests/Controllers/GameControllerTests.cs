@@ -135,7 +135,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Edit_ReturnsRedirectToActionResult_WhenGameIsUpdated()
+        public async Task Edit_ReturnsViewREsult_WhenGameIsUpdated()
         {
             // Arrange
 
@@ -143,14 +143,13 @@ namespace Sprint.Tests.Controllers
             var result = await ControllerSUT.Edit(1, new Game { GameId = 1, Developer = "Blizzard", Name = "StarCraft", GameTypeId = 2 });
 
             // Assert
-            var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            var redirectResult = Assert.IsAssignableFrom<ViewResult>(result);
             var game = Assert.IsAssignableFrom<Game>(_context.Games.FirstOrDefault(g => g.GameId == 1));
 
             Assert.Equal(1, game.GameId);
             Assert.Equal("Blizzard", game.Developer);
             Assert.Equal("StarCraft", game.Name);
             Assert.Equal(2, game.GameTypeId);
-            Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
         }
 
         [Fact]
