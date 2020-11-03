@@ -90,6 +90,7 @@ namespace Sprint.Controllers
                 .Include(g => g.GameType)
                 .Include(g => g.GameImages)
                 .FirstOrDefaultAsync(m => m.GameId == id);
+
             if (game == null)
             {
                 return NotFound();
@@ -111,7 +112,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating,GameImages")] Game game)
+        public async Task<IActionResult> Create([Bind("GameId,GameTypeId,Name,Developer,Rating,RegularPrice,GameImages")] Game game)
         {
             if (ModelState.IsValid)
             {
@@ -121,18 +122,9 @@ namespace Sprint.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
             return View(game);
-            //if (ModelState.IsValid)
-            //{
-            //    game.GameImages.Add(_context.GameImages.FirstOrDefault(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner));
-            //    game.GameImages.Add(game.GameImages.FirstOrDefault());
-            //    _context.Add(game);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
-            //return View(game);
         }
 
         // GET: Game/Edit/5
@@ -144,15 +136,15 @@ namespace Sprint.Controllers
             }
 
             Game game = await _context.Games
-    .Include(g => g.GameType)
-    .Include(g => g.GameImages)
-    .FirstOrDefaultAsync(m => m.GameId == id);
-
+            .Include(g => g.GameType)
+            .Include(g => g.GameImages)
+            .FirstOrDefaultAsync(m => m.GameId == id);
 
             if (game == null)
             {
                 return NotFound();
             }
+
             ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Name", game.GameTypeId);
             return View(game);
         }
@@ -172,7 +164,7 @@ namespace Sprint.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {   
+                {
                     _context.Entry(game).State = EntityState.Modified;
                     _context.Update(game.GameImages);
                     await _context.SaveChangesAsync();
@@ -189,8 +181,8 @@ namespace Sprint.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             ViewData["GameTypeId"] = new SelectList(_context.GameTypes, "GameTypeId", "Game", game.GameTypeId);
             return View(game);
         }
@@ -205,7 +197,9 @@ namespace Sprint.Controllers
 
             var game = await _context.Games
                 .Include(g => g.GameType)
+                .Include(g => g.GameImages)
                 .FirstOrDefaultAsync(m => m.GameId == id);
+
             if (game == null)
             {
                 return NotFound();

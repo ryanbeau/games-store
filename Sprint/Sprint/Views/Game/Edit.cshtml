@@ -4,9 +4,8 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit @Model.Name</h1>
 
-<h4>Games</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -29,19 +28,21 @@
                 <span asp-validation-for="Developer" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="RegularPrice" class="control-label"></label>
+                <input asp-for="RegularPrice" type="number" step="0.01" min="0" class="form-control" />
+                <span asp-validation-for="RegularPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="GameImages" class="control-label"> Update Image URL :</label>
                 <input asp-for="GameImages.FirstOrDefault().ImageURL" class="form-control" name="GameImages[0].ImageUrl"/>
                 <span asp-validation-for="GameImages" class="txt-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary w-25" />
+                <a class="btn btn-primary w-25" role="button" asp-action="Index">Back to List</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

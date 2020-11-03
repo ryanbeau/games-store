@@ -16,6 +16,8 @@ namespace Sprint.Models
         public int GameTypeId { get; set; }
         public string Name { get; set; }
         public string Developer { get; set; }
+
+        [Display(Name = "Price")]
         public decimal RegularPrice { get; set; }
 
         [Display(Name = "Game Type")]
