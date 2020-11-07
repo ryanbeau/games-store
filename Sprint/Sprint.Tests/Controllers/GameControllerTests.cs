@@ -135,7 +135,7 @@ namespace Sprint.Tests.Controllers
         }
 
         [Fact]
-        public async Task Edit_ReturnsViewREsult_WhenGameIsUpdated()
+        public async Task Edit_ReturnsViewResult_WhenGameIsUpdated()
         {
             // Arrange
 
