@@ -38,6 +38,8 @@ namespace Sprint.Controllers
             // user
             User user = await _userManager.GetUserAsync(User);
 
+            DateTime now = DateTime.Now;
+
             // query games
             IQueryable<Game> gamesQuery = _context.Games.Include(g => g.GameType);
             gamesQuery = FilterBySearch(gamesQuery, search);
@@ -51,6 +53,8 @@ namespace Sprint.Controllers
                     Image = _context.GameImages.FirstOrDefault(i => i.GameId == g.GameId && i.ImageType == ImageType.Banner),
                     // if game is wishlisted
                     IsWishlisted = user != null && _context.UserGameWishlists.Any(w => w.GameId == g.GameId && w.UserId == user.Id),
+                    // discount - if in date range and below regular price
+                    Discount = _context.GameDiscounts.FirstOrDefault(d => d.GameId == g.GameId && d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish >= now)
                 })
                 .ToListAsync();
 

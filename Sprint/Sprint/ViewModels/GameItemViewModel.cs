@@ -9,5 +9,6 @@ namespace Sprint.ViewModels
         public bool IsWishlisted { get; set; }
         public Game Game { get; set; }
         public GameImage Image { get; set; }
+        public GameDiscount Discount { get; set; }
     }
 }

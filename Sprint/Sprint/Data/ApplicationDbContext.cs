@@ -9,6 +9,7 @@ namespace Sprint.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
+        public virtual DbSet<GameDiscount> GameDiscounts { get; set; }
         public virtual DbSet<GameImage> GameImages { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Game> Games { get; set; }
@@ -120,6 +121,21 @@ namespace Sprint.Data
                 new Game { GameId = 28, Name = "Sid Meier's Civilization VI", Developer = "Firaxis Games", RegularPrice = 79.99m, GameTypeId = 6 }, // strategy
                 new Game { GameId = 29, Name = "Horizon Zero Dawn", Developer = "Guerrilla", RegularPrice = 59.99m, GameTypeId = 2 }, // action-adventure
                 new Game { GameId = 30, Name = "Fallout 4", Developer = "Bethesda", RegularPrice = 39.99m, GameTypeId = 4 } // role-playing
+            );
+
+            modelBuilder.Entity<GameDiscount>().HasData(
+                // Fallout 4
+                new GameDiscount { DiscountId = 1, GameId = 30, DiscountPrice = 19.99m, DiscountStart = new DateTime(2020, 11, 08), DiscountFinish = new DateTime(2020, 12, 08, 23, 0, 0) },
+                // Among Us
+                new GameDiscount { DiscountId = 2, GameId = 26, DiscountPrice = 2.69m, DiscountStart = new DateTime(2020, 11, 08), DiscountFinish = new DateTime(2020, 12, 08, 23, 0, 0) },
+                // The Legend of Zelda: Breath of the Wild
+                new GameDiscount { DiscountId = 3, GameId = 19, DiscountPrice = 59.99m, DiscountStart = new DateTime(2020, 11, 08), DiscountFinish = new DateTime(2020, 12, 08, 23, 0, 0) },
+                // Besiege
+                new GameDiscount { DiscountId = 4, GameId = 7, DiscountPrice = 11.99m, DiscountStart = new DateTime(2020, 11, 08), DiscountFinish = new DateTime(2020, 12, 25, 23, 0, 0) },
+                // Slime Rancher
+                new GameDiscount { DiscountId = 5, GameId = 16, DiscountPrice = 12.49m, DiscountStart = new DateTime(2020, 11, 08), DiscountFinish = new DateTime(2020, 12, 25, 23, 0, 0) },
+                // Tomb Raider
+                new GameDiscount { DiscountId = 6, GameId = 5, DiscountPrice = 11.59m, DiscountStart = new DateTime(2020, 11, 08), DiscountFinish = new DateTime(2020, 12, 25, 23, 0, 0) }
             );
 
             modelBuilder.Entity<GameImage>().HasData(
@@ -259,6 +275,33 @@ namespace Sprint.Data
                     .HasForeignKey(d => d.GameTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Game_GameType");
+            });
+
+            modelBuilder.Entity<GameDiscount>(entity =>
+            {
+                entity.HasKey(e => e.DiscountId);
+
+                entity.ToTable("Discount");
+
+                entity.Property(p => p.DiscountId).HasColumnName("DiscountId").UseIdentityColumn();
+
+                entity.Property(e => e.GameId).HasColumnName("GameId")
+                    .IsRequired();
+
+                entity.Property(e => e.DiscountPrice).HasColumnName("DiscountPrice")
+                    .IsRequired();
+
+                entity.Property(e => e.DiscountStart).HasColumnName("DiscountStart")
+                    .IsRequired();
+
+                entity.Property(e => e.DiscountFinish).HasColumnName("DiscountFinish")
+                    .IsRequired();
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.Discounts)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Game_Discount");
             });
 
             modelBuilder.Entity<Review>(entity =>
