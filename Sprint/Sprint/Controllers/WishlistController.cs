@@ -47,7 +47,7 @@ namespace Sprint.Controllers
             return View(new WishlistViewModel
             {
                 Authorized = true,
-                Username = User.Identity.Name,
+                Username = user.UserName,
                 WishlistVisibility = user.WishlistVisibility,
                 Games = wishlistGames
             });
@@ -58,8 +58,10 @@ namespace Sprint.Controllers
         [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> UserWishlist(string username)
         {
+            User user = await _userManager.GetUserAsync(User);
+
             // if viewing your own page - redirect to index
-            if (username == User.Identity.Name)
+            if (username == user.UserName)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -79,8 +81,6 @@ namespace Sprint.Controllers
             // redirect if friends-only wishlist & we are either blocked or not friends
             if (wishlistUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
             {
-                User user = await _userManager.GetUserAsync(User);
-
                 bool areFriendsOrPending = await _context.UserRelationships
                     .AnyAsync(r => r.Type != Relationship.Blocked && r.RelatingUserId == wishlistUser.Id && r.RelatedUserId == user.Id);
 
@@ -213,7 +213,13 @@ namespace Sprint.Controllers
             }
 
             var userGameWishlist = await _context.UserGameWishlists.FirstOrDefaultAsync(w => w.GameId == gameId && w.UserId == user.Id);
+
+            if (userGameWishlist == null) {
+                return NotFound();
+            }
+
             _context.UserGameWishlists.Remove(userGameWishlist);
+
             await _context.SaveChangesAsync();
 
             if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "GameIndex")

@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Castle.Core.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient.Server;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Sprint.Controllers;
 using Sprint.Enums;
 using Sprint.Models;
+using Sprint.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +32,81 @@ namespace Sprint.Tests.Controllers
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            Assert.IsAssignableFrom<IEnumerable<UserGameWishlist>>(viewResult.ViewData.Model);
+            var wishlistItem = Assert.IsAssignableFrom<WishlistViewModel>(viewResult.ViewData.Model);
+        }
+
+        [Fact]
+        public async Task UserWishList_ReturnsViewResult()
+        {
+            // Arrange
+            GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
+
+            // Act
+            var result = await ControllerSUT.UserWishlist("bob");
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            Assert.Equal(nameof(WishlistController.Index), viewResult.ActionName);
+        }
+
+        [Fact]
+        public async Task UserWishList_NotFoundResult()
+        {
+            // Arrange
+            GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
+
+            // Act
+            var result = await ControllerSUT.UserWishlist("fred");
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async Task UserWishList_RedirectToActionResult()
+        {
+            // Arrange
+            GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
+            FindByNameAsyncReturns = new User { Id = 2, UserName = "fred", WishlistVisibility = WishlistVisibility.OnlyMe };
+
+            // Act
+            var result = await ControllerSUT.UserWishlist("fred");
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            Assert.Equal(nameof(FriendsController.Index), viewResult.ActionName);
+            Assert.Equal("Friends", viewResult.ControllerName);
+        }
+
+        [Fact]
+        public async Task UserWishList_RedirectToActionResult_WhenFriendshipIsPending()
+        {
+            // Arrange
+            GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
+            FindByNameAsyncReturns = new User { Id = 2, UserName = "fred", WishlistVisibility = WishlistVisibility.FriendsOnly };
+
+            // Act
+            var result = await ControllerSUT.UserWishlist("fred");
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            Assert.Equal(nameof(FriendsController.Index), viewResult.ActionName);
+            Assert.Equal("Friends", viewResult.ControllerName);
+        }
+
+        [Fact]
+        public async Task UserWishList_ReturnsViewResult_WhenSuccessful()
+        {
+            // Arrange
+            GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
+            FindByNameAsyncReturns = new User { Id = 2, UserName = "fred", WishlistVisibility = WishlistVisibility.Everyone };
+
+            // Act
+            var result = await ControllerSUT.UserWishlist("fred");
+
+            // Assert
+            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
+            var wishlistItem = Assert.IsAssignableFrom<WishlistViewModel>(viewResult.ViewData.Model);
         }
 
         [Fact]
@@ -42,8 +120,19 @@ namespace Sprint.Tests.Controllers
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<RedirectResult>(result);
+        }
 
-            Assert.Null(viewResult);
+        [Fact]
+        public async Task Add_ReturnsRedirectResult_WhenGameIsAdded()
+        {
+            // Arrange
+            GetUserAsyncReturns = new User { Id = 1 };
+
+            // Act
+            var result = await ControllerSUT.Add(1, "url");
+
+            // Assert
+            var redirectResult = Assert.IsAssignableFrom<RedirectResult>(result);
         }
 
         [Fact]
@@ -53,75 +142,108 @@ namespace Sprint.Tests.Controllers
             GetUserAsyncReturns = new User { Id = 1 };
 
             // Act
-            var result = await ControllerSUT.Add(1, "url");
+            var result = await ControllerSUT.Add(1, null);
 
             // Assert
-            var wishlistItem = Assert.IsAssignableFrom<UserGameWishlist>(_context.Users.FirstOrDefault(g => g.Id == 1));
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
 
-            Assert.Equal(nameof(WishlistController.Index), redirectResult.ActionName);
+            Assert.Equal(nameof(GameController.Index), redirectResult.ActionName);
+            Assert.Equal("Game", redirectResult.ControllerName);
         }
 
         [Fact]
-        public async Task Edit_ReturnsViewResult_WhenGameIdIsFound()
+        public async Task Edit_RedirectToAction_WhenGameIdIsFound()
         {
             // Arrange
-            GetUserAsyncReturns = new User { Id = 1 };
+            GetUserAsyncReturns = _context.Users.FirstOrDefault();
 
             // Act
             var result = await ControllerSUT.Edit(WishlistVisibility.OnlyMe);
 
             // Assert
-            var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var selectList = Assert.IsAssignableFrom<SelectList>(viewResult.ViewData["Wishlist"]);
-
-            Assert.NotEmpty(selectList);
+            var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
+            Assert.Equal(nameof(GameController.Index), viewResult.ActionName);
         }
 
-        [Theory]
-        [InlineData(WishlistVisibility.Everyone)]
-        [InlineData(WishlistVisibility.OnlyMe)]
-        [InlineData(WishlistVisibility.FriendsOnly)]
-        public async Task Edit_ReturnsNotFound_WhenGameIdIsNotFound(WishlistVisibility wishlistVisibility)
+        [Fact]
+        public async Task Remove_ReturnsRedirectResult_WhenGameIsRemoved()
         {
             // Arrange
-            GetUserAsyncReturns = new User { Id = 1 };
+            User user = _context.Users.FirstOrDefault();
+            Game game = _context.Games.FirstOrDefault();
+            GetUserAsyncReturns = _context.Users.FirstOrDefault();
+            _context.UserGameWishlists.Add(new UserGameWishlist {
+                UserId = user.Id,
+                GameId = game.GameId
+            });
+            await _context.SaveChangesAsync();
 
             // Act
-            var result = await ControllerSUT.Edit(wishlistVisibility);
+            var result = await ControllerSUT.Remove(1, "url");
 
             // Assert
-            Assert.IsAssignableFrom<NotFoundResult>(result);
+            var redirectResult = Assert.IsAssignableFrom<RedirectResult>(result);
         }
 
         [Fact]
         public async Task Remove_ReturnsRedirectToActionResult_WhenGameIsRemoved()
         {
             // Arrange
-            GetUserAsyncReturns = new User { Id = 1 };
+            User user = _context.Users.FirstOrDefault();
+            Game game = _context.Games.FirstOrDefault();
+            GetUserAsyncReturns = _context.Users.FirstOrDefault();
+            _context.UserGameWishlists.Add(new UserGameWishlist
+            {
+                UserId = user.Id,
+                GameId = game.GameId
+            });
+            await _context.SaveChangesAsync();
 
             // Act
-            var result = await ControllerSUT.Remove(1, "url");
+            var result = await ControllerSUT.Remove(1, null);
 
             // Assert
             var redirectResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
-            Assert.Null(_context.Games.FirstOrDefault(g => g.GameId == 1));
-            Assert.Equal(nameof(WishlistController.Index), redirectResult.ActionName);
         }
 
         [Theory]
-        [InlineData(null, "")]
         [InlineData(666, "url")]
-        public async Task Remove_ReturnsNotFound_WhenGameIdIsNotFound(int? gameId, string url)
+        public async Task Remove_ReturnsNotFound_WhenGameIdIsNotFound(int gameId, string url)
         {
             // Arrange
-            GetUserAsyncReturns = new User { Id = 1 };
+            GetUserAsyncReturns = _context.Users.FirstOrDefault();
 
             // Act
-            var result = await ControllerSUT.Remove((int)gameId, url);
+            var result = await ControllerSUT.Remove(gameId, url);
 
             // Assert
             Assert.IsAssignableFrom<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public void Remove_ReturnsRedirectResult_WhenNullOrEmpty()
+        {
+            // Arrange
+            GetUserAsyncReturns = _context.Users.FirstOrDefault();
+
+            // Act
+            var result = ControllerSUT.Remove("bob");
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectResult>(result);
+        }
+
+        [Fact]
+        public void Remove_ReturnsRedirectToActionResult_WhenNullOrEmpty()
+        {
+            // Arrange
+            GetUserAsyncReturns = _context.Users.FirstOrDefault();
+
+            // Act
+            var result = ControllerSUT.Remove(null);
+
+            // Assert
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
         }
     }
 }
