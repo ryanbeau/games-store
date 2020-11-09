@@ -33,12 +33,19 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
+            DateTime now = DateTime.Now;
+
             var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
                 .Where(w => w.UserId == user.Id)
                 .Select(w => new WishlistItemViewModel
                 {
-                    Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
+                    // image
+                    Image = w.Game.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
+                    // discount
+                    Discount = w.Game.Discounts.Where(d => d.DiscountPrice < w.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                        .OrderBy(d => d.DiscountPrice)
+                        .FirstOrDefault(),
                     IsInCart = false, // TODO : modify this when cart is developed
                     WishlistItem = w,
                 })
@@ -222,25 +229,18 @@ namespace Sprint.Controllers
 
             await _context.SaveChangesAsync();
 
-            if (!string.IsNullOrEmpty(returnUrl) && returnUrl != "GameIndex")
-            {
-                return Redirect(returnUrl);
-            }
-
             Game game = await _context.Games.FirstOrDefaultAsync(g => g.GameId == gameId);
             if (game != null)
             {
                 TempData["WishlistRemoved"] = $"Removed {game.Name} from wishlist";
             }
 
-            if (!string.IsNullOrEmpty(returnUrl) && returnUrl == "GameIndex")
+            if (!string.IsNullOrEmpty(returnUrl))
             {
-                return RedirectToAction("Index", "Game");
+                return Redirect(returnUrl);
             }
-            else
-            {
-                return RedirectToAction(nameof(Index));
-            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

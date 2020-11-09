@@ -220,6 +220,28 @@ namespace Sprint.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Discount",
+                columns: table => new
+                {
+                    DiscountId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GameId = table.Column<int>(nullable: false),
+                    DiscountPrice = table.Column<decimal>(nullable: false),
+                    DiscountStart = table.Column<DateTime>(nullable: false),
+                    DiscountFinish = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Discount", x => x.DiscountId);
+                    table.ForeignKey(
+                        name: "FK_Game_Discount",
+                        column: x => x.GameId,
+                        principalTable: "Game",
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GameImage",
                 columns: table => new
                 {
@@ -316,8 +338,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "50fe4003-658d-4d96-927c-6f8838573bdf", "Admin", "ADMIN" },
-                    { 2, "5cffdee3-b649-45f3-b80a-a6bd09e90a4a", "Member", "MEMBER" }
+                    { 1, "b852f83a-ac5d-4c3b-89ef-70e60c6f864b", "Admin", "ADMIN" },
+                    { 2, "416ac185-ceef-4d72-9656-01f52fa2083c", "Member", "MEMBER" }
                 });
 
             migrationBuilder.InsertData(
@@ -325,8 +347,8 @@ namespace Sprint.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "AccountNum", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "Gender", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "5e80d118-ad59-42bf-9c66-ba48af2aeec7", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "952ecb33-7200-498d-a3b7-d4e1228886ca", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAEPOaerGnl6OklqD1FhLN9MUw1hq46N5mvk1eudjRzWP+e0I8v2CekhaH4mKexrIvSg==", "555-555-5555", false, "", false, "admin" },
-                    { 2, 0, "b7f668ab-78b7-4634-941a-7a0d028eb1f6", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "811f7929-90e3-4496-8380-7bb4755f86e3", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEEhqbKcC5l4IvGVTw/L0dgXwGezmpB2iyzmQcWXTILMFLu/PWReW9fsPOCqQIARz0A==", "555-555-5555", false, "", false, "user" }
+                    { 1, 0, "7d93dc65-40da-4b95-b0a6-8785be7efd20", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "1f0b52f5-9fdc-4d96-9062-b31e2bd381d0", "admin@admin.com", true, "Other", false, null, "Admin", "ADMIN@ADMIN.COM", "ADMIN", "AQAAAAEAACcQAAAAELD/iRjSZGy7qSRxUj5R0y08sqY+WiVMY473Ef502bgnGK+WYMBBb37WjZiUBONofw==", "555-555-5555", false, "", false, "admin" },
+                    { 2, 0, "f75d8b70-ce0f-42c5-9c05-3f996b263b34", new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "0b792e51-b6fe-43cc-9835-8e94468178f5", "user@user.com", true, "Other", false, null, "User", "USER@USER.COM", "USER", "AQAAAAEAACcQAAAAEEcfez/McSJqZmI/rmoYmwnHRuYcuDvDW+qTvCgAdnyAk2FFYqECz/OOT3JGbgFHdw==", "555-555-5555", false, "", false, "user" }
                 });
 
             migrationBuilder.InsertData(
@@ -395,25 +417,38 @@ namespace Sprint.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Discount",
+                columns: new[] { "DiscountId", "DiscountFinish", "DiscountPrice", "DiscountStart", "GameId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2020, 12, 8, 23, 0, 0, 0, DateTimeKind.Unspecified), 19.99m, new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 30 },
+                    { 4, new DateTime(2020, 12, 25, 23, 0, 0, 0, DateTimeKind.Unspecified), 11.99m, new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 7 },
+                    { 6, new DateTime(2020, 12, 25, 23, 0, 0, 0, DateTimeKind.Unspecified), 11.59m, new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 5 },
+                    { 3, new DateTime(2020, 12, 8, 23, 0, 0, 0, DateTimeKind.Unspecified), 59.99m, new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 19 },
+                    { 2, new DateTime(2020, 12, 8, 23, 0, 0, 0, DateTimeKind.Unspecified), 2.69m, new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 26 },
+                    { 5, new DateTime(2020, 12, 25, 23, 0, 0, 0, DateTimeKind.Unspecified), 12.49m, new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 16 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "GameImage",
                 columns: new[] { "GameImageId", "GameId", "ImageType", "ImageURL" },
                 values: new object[,]
                 {
-                    { 4, 4, 1, "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png" },
-                    { 22, 22, 1, "https://cdn.steamgriddb.com/grid/56c12a4512e84416de450db11ab040c3.png" },
-                    { 21, 21, 1, "https://cdn.steamgriddb.com/grid/f5e083092550d2f93898e9829e677e39.png" },
-                    { 24, 24, 1, "https://cdn.steamgriddb.com/grid/ee955e252af3c85e66e15864e31174fe.png" },
-                    { 23, 23, 1, "https://cdn.steamgriddb.com/grid/4a8520defd77a137222438d72ed7afd2.png" },
-                    { 2, 2, 1, "https://cdn.steamgriddb.com/grid/097e232de59f809f5a1cdf88e1240b08.png" },
-                    { 28, 28, 1, "https://cdn.steamgriddb.com/grid/c9ee6a825655d889ae6a84bde2802bc2.png" },
-                    { 25, 25, 1, "https://cdn.steamgriddb.com/grid/c967fb654df41177901d1f5f135bf9e6.png" },
-                    { 26, 26, 1, "https://cdn.steamgriddb.com/grid/75c0aa52af187c4cd20744efafa1c7c7.png" },
-                    { 8, 8, 1, "https://cdn.steamgriddb.com/grid/5e26566dffe850373e9a5121703034a1.png" },
-                    { 7, 7, 1, "https://cdn.steamgriddb.com/grid/a3171cc0f610fdfdf460831fb25a3dc7.png" },
                     { 1, 1, 1, "https://cdn.steamgriddb.com/grid/4c22bd444899d3b6047a10b20a2f26db.png" },
+                    { 7, 7, 1, "https://cdn.steamgriddb.com/grid/a3171cc0f610fdfdf460831fb25a3dc7.png" },
+                    { 8, 8, 1, "https://cdn.steamgriddb.com/grid/5e26566dffe850373e9a5121703034a1.png" },
+                    { 26, 26, 1, "https://cdn.steamgriddb.com/grid/75c0aa52af187c4cd20744efafa1c7c7.png" },
+                    { 25, 25, 1, "https://cdn.steamgriddb.com/grid/c967fb654df41177901d1f5f135bf9e6.png" },
+                    { 28, 28, 1, "https://cdn.steamgriddb.com/grid/c9ee6a825655d889ae6a84bde2802bc2.png" },
+                    { 2, 2, 1, "https://cdn.steamgriddb.com/grid/097e232de59f809f5a1cdf88e1240b08.png" },
+                    { 23, 23, 1, "https://cdn.steamgriddb.com/grid/4a8520defd77a137222438d72ed7afd2.png" },
+                    { 24, 24, 1, "https://cdn.steamgriddb.com/grid/ee955e252af3c85e66e15864e31174fe.png" },
+                    { 21, 21, 1, "https://cdn.steamgriddb.com/grid/f5e083092550d2f93898e9829e677e39.png" },
+                    { 22, 22, 1, "https://cdn.steamgriddb.com/grid/56c12a4512e84416de450db11ab040c3.png" },
                     { 30, 30, 1, "https://cdn.steamgriddb.com/grid/60c60a4ffa03bde6f8c83533d465ef5c.png" },
-                    { 9, 9, 1, "https://cdn.steamgriddb.com/grid/c1537c9ed39baee3476c6fdd666b5fd8.png" },
+                    { 4, 4, 1, "https://cdn.steamgriddb.com/grid/7e04e496f1cf3896708f48127a7b65de.png" },
                     { 6, 6, 1, "https://cdn.steamgriddb.com/grid/5248e5118c84beea359b6ea385393661.png" },
+                    { 12, 12, 1, "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png" },
                     { 3, 3, 1, "https://cdn.steamgriddb.com/grid/b16a06a5ea94028944a81ad5bbdbb8ca.png" },
                     { 29, 29, 1, "https://cdn.steamgriddb.com/grid/5ec5d5702a083583b268f32dde14b419.png" },
                     { 27, 27, 1, "https://cdn.steamgriddb.com/grid/41b28a11da13a0384a9b75f95244e8e8.png" },
@@ -427,9 +462,14 @@ namespace Sprint.Migrations
                     { 18, 18, 1, "https://cdn.steamgriddb.com/grid/884738b4332ababd678ca505f4e04f4d.png" },
                     { 17, 17, 1, "https://cdn.steamgriddb.com/grid/ea3a48c74a9efb9a08635fe7990347cc.png" },
                     { 14, 14, 1, "https://cdn.steamgriddb.com/grid/5549f6da5ec3b191b672e682e4735d71.png" },
-                    { 12, 12, 1, "https://cdn.steamgriddb.com/grid/6db2fc0f9848c8830f2c5ad73e78ea75.png" },
+                    { 9, 9, 1, "https://cdn.steamgriddb.com/grid/c1537c9ed39baee3476c6fdd666b5fd8.png" },
                     { 13, 13, 1, "https://cdn.steamgriddb.com/grid/2a574bcb25a0ae1faad7c630370e6234.png" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Discount_GameId",
+                table: "Discount",
+                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Game_GameTypeId",
@@ -501,6 +541,9 @@ namespace Sprint.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Discount");
+
             migrationBuilder.DropTable(
                 name: "GameImage");
 

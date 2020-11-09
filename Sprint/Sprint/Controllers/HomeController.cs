@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Sprint.Data;
 using Sprint.Enums;
-using Sprint.Models;
 using Sprint.ViewModels;
 
 namespace Sprint.Controllers
@@ -26,16 +24,27 @@ namespace Sprint.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var bannerGames = await _context.GameImages
-                .Where(i => i.ImageType == ImageType.Banner)
-                .Include(i => i.Game)
-                .OrderBy(r => Guid.NewGuid())
-                .Take(8)
-                .ToListAsync();
+            DateTime now = DateTime.Now;
 
-            ViewData["BannerImages"] = bannerGames;
+            var homeViewModel = new HomeViewModel
+            {
+                BannerGames = await _context.GameImages
+                    .Where(i => i.ImageType == ImageType.Banner)
+                    .Include(i => i.Game)
+                    .OrderBy(r => Guid.NewGuid())
+                    .Take(8)
+                    .Select(i => new GameItemViewModel
+                    {
+                        Discount = i.Game.Discounts.Where(d => d.DiscountPrice < i.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                            .OrderBy(d => d.DiscountPrice)
+                            .FirstOrDefault(),
+                        Image = i,
+                        Game = i.Game,
+                    })
+                    .ToListAsync(),
+            };
 
-            return View();
+            return View(homeViewModel);
         }
 
         public IActionResult Privacy()

@@ -266,6 +266,7 @@ namespace Sprint.Data
                 entity.Property(e => e.RegularPrice)
                     .IsRequired()
                     .HasColumnName("RegularPrice")
+                    .HasColumnType("decimal(18,4)")
                     .HasDefaultValue(0);
 
                 entity.Property(e => e.GameTypeId).HasColumnName("GameTypeId");
@@ -289,6 +290,7 @@ namespace Sprint.Data
                     .IsRequired();
 
                 entity.Property(e => e.DiscountPrice).HasColumnName("DiscountPrice")
+                    .HasColumnType("decimal(18,4)")
                     .IsRequired();
 
                 entity.Property(e => e.DiscountStart).HasColumnName("DiscountStart")

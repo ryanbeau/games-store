@@ -127,7 +127,7 @@
                     {
                         GameItemViewModel item = Model.Games[i + j];
 
-                        <div class="col-md-4 mb-4">
+                        <div class="col-lg-4 mb-4">
                             <a asp-action="Details" asp-route-id="@item.Game.GameId" class="text-decoration-none">
                                 <div class="moist-card moist-shadow rounded h-100">
                                     @if (item.Image == null)
@@ -138,27 +138,37 @@
                                     {
                                         <img class="card-img-top moist-card-img" src="@Url.Content(item.Image.ImageURL)" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;">
                                     }
-                                    <div class="card-body gradient-buttons">
-                                        <p class="card-text text-dark">@item.Game.Name</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="btn-group hide">
+                                    <div class="card-body gradient-buttons p-2 pb-3">
+                                        <p class="card-text text-dark m-0 p-0 pb-1">@item.Game.Name</p>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="btn-group hide mr-auto">
                                                 @if (item.IsWishlisted)
                                                 {
-                                                    <form class="w-100" asp-route-gameid="@item.Game.GameId" asp-route-returnUrl="GameIndex" asp-controller="Wishlist" asp-action="Remove">
-                                                        <button type="submit" class="btn btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
+                                                    <form asp-route-gameid="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Wishlist" asp-action="Remove">
+                                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
                                                     </form>
                                                 }
                                                 else
                                                 {
-                                                    <form class="w-100" asp-route-gameid="@item.Game.GameId" asp-controller="Wishlist" asp-action="Add">
+                                                    <form asp-route-gameid="@item.Game.GameId" asp-controller="Wishlist" asp-action="Add">
                                                         <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark" aria-hidden="true"></i></button>
                                                     </form>
                                                 }
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
+                                                <form>
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
+                                                </form>
                                             </div>
-                                            @if (item.Game.RegularPrice > 0)
+                                            @if (item.Discount != null && item.Game.RegularPrice != 0)
                                             {
-                                                <p class="text-dark font-weight-bold mt-1 mb-0">@item.Game.RegularPrice</p>
+                                                <span class="moist-discount-percent shadow rounded">@string.Format("{0:0%}", item.Discount.DiscountPrice / item.Game.RegularPrice)</span>
+                                                <div class="ml-2">
+                                                    <span class="moist-discount-regular-price text-secondary">@item.Game.RegularPrice</span>
+                                                    <span class="moist-discount-price text-dark">@item.Discount.DiscountPrice</span>
+                                                </div>
+                                            }
+                                            else if (item.Game.RegularPrice > 0)
+                                            {
+                                                <h5 class="text-dark font-weight-bold mt-1 mb-0">@item.Game.RegularPrice</h5>
                                             }
                                         </div>
                                     </div>

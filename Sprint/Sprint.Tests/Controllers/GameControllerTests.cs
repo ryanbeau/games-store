@@ -42,7 +42,7 @@ namespace Sprint.Tests.Controllers
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            Assert.IsAssignableFrom<Game>(viewResult.ViewData.Model);
+            Assert.IsAssignableFrom<GameViewModel>(viewResult.ViewData.Model);
         }
 
         [Theory]

@@ -20,6 +20,39 @@ body {
     padding: 20px;
 }
 
+.moist-banner-title {
+    font-size: 25px;
+    line-height: 30px;
+    font-weight: 700;
+}
+
+.moist-discount-percent {
+    background-color: #216eb9;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 9px 8px;
+    line-height: 12px;
+    font-weight: 700;
+}
+
+.moist-discount-regular-price {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 600;
+    text-decoration: line-through;
+    font-style: italic;
+    text-align: right;
+    display: block;
+}
+
+.moist-discount-price {
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 700;
+    text-align: right;
+    display: block;
+}
+
 .moist-card {
     background-color: #d3d3d3;
 }
@@ -42,6 +75,10 @@ body {
 
 .moist-shadow {
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.5) !important;
+}
+
+.moist-tooltip:hover .moist-tooltiptext {
+    visibility: visible;
 }
 
 .gradient-buttons .btn {

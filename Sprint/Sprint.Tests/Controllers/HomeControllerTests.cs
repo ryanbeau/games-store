@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sprint.Controllers;
-using Sprint.Models;
-using System.Collections.Generic;
+using Sprint.ViewModels;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -24,8 +23,8 @@ namespace Sprint.Tests.Controllers
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
-            var bannerImages = Assert.IsAssignableFrom<IEnumerable<GameImage>>(viewResult.ViewData["BannerImages"]);
-            Assert.NotEmpty(bannerImages);
+            var homeViewModel = Assert.IsAssignableFrom<HomeViewModel>(viewResult.Model);
+            Assert.NotEmpty(homeViewModel.BannerGames);
         }
     }
 }
