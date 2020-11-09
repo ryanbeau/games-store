@@ -405,6 +405,89 @@ namespace Sprint.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Sprint.Models.GameDiscount", b =>
+                {
+                    b.Property<int>("DiscountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("DiscountId")
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DiscountFinish")
+                        .HasColumnName("DiscountFinish")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DiscountPrice")
+                        .HasColumnName("DiscountPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("DiscountStart")
+                        .HasColumnName("DiscountStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GameId")
+                        .HasColumnName("GameId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DiscountId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Discount");
+
+                    b.HasData(
+                        new
+                        {
+                            DiscountId = 1,
+                            DiscountFinish = new DateTime(2020, 12, 8, 23, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountPrice = 19.99m,
+                            DiscountStart = new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 30
+                        },
+                        new
+                        {
+                            DiscountId = 2,
+                            DiscountFinish = new DateTime(2020, 12, 8, 23, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountPrice = 2.69m,
+                            DiscountStart = new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 26
+                        },
+                        new
+                        {
+                            DiscountId = 3,
+                            DiscountFinish = new DateTime(2020, 12, 8, 23, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountPrice = 59.99m,
+                            DiscountStart = new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 19
+                        },
+                        new
+                        {
+                            DiscountId = 4,
+                            DiscountFinish = new DateTime(2020, 12, 25, 23, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountPrice = 11.99m,
+                            DiscountStart = new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 7
+                        },
+                        new
+                        {
+                            DiscountId = 5,
+                            DiscountFinish = new DateTime(2020, 12, 25, 23, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountPrice = 12.49m,
+                            DiscountStart = new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 16
+                        },
+                        new
+                        {
+                            DiscountId = 6,
+                            DiscountFinish = new DateTime(2020, 12, 25, 23, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiscountPrice = 11.59m,
+                            DiscountStart = new DateTime(2020, 11, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            GameId = 5
+                        });
+                });
+
             modelBuilder.Entity("Sprint.Models.GameImage", b =>
                 {
                     b.Property<int>("GameImageId")
@@ -786,14 +869,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "50fe4003-658d-4d96-927c-6f8838573bdf",
+                            ConcurrencyStamp = "b852f83a-ac5d-4c3b-89ef-70e60c6f864b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "5cffdee3-b649-45f3-b80a-a6bd09e90a4a",
+                            ConcurrencyStamp = "416ac185-ceef-4d72-9656-01f52fa2083c",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -907,9 +990,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "5e80d118-ad59-42bf-9c66-ba48af2aeec7",
+                            AccountNum = "7d93dc65-40da-4b95-b0a6-8785be7efd20",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "952ecb33-7200-498d-a3b7-d4e1228886ca",
+                            ConcurrencyStamp = "1f0b52f5-9fdc-4d96-9062-b31e2bd381d0",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -917,7 +1000,7 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPOaerGnl6OklqD1FhLN9MUw1hq46N5mvk1eudjRzWP+e0I8v2CekhaH4mKexrIvSg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELD/iRjSZGy7qSRxUj5R0y08sqY+WiVMY473Ef502bgnGK+WYMBBb37WjZiUBONofw==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -929,9 +1012,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "b7f668ab-78b7-4634-941a-7a0d028eb1f6",
+                            AccountNum = "f75d8b70-ce0f-42c5-9c05-3f996b263b34",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "811f7929-90e3-4496-8380-7bb4755f86e3",
+                            ConcurrencyStamp = "0b792e51-b6fe-43cc-9835-8e94468178f5",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -939,7 +1022,7 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEhqbKcC5l4IvGVTw/L0dgXwGezmpB2iyzmQcWXTILMFLu/PWReW9fsPOCqQIARz0A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEcfez/McSJqZmI/rmoYmwnHRuYcuDvDW+qTvCgAdnyAk2FFYqECz/OOT3JGbgFHdw==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
@@ -1073,6 +1156,15 @@ namespace Sprint.Migrations
                         .WithMany("Games")
                         .HasForeignKey("GameTypeId")
                         .HasConstraintName("FK_Game_GameType")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sprint.Models.GameDiscount", b =>
+                {
+                    b.HasOne("Sprint.Models.Game", "Game")
+                        .WithMany("Discounts")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Game_Discount")
                         .IsRequired();
                 });
 

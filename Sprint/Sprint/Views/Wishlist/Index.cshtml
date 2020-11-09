@@ -7,6 +7,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="container">
     <div class="row">
         <div class="col-md">
@@ -51,6 +53,7 @@
                 <th>Name</th>
                 <th>Developer</th>
                 <th>Date Added</th>
+                <th>Price</th>
                 <th></th>
             </tr>
         </thead>
@@ -74,6 +77,28 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => dateAdded)
+                    </td>
+                    <td>
+                        @if (item.Discount != null)
+                        {
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <span class="moist-discount-regular-price text-secondary">@item.WishlistItem.Game.RegularPrice</span>
+                                    <span class="moist-discount-price text-light">@item.Discount.DiscountPrice</span>
+                                </div>
+                                <span class="moist-discount-percent shadow rounded moist-tooltip">
+                                    @string.Format("{0:0%}", item.Discount.DiscountPrice / item.WishlistItem.Game.RegularPrice)
+                                </span>
+                            </div>
+                            <small class="text-secondary">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                @(item.Discount.DiscountFinish.ToString("MMM dd h:mm tt"))
+                            </small>
+                        }
+                        else
+                        {
+                            <h5 class="text-light font-weight-bold">@item.WishlistItem.Game.RegularPrice</h5>
+                        }
                     </td>
                     <td>
                         @if (Model.Authorized)

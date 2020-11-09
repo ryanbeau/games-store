@@ -6,6 +6,7 @@ namespace Sprint.ViewModels
     {
         public bool IsInCart { get; set; }
         public GameImage Image { get; set; }
+        public GameDiscount Discount { get; set; }
 
         public UserGameWishlist WishlistItem { get; set; }
     }

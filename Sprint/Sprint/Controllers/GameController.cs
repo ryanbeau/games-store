@@ -38,6 +38,8 @@ namespace Sprint.Controllers
             // user
             User user = await _userManager.GetUserAsync(User);
 
+            DateTime now = DateTime.Now;
+
             // query games
             IQueryable<Game> gamesQuery = _context.Games.Include(g => g.GameType);
             gamesQuery = FilterBySearch(gamesQuery, search);
@@ -48,9 +50,13 @@ namespace Sprint.Controllers
                 {
                     Game = g,
                     // get first Banner image
-                    Image = _context.GameImages.FirstOrDefault(i => i.GameId == g.GameId && i.ImageType == ImageType.Banner),
+                    Image = g.GameImages.FirstOrDefault(i => i.GameId == g.GameId && i.ImageType == ImageType.Banner),
                     // if game is wishlisted
-                    IsWishlisted = user != null && _context.UserGameWishlists.Any(w => w.GameId == g.GameId && w.UserId == user.Id),
+                    IsWishlisted = user != null && g.Wishlists.Any(w => w.UserId == user.Id),
+                    // discount - if in date range and below regular price
+                    Discount = g.Discounts.Where(d => d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                        .OrderBy(d => d.DiscountPrice)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 
@@ -86,17 +92,31 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            Game game = await _context.Games
+            DateTime now = DateTime.Now;
+            User user = await _userManager.GetUserAsync(User);
+
+            GameViewModel game = await _context.Games
                 .Include(g => g.GameType)
                 .Include(g => g.GameImages)
-                .FirstOrDefaultAsync(m => m.GameId == id);
+                .Where(g => g.GameId == id)
+                .Select(g => new GameViewModel
+                {
+                    Discount = g.Discounts
+                        .Where(d => d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                        .OrderBy(d => d.DiscountPrice)
+                        .FirstOrDefault(),
+                    IsWishlisted = user != null && g.Wishlists.Any(w => w.UserId == user.Id),
+                    // TODO : Is In Cart
+                    // TODO : Is Owned
+                    Game = g,
+                })
+                .FirstOrDefaultAsync();
 
             if (game == null)
             {
                 return NotFound();
             }
 
-            ViewData["IsWishlisted"] = await IsGameWishlisted(game.GameId);
             return View(game);
         }
 
@@ -212,16 +232,6 @@ namespace Sprint.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> IsGameWishlisted(int id)
-        {
-            User user = await _userManager.GetUserAsync(User);
-            if (user != null)
-            {
-                return await _context.UserGameWishlists.AnyAsync(w => w.GameId == id && w.UserId == user.Id);
-            }
-            return false;
-        }
-
         private IQueryable<Game> FilterByPrice(IQueryable<Game> gamesQuery, FilterPrice price) => price switch
         {
             FilterPrice.u6 => gamesQuery.Where(g => g.RegularPrice < 6),
@@ -231,6 +241,7 @@ namespace Sprint.Controllers
             FilterPrice.u30 => gamesQuery.Where(g => g.RegularPrice < 30),
             FilterPrice.a30 => gamesQuery.Where(g => g.RegularPrice >= 30),
             FilterPrice.free => gamesQuery.Where(g => g.RegularPrice == 0),
+            FilterPrice.discounted => gamesQuery.Where(g => g.Discounts.Any(d => d.DiscountStart <= DateTime.Now && d.DiscountFinish > DateTime.Now)),
             _ => gamesQuery,
         };
 

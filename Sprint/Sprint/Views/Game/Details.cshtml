@@ -1,31 +1,46 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 
-@model Sprint.Models.Game
+@model Sprint.ViewModels.GameViewModel
 
 @{
-    ViewData["Title"] = @Model.Name;
+    ViewData["Title"] = @Model.Game.Name;
 }
 
-<h1>@Model.Name</h1>
+<h1>@Model.Game.Name</h1>
 
 <div class="container">
     <div class="row">
         <div class="col-sm-8">
-            @foreach (var image in Model.GameImages)
+            @foreach (var image in Model.Game.GameImages)
             {
                 <img class="img-fluid" src="@image.ImageURL">
             }
         </div>
         <div class="col-md-4">
-            <h5 class="text-light">@Html.DisplayNameFor(model => model.Developer)</h5>
-            <p class="text-light">@Html.DisplayFor(model => model.Developer)</p>
+            <h5 class="text-light">@Html.DisplayNameFor(model => model.Game.Developer)</h5>
+            <p class="text-light">@Html.DisplayFor(model => model.Game.Developer)</p>
 
-            <h5 class="text-light">@Html.DisplayNameFor(model => model.GameType)</h5>
-            <p class="text-light">@Html.DisplayFor(model => model.GameType.Name)</p>
+            <h5 class="text-light">@Html.DisplayNameFor(model => model.Game.GameType)</h5>
+            <p class="text-light">@Html.DisplayFor(model => model.Game.GameType.Name)</p>
 
-            <h5 class="text-light">@Html.DisplayNameFor(model => model.RegularPrice)</h5>
-            <p class="text-light">@Html.DisplayFor(model => model.RegularPrice)</p>
+            @if (Model.Discount != null)
+            {
+                <h5 class="text-light">@Html.DisplayNameFor(model => model.Discount.DiscountPrice)</h5>
+                <div class="d-flex p-2">
+                    <div class="mr-2">
+                        <span class="moist-discount-regular-price text-secondary">@Model.Game.RegularPrice</span>
+                        <span class="moist-discount-price text-light">@Model.Discount.DiscountPrice</span>
+                    </div>
+                    <span class="moist-discount-percent rounded">@string.Format("{0:0%}", Model.Discount.DiscountPrice / Model.Game.RegularPrice)</span>
+                </div>
+                <small class="text-secondary">Deal ends: @(Model.Discount.DiscountFinish.ToString("MMM dd yyyy h:mm tt"))</small>
+            }
+            else
+            {
+                <h5 class="text-light">@Html.DisplayNameFor(model => model.Game.RegularPrice)</h5>
+                <p class="text-light">@Html.DisplayFor(model => model.Game.RegularPrice)</p>
+            }
         </div>
     </div>
 
@@ -35,15 +50,15 @@
         @if (SignInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
         {
             <div class="col-sm-4">
-                @if (ViewBag.IsWishlisted)
+                @if (Model.IsWishlisted)
                 {
-                    <form class="w-100" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.GameId })">
+                    <form class="w-100" asp-route-gameid="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
                         <button type="submit" class="btn btn-primary w-100">Remove from wishlist</button>
                     </form>
                 }
                 else
                 {
-                    <form class="w-100" asp-route-gameid="@Model.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.GameId })">
+                    <form class="w-100" asp-route-gameid="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
                         <button type="submit" class="btn btn-primary w-100">Add to wishlist</button>
                     </form>
                 }
@@ -55,10 +70,10 @@
         else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
         {
             <div class="col-sm-4">
-                <a class="btn btn-primary btn-danger w-100" role="button" asp-action="Delete" asp-route-id="@Model.GameId">Delete</a>
+                <a class="btn btn-primary btn-danger w-100" role="button" asp-action="Delete" asp-route-id="@Model.Game.GameId">Delete</a>
             </div>
             <div class="col-sm-4">
-                <a class="btn btn-primary w-100" role="button" asp-action="Edit" asp-route-id="@Model.GameId">Edit</a>
+                <a class="btn btn-primary w-100" role="button" asp-action="Edit" asp-route-id="@Model.Game.GameId">Edit</a>
             </div>
         }
         <div class="col-sm-4">
