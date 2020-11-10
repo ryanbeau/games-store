@@ -3,7 +3,7 @@
 @model Sprint.ViewModels.WishlistViewModel
 
 @{
-    ViewData["Title"] = $"{Model.Username}'s Wishlist";
+    ViewData["Title"] = $"{Model.User.UserName}'s Wishlist";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,10 +12,10 @@
 <div class="container">
     <div class="row">
         <div class="col-md">
-            <h4 class="text-light font-weight-light text-uppercase">@Model.Username's Wishlist</h4>
+            <h4 class="text-light font-weight-light text-uppercase">@Model.User.UserName's Wishlist</h4>
         </div>
 
-        @if (Model.Authorized)
+        @if (User.Identity.Name == Model.User.UserName)
         {
             <div class="col-md">
                 <form class="form-inline float-right mb-2" asp-action="Edit">
@@ -55,6 +55,7 @@
                 <th>Date Added</th>
                 <th>Price</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -70,7 +71,7 @@
                         </a>
                     </td>
                     <td>
-                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.WishlistItem.Game.GameId"  class="text-decoration-none" style="color:white">@Html.DisplayFor(modelItem => item.WishlistItem.Game.Name)</a>
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.WishlistItem.Game.GameId" class="text-decoration-none" style="color:white">@Html.DisplayFor(modelItem => item.WishlistItem.Game.Name)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.WishlistItem.Game.Developer)
@@ -101,10 +102,18 @@
                         }
                     </td>
                     <td>
-                        @if (Model.Authorized)
+                        @if (!item.IsInCart)
                         {
-                            <form class="form-inline" asp-route-gameid="@item.WishlistItem.Game.GameId" asp-action="Remove">
-                                <button type="submit" class="btn btn-primary btn-block btn-sm">Remove</button>
+                            <form asp-route-gameId="@item.WishlistItem.Game.GameId" asp-route-recipientUserId="@Model.User.Id" asp-controller="Cart" asp-action="Add">
+                                <button type="submit" class="btn btn-light btn-outline-secondary" title="Add to cart"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        @if (User.Identity.Name == Model.User.UserName)
+                        {
+                            <form asp-route-gameId="@item.WishlistItem.Game.GameId" asp-controller="Wishlist" asp-action="Remove">
+                                <button type="submit" class="btn btn-link" title="Remove"><i class="fa fa-times text-danger" aria-hidden="true"></i></button>
                             </form>
                         }
                     </td>

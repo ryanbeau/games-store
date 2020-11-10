@@ -8,6 +8,7 @@ namespace Sprint.Models
         public Game()
         {
             Reviews = new HashSet<Review>();
+            CartItems = new HashSet<CartGame>();
             GameImages = new HashSet<GameImage>();
             Wishlists = new HashSet<UserGameWishlist>();
             Discounts = new HashSet<GameDiscount>();
@@ -24,6 +25,7 @@ namespace Sprint.Models
         [Display(Name = "Game Type")]
         public virtual GameType GameType { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<CartGame> CartItems { get; set; }
         public virtual ICollection<GameImage> GameImages { get; set; }
         public virtual ICollection<UserGameWishlist> Wishlists { get; set; }
         public virtual ICollection<GameDiscount> Discounts { get; set; }

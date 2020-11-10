@@ -46,15 +46,14 @@ namespace Sprint.Controllers
                     Discount = w.Game.Discounts.Where(d => d.DiscountPrice < w.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                         .OrderBy(d => d.DiscountPrice)
                         .FirstOrDefault(),
-                    IsInCart = false, // TODO : modify this when cart is developed
+                    IsInCart = _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
                     WishlistItem = w,
                 })
                 .ToListAsync();
 
             return View(new WishlistViewModel
             {
-                Authorized = true,
-                Username = user.UserName,
+                User = user,
                 WishlistVisibility = user.WishlistVisibility,
                 Games = wishlistGames
             });
@@ -103,15 +102,14 @@ namespace Sprint.Controllers
                 .Select(w => new WishlistItemViewModel
                 {
                     Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
-                    IsInCart = false, // TODO : modify this when cart is developed
+                    IsInCart = _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == wishlistUser.Id),
                     WishlistItem = w,
                 })
                 .ToListAsync();
 
             return View("Index", new WishlistViewModel
             {
-                Authorized = false,
-                Username = wishlistUser.Name,
+                User = wishlistUser,
                 WishlistVisibility = wishlistUser.WishlistVisibility,
                 Games = wishlistGames
             });
