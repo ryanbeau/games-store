@@ -1,9 +1,11 @@
-﻿@using Sprint.ViewModels
+﻿@using Microsoft.AspNetCore.Identity
+@using Sprint.ViewModels
+@inject SignInManager<User> SignInManager
 
 @model Sprint.ViewModels.GameIndexViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Games";
 }
 
 <script>
@@ -19,7 +21,6 @@
 
 @if (TempData["WishlistAdded"] is string)
 {
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="alert alert-success" role="alert">
         <i class="fa fa-heart mr-2" aria-hidden="true"></i>@TempData["WishlistAdded"]
     </div>
@@ -27,7 +28,6 @@
 
 @if (TempData["WishlistRemoved"] is string)
 {
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="alert alert-secondary" role="alert">
         <i class="fa fa-times-circle mr-2" aria-hidden="true"></i>@TempData["WishlistRemoved"]
     </div>
@@ -36,7 +36,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3 mt-2">
-            <h5 class="text-light text-left font-weight-light">Games</h5>
+            <h4 class="text-light font-weight-light text-uppercase">Games</h4>
         </div>
 
         <div class="col-sm-9">
@@ -141,23 +141,35 @@
                                     <div class="card-body gradient-buttons p-2 pb-3">
                                         <p class="card-text text-dark m-0 p-0 pb-1">@item.Game.Name</p>
                                         <div class="d-flex justify-content-between">
-                                            <div class="btn-group hide mr-auto">
-                                                @if (item.IsWishlisted)
-                                                {
-                                                    <form asp-route-gameid="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Wishlist" asp-action="Remove">
-                                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
-                                                    </form>
-                                                }
-                                                else
-                                                {
-                                                    <form asp-route-gameid="@item.Game.GameId" asp-controller="Wishlist" asp-action="Add">
-                                                        <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark" aria-hidden="true"></i></button>
-                                                    </form>
-                                                }
-                                                <form>
-                                                    <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
-                                                </form>
-                                            </div>
+                                            @if (SignInManager.IsSignedIn(User))
+                                            {
+                                                <div class="btn-group hide mr-auto">
+                                                    @if (item.IsWishlisted)
+                                                    {
+                                                        <form asp-route-gameId="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Wishlist" asp-action="Remove">
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form asp-route-gameId="@item.Game.GameId" asp-controller="Wishlist" asp-action="Add">
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark" aria-hidden="true"></i></button>
+                                                        </form>
+                                                    }
+                                                    @if (item.IsInCart)
+                                                    {
+                                                        <form asp-route-gameId="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Cart" asp-action="Remove">
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-success" aria-hidden="true"></i></button>
+                                                        </form>
+                                                    }
+                                                    else
+                                                    {
+                                                        <form asp-route-gameId="@item.Game.GameId" asp-controller="Cart" asp-action="Add">
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
+                                                        </form>
+                                                    }
+                                                </div>
+                                            }
                                             @if (item.Discount != null && item.Game.RegularPrice != 0)
                                             {
                                                 <span class="moist-discount-percent shadow rounded">@string.Format("{0:0%}", item.Discount.DiscountPrice / item.Game.RegularPrice)</span>

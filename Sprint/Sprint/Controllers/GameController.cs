@@ -45,16 +45,23 @@ namespace Sprint.Controllers
             gamesQuery = FilterBySearch(gamesQuery, search);
             gamesQuery = FilterByPrice(gamesQuery, ePrice);
             gamesQuery = FilterByCategory(gamesQuery, category);
+
             var games = await gamesQuery
                 .Select(g => new GameItemViewModel
                 {
                     Game = g,
-                    // get first Banner image
-                    Image = g.GameImages.FirstOrDefault(i => i.GameId == g.GameId && i.ImageType == ImageType.Banner),
-                    // if game is wishlisted
-                    IsWishlisted = user != null && g.Wishlists.Any(w => w.UserId == user.Id),
-                    // discount - if in date range and below regular price
-                    Discount = g.Discounts.Where(d => d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                    
+                    Image = _context.GameImages
+                        .FirstOrDefault(i => i.GameId == g.GameId && i.ImageType == ImageType.Banner),
+                    
+                    IsWishlisted = user != null && _context.UserGameWishlists
+                        .Any(w => w.GameId == g.GameId && w.UserId == user.Id),
+                    
+                    IsInCart = user != null && _context.CartGames
+                        .Any(c => c.GameId == g.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
+                    
+                    Discount = _context.GameDiscounts
+                        .Where(d => d.GameId == g.GameId && d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                         .OrderBy(d => d.DiscountPrice)
                         .FirstOrDefault()
                 })
@@ -95,29 +102,33 @@ namespace Sprint.Controllers
             DateTime now = DateTime.Now;
             User user = await _userManager.GetUserAsync(User);
 
-            GameViewModel game = await _context.Games
+            Game game = _context.Games
                 .Include(g => g.GameType)
                 .Include(g => g.GameImages)
-                .Where(g => g.GameId == id)
-                .Select(g => new GameViewModel
-                {
-                    Discount = g.Discounts
-                        .Where(d => d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
-                        .OrderBy(d => d.DiscountPrice)
-                        .FirstOrDefault(),
-                    IsWishlisted = user != null && g.Wishlists.Any(w => w.UserId == user.Id),
-                    // TODO : Is In Cart
-                    // TODO : Is Owned
-                    Game = g,
-                })
-                .FirstOrDefaultAsync();
+                .FirstOrDefault(g => g.GameId == id);
 
             if (game == null)
             {
                 return NotFound();
             }
 
-            return View(game);
+            return View(new GameViewModel
+            {
+                Game = game,
+
+                Discount = _context.GameDiscounts
+                    .Where(d => d.GameId == game.GameId && d.DiscountPrice < game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                    .OrderBy(d => d.DiscountPrice)
+                    .FirstOrDefault(),
+
+                IsWishlisted = user != null && _context.UserGameWishlists
+                        .Any(w => w.GameId == game.GameId && w.UserId == user.Id),
+
+                IsInCart = user != null && _context.CartGames
+                        .Any(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
+
+                // TODO : Is Owned
+            });
         }
 
         // GET: Game/Create

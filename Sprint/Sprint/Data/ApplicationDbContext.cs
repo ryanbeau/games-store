@@ -14,6 +14,7 @@ namespace Sprint.Data
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<CartGame> CartGames { get; set; }
         public virtual DbSet<UserGameWishlist> UserGameWishlists { get; set; }
         public virtual DbSet<UserRelationship> UserRelationships { get; set; }
 
@@ -266,7 +267,7 @@ namespace Sprint.Data
                 entity.Property(e => e.RegularPrice)
                     .IsRequired()
                     .HasColumnName("RegularPrice")
-                    .HasColumnType("decimal(18,4)")
+                    .HasColumnType("decimal(18,2)")
                     .HasDefaultValue(0);
 
                 entity.Property(e => e.GameTypeId).HasColumnName("GameTypeId");
@@ -290,7 +291,7 @@ namespace Sprint.Data
                     .IsRequired();
 
                 entity.Property(e => e.DiscountPrice).HasColumnName("DiscountPrice")
-                    .HasColumnType("decimal(18,4)")
+                    .HasColumnType("decimal(18,2)")
                     .IsRequired();
 
                 entity.Property(e => e.DiscountStart).HasColumnName("DiscountStart")
@@ -302,6 +303,7 @@ namespace Sprint.Data
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.Discounts)
                     .HasForeignKey(d => d.GameId)
+                    .HasPrincipalKey(d => d.GameId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Game_Discount");
             });
@@ -342,6 +344,50 @@ namespace Sprint.Data
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Review_User");
+            });
+
+            modelBuilder.Entity<CartGame>(entity =>
+            {
+                entity.HasKey(e => e.CartGameId);
+
+                entity.ToTable("CartGame");
+
+                entity.Property(p => p.CartGameId)
+                    .HasColumnName("CartGameId")
+                    .UseIdentityColumn();
+
+                entity.Property(e => e.CartUserId)
+                    .HasColumnName("UserId")
+                    .IsRequired();
+
+                entity.Property(e => e.ReceivingUserId)
+                    .HasColumnName("ReceivingUserId")
+                    .IsRequired();
+
+                entity.Property(e => e.GameId)
+                    .HasColumnName("GameId")
+                    .IsRequired();
+
+                entity.HasIndex(b => new { b.CartUserId, b.ReceivingUserId, b.GameId })
+                    .IsUnique();
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartGame_Game");
+
+                entity.HasOne(d => d.CartUser)
+                    .WithMany(p => p.CartItems)
+                    .HasForeignKey(d => d.CartUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartGame_CartUser");
+
+                entity.HasOne(d => d.ReceivingUser)
+                    .WithMany(p => p.ReceivingCartItems)
+                    .HasForeignKey(d => d.ReceivingUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartGame_ReceivingUser");
             });
 
             modelBuilder.Entity<UserGameWishlist>(entity =>
