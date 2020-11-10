@@ -7,9 +7,13 @@
     ViewData["Title"] = @Model.Game.Name;
 }
 
-<h1>@Model.Game.Name</h1>
-
 <div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h4 class="text-light font-weight-light text-uppercase">@Model.Game.Name</h4>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-8">
             @foreach (var image in Model.Game.GameImages)
@@ -52,19 +56,30 @@
             <div class="col-sm-4">
                 @if (Model.IsWishlisted)
                 {
-                    <form class="w-100" asp-route-gameid="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
                         <button type="submit" class="btn btn-primary w-100">Remove from wishlist</button>
                     </form>
                 }
                 else
                 {
-                    <form class="w-100" asp-route-gameid="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
                         <button type="submit" class="btn btn-primary w-100">Add to wishlist</button>
                     </form>
                 }
             </div>
             <div class="col-sm-4">
-                <a class="btn btn-primary w-100" role="button" asp-area="" asp-controller="Game" asp-action="Index">Add to Cart</a>
+                @if (Model.IsInCart)
+                {
+                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Cart" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                        <button type="submit" class="btn btn-primary w-100">Remove from Cart</button>
+                    </form>
+                }
+                else
+                {
+                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                        <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                    </form>
+                }
             </div>
         }
         else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))

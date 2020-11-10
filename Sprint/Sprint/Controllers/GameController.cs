@@ -124,7 +124,8 @@ namespace Sprint.Controllers
                 IsWishlisted = user != null && _context.UserGameWishlists
                         .Any(w => w.GameId == game.GameId && w.UserId == user.Id),
 
-                // TODO : Is In Cart
+                IsInCart = user != null && _context.CartGames
+                        .Any(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
 
                 // TODO : Is Owned
             });

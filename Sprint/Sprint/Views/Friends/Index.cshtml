@@ -7,19 +7,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Friends</h1>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-@if (TempData["FriendInvite"] is string)
-{
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <div class="alert alert-success" role="alert">
-        <i class="fa fa-check-square-o mr-2" aria-hidden="true"></i>@TempData["FriendInvite"]
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h4 class="text-light font-weight-light text-uppercase">Friends</h4>
+        </div>
     </div>
-}
 
-<p>
-    <a asp-action="Add">＋Invite New Friend</a>
-</p>
+    <div class="row">
+        <div class="col-md">
+            @if (TempData["FriendsMessage"] is string)
+            {
+                <div class="alert alert-light" role="alert">
+                    <span class="text-dark"><i class="fa fa-user-circle mr-2" aria-hidden="true"></i>@TempData["FriendsMessage"]</span>
+                </div>
+            }
+            @if (TempData["FriendInvite"] is string)
+            {
+                <div class="alert alert-success" role="alert">
+                    <i class="fa fa-check-square-o mr-2" aria-hidden="true"></i>@TempData["FriendInvite"]
+                </div>
+            }
+            @if (TempData["RestrictedWishlist"] is string)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>@TempData["RestrictedWishlist"]
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md">
+            <p>
+                <a asp-action="Add">＋Invite New Friend</a>
+            </p>
+        </div>
+    </div>
+</div>
+
 @if (Model.PendingRelationships.Any())
 {
     <hr />

@@ -1,0 +1,42 @@
+﻿@model Sprint.Models.CartGame
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="row centered-form">
+    <div class="container col-md-6">
+        <h4 class="text-light font-weight-light text-uppercase">@Model.Game.Name</h4>
+        <hr />
+        <form asp-action="Gift">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CartGameId" />
+            <input type="hidden" asp-for="CartUserId" />
+            <input type="hidden" asp-for="GameId" />
+            <div class="form-group">
+                <label class="control-label">Gift to a Friend</label>
+                <select asp-for="ReceivingUserId" class="form-control" asp-items="ViewBag.RelatedUserId">
+                    <option disabled selected>Select a Friend</option>
+                </select>
+                <span asp-validation-for="ReceivingUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" title="Gift Game to Friend">
+                    <i class="text-light fa fa-gift mr-3" aria-hidden="true"></i>Update as gift
+                </button>
+            </div>
+        </form>
+
+        <div class="text-light">
+            <a asp-action="Index">Back to List</a> |
+            <a asp-action="Index" asp-controller="Friends">Add Friends</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

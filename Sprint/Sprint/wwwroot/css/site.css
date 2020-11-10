@@ -86,3 +86,7 @@ html {
 .footerLinks a:active {
     color: orange;
 }
+
+.cursor-help {
+    cursor: help;
+}

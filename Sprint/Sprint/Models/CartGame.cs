@@ -7,6 +7,7 @@ namespace Sprint.Models
     {
         public int CartGameId { get; set; }
         public int CartUserId { get; set; }
+        [DisplayName("Receiving User")]
         public int ReceivingUserId { get; set; }
         public int GameId { get; set; }
 

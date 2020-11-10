@@ -81,6 +81,7 @@ namespace Sprint.Controllers
             // redirect if private wishlist
             if (wishlistUser.WishlistVisibility == WishlistVisibility.OnlyMe)
             {
+                TempData["RestrictedWishlist"] = $"You do not have permission to view {wishlistUser.UserName}'s wishlist.";
                 return RedirectToAction("Index", "Friends"); // somehow we got here - redirect
             }
 
@@ -92,6 +93,7 @@ namespace Sprint.Controllers
 
                 if (!areFriendsOrPending)
                 {
+                    TempData["RestrictedWishlist"] = $"You do not have permission to view {wishlistUser.UserName}'s wishlist.";
                     return RedirectToAction("Index", "Friends"); // somehow we got here - redirect
                 }
             }
