@@ -41,92 +41,92 @@
     </div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-            <th>
-                Game
-            </th>
-            <th>
-                Developer
-            </th>
-            <th>
-                Added On
-            </th>
-            <th>
-                Price
-            </th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
+@if (Model.Items.Any())
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    <a asp-controller="Game" asp-action="Details" asp-route-id="@item.CartItem.Game.GameId">
-                        @if (item.Image != null)
-                        {<img height="50" width="100" src="@item.Image.ImageURL">}
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CartItem.Game.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CartItem.Game.Developer)
-                </td>
-                <td>
-                    <span class="cursor-help" title="@item.CartItem.AddedOn?.ToString("MMM dd h:mm tt")">
-                        @(item.CartItem.AddedOn?.ToString("yyyy/MM/dd"))
-                    </span>
-                </td>
-                <td>
-                    @if (item.Discount != null)
-                    {
-                        <div class="d-flex">
-                            <div class="mr-2">
-                                <span class="moist-discount-regular-price text-secondary">@item.CartItem.Game.RegularPrice</span>
-                                <span class="moist-discount-price text-light">@item.Discount.DiscountPrice</span>
-                            </div>
-                            <span class="moist-discount-percent shadow rounded moist-tooltip">
-                                @string.Format("{0:0%}", item.Discount.DiscountPrice / item.CartItem.Game.RegularPrice)
-                            </span>
-                        </div>
-                        <small class="text-secondary">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
-                            @(item.Discount.DiscountFinish.ToString("MMM dd h:mm tt"))
-                        </small>
-                    }
-                    else
-                    {
-                        <h5 class="text-light font-weight-bold">@item.CartItem.Game.RegularPrice</h5>
-                    }
-                </td>
-                <td>
-                    @if (item.CartItem.ReceivingUserId == Model.User.Id)
-                    {
-                        <a asp-route-id="@item.CartItem.CartGameId" asp-controller="Cart" asp-action="Gift" class="btn btn-sm btn-light" role="button" title="Purchase as a gift">
-                            <i class="text-dark fa fa-gift" aria-hidden="true"></i>
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-route-id="@item.CartItem.CartGameId" asp-controller="Cart" asp-action="Gift" class="btn btn-link p-0" title="Change Friend">
-                            <i class="text-light fa fa-gift" aria-hidden="true"></i>
-                        </a>
-                        <a asp-controller="Wishlist" asp-route-username="@item.CartItem.ReceivingUser.Name" title="View @item.CartItem.ReceivingUser.Name's wishlist">
-                            @item.CartItem.ReceivingUser.Name
-                        </a>
-                    }
-                </td>
-                <td>
-                    <form asp-route-gameId="@item.CartItem.Game.GameId" asp-route-recipientUserId="@item.CartItem.ReceivingUserId" asp-controller="Cart" asp-action="Remove">
-                        <button type="submit" class="btn btn-link" title="Remove"><i class="fa fa-times text-danger" aria-hidden="true"></i></button>
-                    </form>
-                </td>
+                <th></th>
+                <th>Game</th>
+                <th>Developer</th>
+                <th>Added On</th>
+                <th>Price</th>
+                <th></th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.CartItem.Game.GameId">
+                            @if (item.Image != null)
+                            {<img height="50" width="100" src="@item.Image.ImageURL">}
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CartItem.Game.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CartItem.Game.Developer)
+                    </td>
+                    <td>
+                        <span class="cursor-help" title="@item.CartItem.AddedOn?.ToString("MMM dd h:mm tt")">
+                            @(item.CartItem.AddedOn?.ToString("yyyy/MM/dd"))
+                        </span>
+                    </td>
+                    <td>
+                        @if (item.Discount != null)
+                        {
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <span class="moist-discount-regular-price text-secondary">@item.CartItem.Game.RegularPrice</span>
+                                    <span class="moist-discount-price text-light">@item.Discount.DiscountPrice</span>
+                                </div>
+                                <span class="moist-discount-percent shadow rounded moist-tooltip">
+                                    @string.Format("{0:0%}", item.Discount.DiscountPrice / item.CartItem.Game.RegularPrice)
+                                </span>
+                            </div>
+                            <small class="text-secondary">
+                                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                @(item.Discount.DiscountFinish.ToString("MMM dd h:mm tt"))
+                            </small>
+                        }
+                        else
+                        {
+                            <h5 class="text-light font-weight-bold">@item.CartItem.Game.RegularPrice</h5>
+                        }
+                    </td>
+                    <td>
+                        @if (item.CartItem.ReceivingUserId == Model.User.Id)
+                        {
+                            <a asp-route-id="@item.CartItem.CartGameId" asp-controller="Cart" asp-action="Gift" class="btn btn-sm btn-light" role="button" title="Purchase as a gift">
+                                <i class="text-dark fa fa-gift" aria-hidden="true"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-route-id="@item.CartItem.CartGameId" asp-controller="Cart" asp-action="Gift" class="btn btn-link p-0" title="Change Friend">
+                                <i class="text-light fa fa-gift" aria-hidden="true"></i>
+                            </a>
+                            <a asp-controller="Wishlist" asp-route-username="@item.CartItem.ReceivingUser.Name" title="View @item.CartItem.ReceivingUser.Name's wishlist">
+                                @item.CartItem.ReceivingUser.Name
+                            </a>
+                        }
+                    </td>
+                    <td>
+                        <form asp-route-gameId="@item.CartItem.Game.GameId" asp-route-recipientUserId="@item.CartItem.ReceivingUserId" asp-controller="Cart" asp-action="Remove">
+                            <button type="submit" class="btn btn-link" title="Remove"><i class="fa fa-times text-danger" aria-hidden="true"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4 class="text-light font-weight-light text-uppercase text-center mt-3 mb-3">is currently empty</h4>
+    <p class="text-center">Explore our <a asp-controller="Game" asp-action="Index">catalog of games</a> to add to your cart.</p>
+}

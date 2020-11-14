@@ -1,4 +1,4 @@
-﻿@using Sprint.Enums;
+﻿@using Sprint.Enums
 
 @model Sprint.ViewModels.WishlistViewModel
 
@@ -7,17 +7,36 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    function copy_to_clipboard(text) {
+        var input = document.body.appendChild(document.createElement("input"));
+        input.value = text;
+        input.focus();
+        input.select();
+        document.execCommand('copy');
+        input.parentNode.removeChild(input);
+        alert("Copied link: " + text);
+    }
+</script>
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="container">
     <div class="row">
-        <div class="col-md">
+        <div class="col-md-3">
             <h4 class="text-light font-weight-light text-uppercase">@Model.User.UserName's Wishlist</h4>
         </div>
 
         @if (User.Identity.Name == Model.User.UserName)
         {
-            <div class="col-md">
+            <div class="col-md-3 pt-1">
+                <a class="text-light cursor-pointer" data-toggle="tooltip" data-placement="top" title="Copy wishlist link"
+                   onclick="copy_to_clipboard('@{<text>@Url.Action("Index", "Wishlist", new { username = Model.User.UserName }, Url.ActionContext.HttpContext.Request.Scheme)</text>}')">
+                    <i class="fa fa-copy" aria-hidden="true"></i>
+                    <span>Share wishlist</span>
+                </a>
+            </div>
+            <div class="col-md-6">
                 <form class="form-inline float-right mb-2" asp-action="Edit">
                     <label class="text-light text-uppercase font-weight-light mr-4" for="select-visibility">Your wishlist can be seen by:</label>
                     <select onchange="this.form.submit()" class="form-control right" id="select-visibility" asp-for="WishlistVisibility" asp-items="@Html.GetEnumSelectList<WishlistVisibility>()"></select>
@@ -124,5 +143,5 @@
 }
 else
 {
-    <h4 class="text-light font-weight-light text-uppercase text-center">The wishlist is empty.</h4>
+    <h4 class="text-light font-weight-light text-uppercase text-center mt-3">The wishlist is empty.</h4>
 }

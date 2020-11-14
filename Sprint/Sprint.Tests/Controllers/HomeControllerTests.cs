@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sprint.Controllers;
+using Sprint.Tests.Helpers;
 using Sprint.ViewModels;
 using System.Threading.Tasks;
 using Xunit;

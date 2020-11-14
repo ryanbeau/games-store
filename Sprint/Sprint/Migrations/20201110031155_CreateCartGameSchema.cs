@@ -16,7 +16,7 @@ namespace Sprint.Migrations
                     UserId = table.Column<int>(nullable: false),
                     ReceivingUserId = table.Column<int>(nullable: false),
                     GameId = table.Column<int>(nullable: false),
-                    AddedOn = table.Column<DateTime>(nullable: true)
+                    AddedOn = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

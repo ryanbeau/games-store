@@ -32,7 +32,7 @@ namespace Sprint.Data
             }
         }
 
-        private void Seed(ModelBuilder modelBuilder)
+        protected virtual void Seed(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Admin", NormalizedName = "ADMIN" },
@@ -366,6 +366,10 @@ namespace Sprint.Data
 
                 entity.Property(e => e.GameId)
                     .HasColumnName("GameId")
+                    .IsRequired();
+
+                entity.Property(e => e.AddedOn)
+                    .HasColumnName("AddedOn")
                     .IsRequired();
 
                 entity.HasIndex(b => new { b.CartUserId, b.ReceivingUserId, b.GameId })
