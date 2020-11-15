@@ -30,11 +30,18 @@
         @if (User.Identity.Name == Model.User.UserName)
         {
             <div class="col-md-3 pt-1">
-                <a class="text-light cursor-pointer" data-toggle="tooltip" data-placement="top" title="Copy wishlist link"
-                   onclick="copy_to_clipboard('@{<text>@Url.Action("Index", "Wishlist", new { username = Model.User.UserName }, Url.ActionContext.HttpContext.Request.Scheme)</text>}')">
-                    <i class="fa fa-copy" aria-hidden="true"></i>
-                    <span>Share wishlist</span>
-                </a>
+                @if (Model.WishlistVisibility != WishlistVisibility.OnlyMe)
+                {
+                    <a class="text-light cursor-pointer" data-toggle="tooltip" data-placement="top" title="Copy wishlist link"
+                        onclick="copy_to_clipboard('@{<text>@Url.Action("Index", "Wishlist", new { username = Model.User.UserName }, Url.ActionContext.HttpContext.Request.Scheme)</text>}')">
+                        <i class="fa fa-copy" aria-hidden="true"></i>
+                        <span>Share wishlist</span>
+                    </a>
+                }
+                else
+                {
+                    <p>Your wishlist is private</p>
+                }
             </div>
             <div class="col-md-6">
                 <form class="form-inline float-right mb-2" asp-action="Edit">

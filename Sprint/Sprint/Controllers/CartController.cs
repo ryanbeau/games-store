@@ -48,10 +48,10 @@ namespace Sprint.Controllers
                     .Select(c => new CartItemViewModel
                     {
                         CartItem = c,
-                        // image
-                        Image = _context.GameImages.FirstOrDefault(i => i.GameId == c.GameId && i.ImageType == ImageType.Banner),
-                        // discount
-                        Discount = _context.GameDiscounts.Where(d => d.GameId == c.GameId && d.DiscountPrice < c.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                        
+                        Image = c.Game.GameImages.FirstOrDefault(i => i.ImageType == ImageType.Banner),
+                        
+                        Discount = c.Game.Discounts.Where(d => d.DiscountPrice < c.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                             .OrderBy(d => d.DiscountPrice)
                             .FirstOrDefault(),
                     })
