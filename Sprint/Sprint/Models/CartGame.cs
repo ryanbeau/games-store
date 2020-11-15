@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sprint.Models
 {
@@ -10,7 +11,7 @@ namespace Sprint.Models
         [DisplayName("Receiving User")]
         public int ReceivingUserId { get; set; }
         public int GameId { get; set; }
-
+        [Required]
         [DisplayName("Added on")]
         public DateTime? AddedOn { get; set; }
 

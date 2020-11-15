@@ -40,14 +40,15 @@ namespace Sprint.Controllers
                 .Where(w => w.UserId == user.Id)
                 .Select(w => new WishlistItemViewModel
                 {
-                    // image
-                    Image = w.Game.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
-                    // discount
+                    WishlistItem = w,
+                    
+                    Image = w.Game.GameImages.FirstOrDefault(i => i.ImageType == ImageType.Banner),
+
                     Discount = w.Game.Discounts.Where(d => d.DiscountPrice < w.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                         .OrderBy(d => d.DiscountPrice)
                         .FirstOrDefault(),
-                    IsInCart = _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
-                    WishlistItem = w,
+
+                    IsInCart = w != null && w.User.CartItems.Any(c => c.GameId == w.GameId && c.ReceivingUserId == w.UserId),
                 })
                 .ToListAsync();
 
@@ -103,9 +104,11 @@ namespace Sprint.Controllers
                 .Where(w => w.UserId == wishlistUser.Id)
                 .Select(w => new WishlistItemViewModel
                 {
-                    Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
-                    IsInCart = _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == wishlistUser.Id),
                     WishlistItem = w,
+
+                    Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
+
+                    IsInCart = w != null && _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == w.UserId && c.ReceivingUserId == wishlistUser.Id),
                 })
                 .ToListAsync();
 

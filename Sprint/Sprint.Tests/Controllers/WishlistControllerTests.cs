@@ -1,13 +1,9 @@
-﻿using Castle.Core.Internal;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Data.SqlClient.Server;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sprint.Controllers;
 using Sprint.Enums;
 using Sprint.Models;
+using Sprint.Tests.Helpers;
 using Sprint.ViewModels;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;

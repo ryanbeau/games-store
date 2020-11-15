@@ -47,20 +47,17 @@ namespace Sprint.Controllers
                     .Where(c => c.CartUserId == user.Id)
                     .Select(c => new CartItemViewModel
                     {
-                        // image
-                        Image = c.Game.GameImages.FirstOrDefault(i => i.GameId == c.GameId && i.ImageType == ImageType.Banner),
-                        // discount
+                        CartItem = c,
+                        
+                        Image = c.Game.GameImages.FirstOrDefault(i => i.ImageType == ImageType.Banner),
+                        
                         Discount = c.Game.Discounts.Where(d => d.DiscountPrice < c.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                             .OrderBy(d => d.DiscountPrice)
                             .FirstOrDefault(),
-                        CartItem = c,
                     })
                     .ToListAsync(),
                 User = user,
             };
-
-            cart.ContainsGiftItem = cart.Items
-                .Any(i => i.CartItem.ReceivingUserId != user.Id);
 
             return View(cart);
         }
@@ -87,15 +84,27 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
+            User recipientUser;
+
             // if null - item is for this User (aka: not a gift)
-            if (recipientUserId == null)
+            if (recipientUserId == null || recipientUserId == user.Id)
             {
                 recipientUserId = user.Id;
+                recipientUser = user;
+            } 
+            else
+            {
+                recipientUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == recipientUserId);
+            }
+
+            if (recipientUser == null)
+            {
+                return NotFound();
             }
 
             // add to cart if not already in cart
             bool isInCart = await _context.CartGames
-                .AnyAsync(w => w.GameId == gameId && w.CartUserId == user.Id && w.ReceivingUserId == recipientUserId.Value);
+                .AnyAsync(w => w.GameId == gameId && w.CartUserId == user.Id && w.ReceivingUserId == recipientUser.Id);
 
             if (!isInCart)
             {
@@ -103,7 +112,7 @@ namespace Sprint.Controllers
                 {
                     GameId = gameId.Value,
                     CartUserId = user.Id,
-                    ReceivingUserId = recipientUserId.Value,
+                    ReceivingUserId = recipientUser.Id,
                     AddedOn = DateTime.Now
                 });
                 await _context.SaveChangesAsync();
@@ -130,14 +139,26 @@ namespace Sprint.Controllers
                 return Problem();
             }
 
+            User recipientUser;
+
             // if null - item is for this User (aka: not a gift)
-            if (recipientUserId == null)
+            if (recipientUserId == null || recipientUserId == user.Id)
             {
                 recipientUserId = user.Id;
+                recipientUser = user;
+            }
+            else
+            {
+                recipientUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == recipientUserId);
+            }
+
+            if (recipientUser == null)
+            {
+                return NotFound();
             }
 
             var cartGame = await _context.CartGames
-                .FirstOrDefaultAsync(w => w.GameId == gameId && w.ReceivingUserId == recipientUserId.Value && w.CartUserId == user.Id);
+                .FirstOrDefaultAsync(w => w.GameId == gameId && w.ReceivingUserId == recipientUser.Id && w.CartUserId == user.Id);
 
             if (cartGame != null)
             {
@@ -184,8 +205,8 @@ namespace Sprint.Controllers
 
             var relationships = await _context.UserRelationships
                 .Include(r => r.RelatedUser)
-                .Where(r => r.RelatingUserId == user.Id &&
-                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == user.Id))
+                .Where(r => r.RelatingUserId == user.Id && r.Type == Relationship.Friend && 
+                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == r.RelatingUserId))
                 .Select(r => new
                 {
                     r.RelatedUserId,
@@ -232,10 +253,16 @@ namespace Sprint.Controllers
             {
                 try
                 {
-                    bool uniqueIndexExists = await _context.CartGames
-                        .AnyAsync(c => c.CartGameId != cartItem.CartGameId && c.GameId == cartItem.GameId && c.CartUserId == user.Id && c.ReceivingUserId == cartItem.ReceivingUserId);
+                    User recipientUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == cartItem.ReceivingUserId);
+                    if (recipientUser == null)
+                    {
+                        return NotFound();
+                    }
 
-                    if (uniqueIndexExists)
+                    bool duplicateIndexExists = await _context.CartGames
+                        .AnyAsync(c => c.CartGameId != cartItem.CartGameId && c.GameId == cartItem.GameId && c.CartUserId == user.Id && c.ReceivingUserId == recipientUser.Id);
+
+                    if (duplicateIndexExists)
                     {
                         TempData["CartError"] = $"Gift for friend already exists in your cart.";
                         return RedirectToAction(nameof(Index));
@@ -261,8 +288,8 @@ namespace Sprint.Controllers
 
             var relationships = await _context.UserRelationships
                 .Include(r => r.RelatedUser)
-                .Where(r => r.RelatingUserId == user.Id && 
-                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == user.Id))
+                .Where(r => r.RelatingUserId == user.Id && r.Type == Relationship.Friend &&
+                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == r.RelatingUserId))
                 .Select(r => new
                 {
                     r.RelatedUserId,

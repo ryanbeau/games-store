@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Sprint.Controllers;
 using Sprint.Models;
+using Sprint.Tests.Helpers;
 using Sprint.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
