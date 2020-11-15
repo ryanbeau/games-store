@@ -48,7 +48,7 @@ namespace Sprint.Controllers
                         .OrderBy(d => d.DiscountPrice)
                         .FirstOrDefault(),
 
-                    IsInCart = user != null && _context.CartGames.Any(c => c.GameId == w.GameId && c.CartUserId == w.UserId && c.ReceivingUserId == w.UserId),
+                    IsInCart = w != null && _context.CartGames.Any(c => c.GameId == w.GameId && c.CartUserId == w.UserId && c.ReceivingUserId == w.UserId),
                 })
                 .ToListAsync();
 
@@ -108,7 +108,7 @@ namespace Sprint.Controllers
 
                     Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
 
-                    IsInCart = user != null && _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == wishlistUser.Id),
+                    IsInCart = w != null && _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == w.UserId && c.ReceivingUserId == wishlistUser.Id),
                 })
                 .ToListAsync();
 

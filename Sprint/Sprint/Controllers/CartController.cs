@@ -206,7 +206,7 @@ namespace Sprint.Controllers
             var relationships = await _context.UserRelationships
                 .Include(r => r.RelatedUser)
                 .Where(r => r.RelatingUserId == user.Id && r.Type == Relationship.Friend && 
-                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == user.Id))
+                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == r.RelatingUserId))
                 .Select(r => new
                 {
                     r.RelatedUserId,
@@ -289,7 +289,7 @@ namespace Sprint.Controllers
             var relationships = await _context.UserRelationships
                 .Include(r => r.RelatedUser)
                 .Where(r => r.RelatingUserId == user.Id && r.Type == Relationship.Friend &&
-                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == user.Id))
+                    !r.RelatedUser.ReceivingCartItems.Any(c => c.GameId == cartItem.GameId && c.CartUserId == r.RelatingUserId))
                 .Select(r => new
                 {
                     r.RelatedUserId,
