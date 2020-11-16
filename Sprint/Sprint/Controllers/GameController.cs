@@ -116,16 +116,23 @@ namespace Sprint.Controllers
             {
                 Game = game,
 
-                Discount = _context.GameDiscounts
+                Image = await _context.GameImages
+                    .FirstOrDefaultAsync(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner),
+
+                Images = await _context.GameImages
+                    .Where(i => i.GameId == game.GameId && i.ImageType == ImageType.Regular)
+                    .ToListAsync(),
+
+                Discount = await _context.GameDiscounts
                     .Where(d => d.GameId == game.GameId && d.DiscountPrice < game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                     .OrderBy(d => d.DiscountPrice)
-                    .FirstOrDefault(),
+                    .FirstOrDefaultAsync(),
 
-                IsWishlisted = user != null && _context.UserGameWishlists
-                        .Any(w => w.GameId == game.GameId && w.UserId == user.Id),
+                IsWishlisted = user != null && await _context.UserGameWishlists
+                        .AnyAsync(w => w.GameId == game.GameId && w.UserId == user.Id),
 
-                IsInCart = user != null && _context.CartGames
-                        .Any(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
+                IsInCart = user != null && await _context.CartGames
+                        .AnyAsync(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
 
                 // TODO : Is Owned
             });
