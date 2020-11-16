@@ -36,7 +36,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-3 mt-2">
-            <h4 class="text-light font-weight-light text-uppercase">Games</h4>
+            <h4 class="text-light font-weight-light text-uppercase"><i class="fa fa-gamepad text-secondary pr-2" aria-hidden="true"></i>Games</h4>
         </div>
 
         <div class="col-sm-9">
@@ -138,7 +138,7 @@
                                     {
                                         <img class="card-img-top moist-card-img" src="@Url.Content(item.Image.ImageURL)" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;">
                                     }
-                                    <div class="card-body gradient-buttons p-2 pb-3">
+                                    <div class="card-body p-2 pb-3">
                                         <p class="card-text text-dark m-0 p-0 pb-1">@item.Game.Name</p>
                                         <div class="d-flex justify-content-between">
                                             @if (SignInManager.IsSignedIn(User))
@@ -147,25 +147,25 @@
                                                     @if (item.IsWishlisted)
                                                     {
                                                         <form asp-route-gameId="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Wishlist" asp-action="Remove">
-                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary gradient-button"><i class="fa fa-heart text-danger" aria-hidden="true"></i></button>
                                                         </form>
                                                     }
                                                     else
                                                     {
                                                         <form asp-route-gameId="@item.Game.GameId" asp-controller="Wishlist" asp-action="Add">
-                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-heart-o text-dark" aria-hidden="true"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary gradient-button"><i class="fa fa-heart-o text-dark" aria-hidden="true"></i></button>
                                                         </form>
                                                     }
                                                     @if (item.IsInCart)
                                                     {
                                                         <form asp-route-gameId="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Cart" asp-action="Remove">
-                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-success" aria-hidden="true"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary gradient-button"><i class="fa fa-shopping-cart text-success" aria-hidden="true"></i></button>
                                                         </form>
                                                     }
                                                     else
                                                     {
                                                         <form asp-route-gameId="@item.Game.GameId" asp-controller="Cart" asp-action="Add">
-                                                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
+                                                            <button type="submit" class="btn btn-sm btn-outline-secondary gradient-button"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
                                                         </form>
                                                     }
                                                 </div>

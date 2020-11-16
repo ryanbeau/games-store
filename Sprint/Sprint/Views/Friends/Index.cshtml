@@ -9,123 +9,118 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class="container">
-    <div class="row">
-        <div class="col-md">
-            <h4 class="text-light font-weight-light text-uppercase">Friends</h4>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md">
-            @if (TempData["FriendsMessage"] is string)
-            {
-                <div class="alert alert-light" role="alert">
-                    <span class="text-dark"><i class="fa fa-user-circle mr-2" aria-hidden="true"></i>@TempData["FriendsMessage"]</span>
+<div class="row centered-form">
+    <div class="container col-md-6 col-md-offset-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md">
+                    <h4 class="text-light font-weight-light text-uppercase">
+                        <i class="fa fa-users text-secondary pr-2" aria-hidden="true"></i>Friends
+                    </h4>
                 </div>
-            }
-            @if (TempData["FriendInvite"] is string)
-            {
-                <div class="alert alert-success" role="alert">
-                    <i class="fa fa-check-square-o mr-2" aria-hidden="true"></i>@TempData["FriendInvite"]
-                </div>
-            }
-            @if (TempData["RestrictedWishlist"] is string)
-            {
-                <div class="alert alert-danger" role="alert">
-                    <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>@TempData["RestrictedWishlist"]
-                </div>
-            }
-        </div>
-    </div>
+            </div>
 
-    <div class="row">
-        <div class="col-md">
-            <p>
-                <a asp-action="Add">＋Invite New Friend</a>
-            </p>
-        </div>
-    </div>
-</div>
+            <div class="row">
+                <div class="col-md">
+                    @if (TempData["FriendsMessage"] is string)
+                    {
+                        <div class="alert alert-light" role="alert">
+                            <span class="text-dark"><i class="fa fa-user-circle mr-2" aria-hidden="true"></i>@TempData["FriendsMessage"]</span>
+                        </div>
+                    }
+                    @if (TempData["FriendInvite"] is string)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            <i class="fa fa-check-square-o mr-2" aria-hidden="true"></i>@TempData["FriendInvite"]
+                        </div>
+                    }
+                    @if (TempData["RestrictedWishlist"] is string)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>@TempData["RestrictedWishlist"]
+                        </div>
+                    }
+                </div>
+            </div>
 
-@if (Model.PendingRelationships.Any())
-{
-    <hr />
-    <h4 class="text-light font-weight-light mb-3">You have a friend request!</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Status</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.PendingRelationships)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RelatingUser.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td>
-                        <form class="w-100" asp-action="Add">
-                            <input type="hidden" name="username" value="@item.RelatingUser.UserName" />
-                            <button type="submit" class="btn btn-primary btn-success w-100">Accept</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form class="w-100" asp-action="Remove">
-                            <input type="hidden" name="username" value="@item.RelatingUser.UserName" />
-                            <button type="submit" class="btn btn-danger w-100">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-@if (Model.FriendRelationships.Any())
-{
-    <hr />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.FriendRelationships)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RelatedUser.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Type)
-                    </td>
-                    <td>
-                        @if (item.RelatedUser.WishlistVisibility == WishlistVisibility.Everyone ||
-                      item.RelatedUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
-                        {
-                            <a class="btn btn-primary w-100" role="button" asp-controller="Wishlist" asp-route-username="@item.RelatedUser.UserName">@item.RelatedUser.Name's Wishlist</a>
-                        }
-                    </td>
-                    <td>
-                        <a class="btn btn-primary btn-danger w-100" asp-action="Remove" asp-route-username="@item.RelatedUser.UserName">Unfriend</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else if (!Model.PendingRelationships.Any())
-{
-    <h4 class="text-light font-weight-light text-uppercase text-center mt-3">You haven't added anybody yet</h4>
-}
+            <div class="row">
+                <div class="col-md">
+                    <p>
+                        <a asp-action="Add">＋Invite a New Friend</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.PendingRelationships.Any())
+        {
+            <hr />
+            <h4 class="text-light font-weight-light mb-3">You have a friend request!</h4>
+
+            <div class="container moist-border-secondary mt-3 p-2">
+                @foreach (var item in Model.PendingRelationships)
+                {
+                    <div class="row">
+                        <div class="col-lg-4 pt-2">
+                            <span class="text-light font-weight-bold">
+                                <i class="fa fa-user-o text-light pl-2 pr-2" aria-hidden="true"></i>@Html.DisplayFor(modelItem => item.RelatingUser.Name)
+                            </span>
+                        </div>
+                        <div class="col-xl-8 d-flex">
+                            <form class="flex-fill mr-3" asp-action="Add">
+                                <input type="hidden" name="username" value="@item.RelatingUser.UserName" />
+                                <button type="submit" class="btn btn-primary btn-success w-100">
+                                    <i class="fa fa-user-plus pr-2" aria-hidden="true"></i>Accept
+                                </button>
+                            </form>
+                            <form class="flex-fill" asp-action="Remove">
+                                <input type="hidden" name="username" value="@item.RelatingUser.UserName" />
+                                <button type="submit" class="btn btn-danger w-100">
+                                    <i class="fa fa-user-times pr-2" aria-hidden="true"></i>Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <hr />
+
+        @if (Model.FriendRelationships.Any())
+        {
+            <h4 class="text-light font-weight-light mb-3">Your Connections</h4>
+
+            <div class="container rounded moist-bg-light moist-shadow moist-border-secondary mt-3 p-2">
+                @foreach (var item in Model.FriendRelationships)
+                {
+                    <div class="row">
+                        <div class="col-lg-4 pt-2">
+                            <span class="text-dark font-weight-bold">
+                                <i class="fa fa-user text-secondary pl-2 pr-2" aria-hidden="true"></i>@Html.DisplayFor(modelItem => item.RelatedUser.Name)
+                            </span>
+                        </div>
+                        <div class="col-xl-8 d-flex">
+                            @if (item.RelatedUser.WishlistVisibility == WishlistVisibility.Everyone ||
+                     item.RelatedUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
+                            {
+                                <a asp-controller="Wishlist" asp-route-username="@item.RelatedUser.UserName"
+                                   class="flex-fill btn btn-primary font-weight-bold mr-3" role="button">
+                                    <i class="fa fa-heart pr-2" aria-hidden="true"></i>
+                                    View @item.RelatedUser.Name's Wishlist
+                                </a>
+                            }
+                            <a class="btn btn-danger d-inline align-middle ml-auto" asp-action="Remove" asp-route-username="@item.RelatedUser.UserName" title="Unfriend">
+                                <i class="fa fa-trash-o text-light" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (!Model.PendingRelationships.Any())
+        {
+            <h4 class="text-light font-weight-light text-uppercase text-center mt-3">You haven't added anybody yet</h4>
+        }
+    </div>
+    </div>
