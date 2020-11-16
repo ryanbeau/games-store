@@ -1,13 +1,16 @@
 ﻿@using Sprint.ViewModels
+@using Sprint.Enums 
 @model Sprint.ViewModels.HomeViewModel
 
 @{
     ViewData["Title"] = "Moist Games";
 }
 
-<section style="padding-bottom: 30px;">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<section class="pb-3">
     <div class="text-center">
-        <h5 class="text-light text-left font-weight-light">Highlights</h5>
+        <h5 class="text-light text-left font-weight-light"><i class="fa fa-tag text-secondary pr-2" aria-hidden="true"></i>Highlights</h5>
         <hr />
         <div id="carouselExampleIndicators" class="carousel slide carouselstyle moist-shadow rounded" data-ride="carousel" style="width: auto;">
             <ol class="carousel-indicators">
@@ -60,64 +63,35 @@
 </section>
 
 <section>
-    <div class="container-fluid mt-4" style="padding-left: 0px; padding-right: 0px;">
-        <div class="row">
-            <div class="col-6" style="text-align: left;">
-                <h5 class="text-light text-left font-weight-light">Moist Deals</h5>
+    <div class="container mt-4 pl-0 pr-0">
+        <h5 class="text-light text-left font-weight-light"><i class="fa fa-bolt text-secondary pr-2" aria-hidden="true"></i>Moist Deals</h5>
+
+        @for (int i = 0; i < Model.DiscountedGames.Count; i += 3)
+        {
+            <div class="row mb-4">
+                @for (int j = 0; j < 3 && i + j < Model.DiscountedGames.Count; j++)
+                {
+                    GameItemViewModel item = Model.DiscountedGames[i + j];
+
+                    <div class="col-4">
+                        <a asp-controller="Game" asp-action="Details" asp-route-id="@item.Game.GameId" class="text-decoration-none">
+                            <img class="img-thumbnail" src="@Url.Content(item.Image.ImageURL)" alt="@item.Game.Name thumbnail" style="width: 100%; display: block;">
+                            <div class="row specialOffers">
+                                <h4 class="discount">@string.Format("{0:0%}", item.Discount.DiscountPrice / item.Game.RegularPrice)</h4>
+                            </div>
+                        </a>
+                    </div>
+                }
             </div>
-            <div class="col-6" style="text-align: right;">
-                <h3 class="sectionHeading">&nbsp;</h3>
-            </div>
-        </div>
-        <div class="row" style="height: 200px;">
-            <div class="col-4">
-                <img src="~/image/game1.jpg" class="img-thumbnail" style="width: 100%;" />
-                <div class="row specialOffers">
-                    <h4 class="discount">-25%</h4>
-                </div>
-            </div>
-            <div class="col-4">
-                <img src="~/image/game2.jpg" class="img-thumbnail" style="width: 100%;" />
-                <div class="row specialOffers">
-                    <h4 class="discount">-50%</h4>
-                </div>
-            </div>
-            <div class="col-4">
-                <img src="~/image/game7.jpg" class="img-thumbnail" style="width: 100%;" />
-                <div class="row specialOffers">
-                    <h4 class="discount">-20%</h4>
-                </div>
-            </div>
-        </div>
-        <br />
-        <div class="row" style="height: 200px;">
-            <div class="col-4">
-                <img src="~/image/game4.jpg" class="img-thumbnail" style="width: 100%;" />
-                <div class="row specialOffers">
-                    <h4 class="discount">-80%</h4>
-                </div>
-            </div>
-            <div class="col-4">
-                <img src="~/image/game8.jpg" class="img-thumbnail" style="width: 100%;" />
-                <div class="row specialOffers">
-                    <h4 class="discount">-30%</h4>
-                </div>
-            </div>
-            <div class="col-4">
-                <img src="~/image/game6.jpg" class="img-thumbnail" style="width: 100%;" />
-                <div class="row specialOffers">
-                    <h4 class="discount">-60%</h4>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </section>
 
-<section style="margin-top: 60px; margin-bottom: 60px;">
-    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+<section class="mt-4 mb-4">
+    <div class="container-fluid pl-0 pr-0">
         <div class="row">
             <div class="col-6" style="text-align: left;">
-                <h5 class="text-light text-left font-weight-light">Browse Moist</h5>
+                <h5 class="text-light text-left font-weight-light"><i class="fa fa-briefcase text-secondary pr-2" aria-hidden="true"></i>Browse Moist</h5>
             </div>
             <div class="col-6" style="text-align: right;">
                 <h3 class="sectionHeading">&nbsp;</h3>
@@ -125,13 +99,19 @@
         </div>
         <div class="row">
             <div class="col-4">
-                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">New Releases</a>
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-controller="Game" asp-action="Filter" asp-route-price="@FilterPrice.discounted.ToString()">
+                    <i class="fa fa-bullhorn text-light pr-2" aria-hidden="true"></i>Discounted Games
+                </a>
             </div>
             <div class="col-4">
-                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Free Games</a>
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-controller="Game" asp-action="Filter" asp-route-price="@FilterPrice.free.ToString()">
+                    <i class="fa fa-ticket text-light pr-2" aria-hidden="true"></i>Free Games
+                </a>
             </div>
             <div class="col-4">
-                <a class="btn btn-primary btn-block btn-lg" role="button" asp-area="" asp-controller="Game" asp-action="Index">Game List</a>
+                <a class="btn btn-primary btn-block btn-lg" role="button" asp-controller="Game" asp-action="Index">
+                    <i class="fa fa-gamepad text-light pr-2" aria-hidden="true"></i>Game List
+                </a>
             </div>
         </div>
 

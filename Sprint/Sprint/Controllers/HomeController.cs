@@ -42,6 +42,23 @@ namespace Sprint.Controllers
                         Game = i.Game,
                     })
                     .ToListAsync(),
+
+                DiscountedGames = (await _context.GameDiscounts
+                    .Include(d => d.Game)
+                        .ThenInclude(g => g.GameImages)
+                    .Where(d => d.DiscountPrice < d.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now && d.Game.GameImages.Any(i => i.ImageType == ImageType.Banner))
+                    .OrderBy(d => d.DiscountPrice)
+                    .ToListAsync())
+                    .GroupBy(d => d.GameId)
+                    .OrderBy(r => Guid.NewGuid())
+                    .Take(6)
+                    .Select(g => new GameItemViewModel
+                    {
+                        Game = g.First().Game,
+                        Discount = g.FirstOrDefault(),
+                        Image = g.First().Game.GameImages.First(i => i.ImageType == ImageType.Banner),
+                    })
+                    .ToList(),
             };
 
             return View(homeViewModel);

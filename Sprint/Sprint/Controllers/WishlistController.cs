@@ -37,6 +37,7 @@ namespace Sprint.Controllers
 
             var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
+                    .ThenInclude(g => g.GameType)
                 .Where(w => w.UserId == user.Id)
                 .Select(w => new WishlistItemViewModel
                 {
@@ -101,6 +102,7 @@ namespace Sprint.Controllers
 
             var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
+                    .ThenInclude(g => g.GameType)
                 .Where(w => w.UserId == wishlistUser.Id)
                 .Select(w => new WishlistItemViewModel
                 {
