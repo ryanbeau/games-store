@@ -112,7 +112,7 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-            return View(new GameViewModel
+                    return View(new GameViewModel
             {
                 Game = game,
 
