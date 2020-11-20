@@ -1,0 +1,53 @@
+﻿@model Sprint.Models.Game
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if((bool)User?.Identity?.IsAuthenticated)
+{
+<p>
+    <a asp-route-id="@Model.GameId" asp-action="Create">Create New</a>
+</p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th>
+                Rating
+            </th>
+            <th>
+                Comment
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Reviews)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewContent)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ReviewId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

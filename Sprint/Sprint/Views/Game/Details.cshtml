@@ -52,6 +52,9 @@
                 <h5 class="text-light">@Html.DisplayNameFor(model => model.Game.RegularPrice)</h5>
                 <p class="text-light">@Html.DisplayFor(model => model.Game.RegularPrice)</p>
             }
+            <form class="w-25" asp-route-id="@Model.Game.GameId" asp-controller="Reviews" asp-action="Index">
+                <button type="submit" class="btn btn-primary w-100">View Reviews</button>
+            </form>
         </div>
     </div>
 
