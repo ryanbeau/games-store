@@ -104,6 +104,7 @@ namespace Sprint.Controllers
 
             Game game = _context.Games
                 .Include(g => g.GameType)
+                .Include(g => g.Reviews)
                 .Include(g => g.GameImages)
                 .FirstOrDefault(g => g.GameId == id);
 
@@ -117,25 +118,27 @@ namespace Sprint.Controllers
                 Game = game,
 
                 Image = await _context.GameImages
-                    .FirstOrDefaultAsync(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner),
+            .FirstOrDefaultAsync(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner),
 
                 Images = await _context.GameImages
-                    .Where(i => i.GameId == game.GameId && i.ImageType == ImageType.Regular)
-                    .ToListAsync(),
+            .Where(i => i.GameId == game.GameId && i.ImageType == ImageType.Regular)
+            .ToListAsync(),
 
                 Discount = await _context.GameDiscounts
-                    .Where(d => d.GameId == game.GameId && d.DiscountPrice < game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
-                    .OrderBy(d => d.DiscountPrice)
-                    .FirstOrDefaultAsync(),
+            .Where(d => d.GameId == game.GameId && d.DiscountPrice < game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+            .OrderBy(d => d.DiscountPrice)
+            .FirstOrDefaultAsync(),
 
                 IsWishlisted = user != null && await _context.UserGameWishlists
-                        .AnyAsync(w => w.GameId == game.GameId && w.UserId == user.Id),
+                .AnyAsync(w => w.GameId == game.GameId && w.UserId == user.Id),
 
                 IsInCart = user != null && await _context.CartGames
-                        .AnyAsync(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
+                .AnyAsync(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
+
+                AverageRating = game.Reviews.Count != 0 ? (int)game.Reviews.Select(review => review.Rating).Average() : 0
 
                 // TODO : Is Owned
-            });
+            }); ; ;
         }
 
         // GET: Game/Create
