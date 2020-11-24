@@ -34,7 +34,7 @@ namespace Sprint.Controllers
             var game = await _context.Games
             .Include(g => g.Reviews)
                 .ThenInclude(r => r.User)
-            .FirstOrDefaultAsync(g => g.GameId == id);         
+            .FirstOrDefaultAsync(g => g.GameId == id);
 
             return View(game);
         }
@@ -70,13 +70,21 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? id,[Bind("ReviewId,UserId,GameId,Rating,ReviewContent")] Review review)
+        public async Task<IActionResult> Create(int? id, [Bind("ReviewId,UserId,GameId,Rating,ReviewContent")] Review review)
         {
             User user = await _userManager.GetUserAsync(User);
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var game = await _context.Games
-                    .Include(g => g.Reviews)
+                .Include(g => g.Reviews)
                         .ThenInclude(r => r.User)
-                    .FirstOrDefaultAsync(g => g.GameId == id);
+                .FirstOrDefaultAsync(g => g.GameId == id);
+
+            if (game != null) review.GameId = game.GameId;
 
             foreach (var r in game.Reviews)
             {
@@ -90,10 +98,10 @@ namespace Sprint.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Reviews.Add(new Review { GameId = id.Value, User = user, Game = game, Rating = review.Rating, ReviewContent = review.ReviewContent, UserId = user.Id});
+                _context.Reviews.Add(new Review { GameId = id.Value, User = user, Game = game, Rating = review.Rating, ReviewContent = review.ReviewContent, UserId = user.Id });
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index", new { id = id});
+                return RedirectToAction("Index", new { id = id });
             }
 
             return View(review);
@@ -108,8 +116,8 @@ namespace Sprint.Controllers
             }
 
             var review = await _context.Reviews
-                .Include(r => r.Game)    
-                .Include(r => r.User)    
+                .Include(r => r.Game)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.ReviewId == id);
 
             if (review == null)
@@ -126,7 +134,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("GameId,ReviewId,Rating,ReviewContent")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("Game,User,UserId,GameId,ReviewId,Rating,ReviewContent")] Review review)
         {
             if (id != review.ReviewId)
             {

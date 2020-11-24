@@ -4,13 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Reviews for @Model.Name</h1>
 
-@if((bool)User?.Identity?.IsAuthenticated)
+@if ((bool)User?.Identity?.IsAuthenticated)
 {
-<p>
-    <a asp-route-id="@Model.GameId" asp-action="Create">Create New</a>
-</p>
+    <p>
+        <a asp-route-id="@Model.GameId" asp-action="Create">Create New</a>
+    </p>
 }
 
 <table class="table">
@@ -19,10 +19,10 @@
             <th>
                 User
             </th>
-            <th>
+            <th style="max-width:170px;">
                 Rating
             </th>
-            <th>
+            <th style="max-width:300px;">
                 Comment
             </th>
             <th></th>
@@ -35,16 +35,34 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.User.Name)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
+                <td style="max-width:170px;">
+                    <div class="rate">
+                        <input asp-for="@item.Rating" type="radio" id="star5" name="@item.Rating" value="5" />
+                        <label for="star5" title="text">5 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star4" name="@item.Rating" value="4" />
+                        <label for="star4" title="text">4 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star3" name="@item.Rating" value="3" />
+                        <label for="star3" title="text">3 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star2" name="@item.Rating" value="2" />
+                        <label for="star2" title="text">2 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star1" name="@item.Rating" value="1" />
+                        <label for="star1" title="text">1 star</label>
+                    </div>
+                    <span asp-validation-for="@item.Rating" class="text-danger"></span>
                 </td>
-                <td>
+                <td style="max-width:300px;">
                     @Html.DisplayFor(modelItem => item.ReviewContent)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ReviewId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ReviewId">Delete</a>
+                    @if (User?.Identity?.Name?.ToLower() == @item?.User?.Name?.ToLower())
+                    {
+                        <a class="btn btn-primary btn-danger w-25" asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a>
+                    }
+                    <a class="btn btn-primary btn-danger w-25" asp-action="Details" asp-route-id="@item.ReviewId"> Details </a>
+                    @if (User?.Identity?.Name?.ToLower() == @item?.User?.Name?.ToLower())
+                    {
+                        <a class="btn btn-primary btn-danger w-25" asp-action="Delete" asp-route-id="@item.ReviewId"> Delete </a>
+                    }
                 </td>
             </tr>
         }
