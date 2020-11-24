@@ -52,29 +52,31 @@
                 <h5 class="text-light">@Html.DisplayNameFor(model => model.Game.RegularPrice)</h5>
                 <p class="text-light">@Html.DisplayFor(model => model.Game.RegularPrice)</p>
             }
-            <form asp-route-id="@Model.Game.GameId" asp-controller="Reviews" asp-action="Index">
-                <h5 class="text-light">@Html.DisplayNameFor(model => model.AverageRating)</h5>
-                @if (Model.AverageRating == 0)
-                {
-                    <p style="font-style: italic;"> No reviews yet..</p>
-                }
-                else
-                {
-                    <div class="rate">
-                        <input asp-for="@Model.AverageRating" type="radio" id="star5" name="@Model.AverageRating" value="5" />
-                        <label for="star5" title="text">5 stars</label>
-                        <input asp-for="@Model.AverageRating" type="radio" id="star4" name="@Model.AverageRating" value="4" />
-                        <label for="star4" title="text">4 stars</label>
-                        <input asp-for="@Model.AverageRating" type="radio" id="star3" name="@Model.AverageRating" value="3" />
-                        <label for="star3" title="text">3 stars</label>
-                        <input asp-for="@Model.AverageRating" type="radio" id="star2" name="@Model.AverageRating" value="2" />
-                        <label for="star2" title="text">2 stars</label>
-                        <input asp-for="@Model.AverageRating" type="radio" id="star1" name="@Model.AverageRating" value="1" />
-                        <label for="star1" title="text">1 star</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">View Reviews</button>
-                }
-            </form>
+        <form asp-route-id="@Model.Game.GameId" asp-controller="Reviews" asp-action="Index">
+            <h5 class="text-light">@Html.DisplayNameFor(model => model.AverageRating)</h5>
+            @if (Model.AverageRating == 0)
+            {
+                <p style="font-style: italic;"> No reviews yet..</p>
+            }
+            else
+            {
+                <div class="rate">
+                    <input asp-for="@Model.AverageRating" type="radio" id="star5" name="@Model.AverageRating" value="5" />
+                    <label for="star5" title="text">5 stars</label>
+                    <input asp-for="@Model.AverageRating" type="radio" id="star4" name="@Model.AverageRating" value="4" />
+                    <label for="star4" title="text">4 stars</label>
+                    <input asp-for="@Model.AverageRating" type="radio" id="star3" name="@Model.AverageRating" value="3" />
+                    <label for="star3" title="text">3 stars</label>
+                    <input asp-for="@Model.AverageRating" type="radio" id="star2" name="@Model.AverageRating" value="2" />
+                    <label for="star2" title="text">2 stars</label>
+                    <input asp-for="@Model.AverageRating" type="radio" id="star1" name="@Model.AverageRating" value="1" />
+                    <label for="star1" title="text">1 star</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">View Reviews</button>
+            }
+            <button type="submit" class="btn btn-primary w-100">Add a Review</button>
+
+        </form>
         </div>
     </div>
 
