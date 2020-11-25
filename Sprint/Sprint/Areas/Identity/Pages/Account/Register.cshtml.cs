@@ -66,9 +66,12 @@ namespace Sprint.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]        
+            [Required]
             [Display(Name = "Gender")]
             public string Gender { get; set; }
+
+            [Display(Name = "Receive promotional emails")]
+            public bool ReceivePromotionalEmails { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -93,7 +96,7 @@ namespace Sprint.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
-            {//Gender = Input.Gender, 
+            {
                 var user = new User { Name = Input.Name, BirthDate = Input.Birthdate, UserName = Input.Username, Email = Input.Email, AccountNum = Guid.NewGuid().ToString(), Gender = Input.Gender};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

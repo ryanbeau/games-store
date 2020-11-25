@@ -20,14 +20,28 @@ namespace Sprint.Models
 
         [Display(Name = "Account Number")]
         public string AccountNum { get; set; }
+        
         [Display(Name = "User Name")]
         public override string UserName { get => base.UserName; set => base.UserName = value; }
+        
         [Display(Name = "Name")]
         public string Name { get; set; }
+        
         [Display(Name = "Birthdate")]
         public DateTime BirthDate { get; set; }
+        
         [Display(Name = "Gender")]
         public string Gender { get; set; }
+
+        [Display(Name = "Receive Promotional Emails")]
+        public bool ReceivePromotionalEmails { get; set; }
+
+        [Display(Name = "Preferred Platform")]
+        public int? PreferredPlatformTypeId { get; set; }
+
+        [Display(Name = "Preferred Category")]
+        public int? PreferredGameTypeId { get; set; }
+
         [Display(Name = "Wishlist Visibility")]
         public WishlistVisibility WishlistVisibility { get; set; }
 
