@@ -11,6 +11,10 @@ namespace Sprint.Areas.Identity.Pages.Account.Manage
 
         public static string ChangePassword => "ChangePassword";
 
+        public static string Address => "Address";
+
+        public static string Wallet => "Wallet";
+
         public static string DownloadPersonalData => "DownloadPersonalData";
 
         public static string DeletePersonalData => "DeletePersonalData";
@@ -26,6 +30,10 @@ namespace Sprint.Areas.Identity.Pages.Account.Manage
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 
         public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
+
+        public static string AddressNavClass(ViewContext viewContext) => PageNavClass(viewContext, Address);
+
+        public static string WalletNavClass(ViewContext viewContext) => PageNavClass(viewContext, Wallet);
 
         public static string DownloadPersonalDataNavClass(ViewContext viewContext) => PageNavClass(viewContext, DownloadPersonalData);
 

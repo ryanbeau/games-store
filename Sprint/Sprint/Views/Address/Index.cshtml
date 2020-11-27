@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Account Addresses</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,31 +13,18 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MailingStreet)
+                @Html.DisplayNameFor(model => model.Street)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MailingCity)
+                @Html.DisplayNameFor(model => model.City)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MailingProvince)
+                @Html.DisplayNameFor(model => model.Province)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MailingPostal)
+                @Html.DisplayNameFor(model => model.Postal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ShippingStreet)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingCity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingProvince)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingPostal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
             </th>
             <th></th>
         </tr>
@@ -46,31 +33,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MailingStreet)
+                @Html.DisplayFor(modelItem => item.Street)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MailingCity)
+                @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MailingProvince)
+                @Html.DisplayFor(modelItem => item.Province)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MailingPostal)
+                @Html.DisplayFor(modelItem => item.Postal)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShippingStreet)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingCity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingProvince)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingPostal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.AccountNum)
+                @Html.HiddenFor(modelItem => item.User.AccountNum)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AddressId">Edit</a> |

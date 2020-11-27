@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +12,31 @@ using Sprint.Models;
 
 namespace Sprint.Controllers
 {
+    [Authorize(Roles = "Member,Admin")]
     public class AddressController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public AddressController(ApplicationDbContext context)
+        public AddressController(ApplicationDbContext context, UserManager<User> user)
         {
             _context = context;
+            _userManager = user;
         }
 
         // GET: Address
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Address.Include(a => a.User);
-            return View(await applicationDbContext.ToListAsync());
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+            var userAddresses = await _context.Address
+                .Include(w => w.User)
+                .Where(w => w.UserId == user.Id)
+                .ToListAsync();
+            return View(userAddresses);
         }
 
         // GET: Address/Details/5
@@ -46,9 +59,15 @@ namespace Sprint.Controllers
         }
 
         // GET: Address/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum");
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+            ViewData["UserId"] = user.Id;
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum");
             return View();
         }
 
@@ -57,21 +76,31 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AddressId,UserId,MailingStreet,MailingCity,MailingProvince,MailingPostal,ShippingStreet,ShippingCity,ShippingProvince,ShippingPostal")] Address address)
+        public async Task<IActionResult> Create([Bind("UserId,Street,City,Province,Postal")] Address address)
         {
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(address);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", address.UserId);
+            ViewData["UserId"] = user.Id;
             return View(address);
         }
 
         // GET: Address/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -82,7 +111,7 @@ namespace Sprint.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", address.UserId);
+            ViewData["UserId"] = user.Id;
             return View(address);
         }
 
@@ -91,7 +120,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AddressId,UserId,MailingStreet,MailingCity,MailingProvince,MailingPostal,ShippingStreet,ShippingCity,ShippingProvince,ShippingPostal")] Address address)
+        public async Task<IActionResult> Edit(int id, [Bind("AddressId,UserId,Street,City,Province,Postal")] Address address)
         {
             if (id != address.AddressId)
             {

@@ -198,6 +198,31 @@ namespace Sprint.Tests.Helpers
             };
         }
 
+        protected Wallet CreateWallet(int? id, int userId, int walletId, string cardNumber, string year, string month)
+        {
+            return new Wallet
+            {
+                UserId = userId,
+                WalletId = walletId,
+                CardNumber = cardNumber, 
+                Year = year, 
+                Month = month
+            };
+        }
+
+        protected Address CreateAddress(int? id, int userId, int addressId, string street, string city, string province, string postal)
+        {
+            return new Address
+            {
+                UserId = userId,
+                AddressId = addressId,
+                Street = street,
+                City = city,
+                Province = province,
+                Postal = postal
+            };
+        }
+
         protected UserRelationship CreateRelationship(int? id, User user, User related, Relationship type)
         {
             return new UserRelationship
