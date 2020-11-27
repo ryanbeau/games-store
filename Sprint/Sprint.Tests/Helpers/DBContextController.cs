@@ -171,6 +171,18 @@ namespace Sprint.Tests.Helpers
             };
         }
 
+        protected Review CreateReview(int? id, int userId, int gameId, string content, int rating)
+        {
+            return new Review
+            {
+                ReviewId = id ?? default,
+                UserId = userId,
+                ReviewContent = content,
+                Rating = rating,
+                GameId = gameId,
+            };
+        }
+
         protected CartGame CreateCartGame(int? id, User cartUser, User receivingUser, Game game, DateTime? added = null)
         {
             return new CartGame
