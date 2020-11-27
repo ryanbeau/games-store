@@ -12,6 +12,7 @@ namespace Sprint.Data
         public virtual DbSet<Wallet> Wallet { get; set; }
         public virtual DbSet<GameDiscount> GameDiscounts { get; set; }
         public virtual DbSet<GameImage> GameImages { get; set; }
+        public virtual DbSet<PlatformType> PlatformTypes { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
@@ -334,11 +335,46 @@ namespace Sprint.Data
                 new GameImage { GameImageId = 149, GameId = 30, ImageType = ImageType.Regular, ImageURL = "https://cdn.cloudflare.steamstatic.com/steam/apps/377160/ss_6834be966451a9b0f12eb4f68bfb0853ea0b7267.jpg" },
                 new GameImage { GameImageId = 150, GameId = 30, ImageType = ImageType.Regular, ImageURL = "https://cdn.cloudflare.steamstatic.com/steam/apps/377160/ss_cd83d21b82e4c4e9a6d76edc98a8c2b70b1b5e9d.jpg" }
             );
+
+            modelBuilder.Entity<PlatformType>().HasData(
+                new PlatformType { PlatformTypeId = 1, Name = "Other" },
+                new PlatformType { PlatformTypeId = 2, Name = "Xbox" },
+                new PlatformType { PlatformTypeId = 3, Name = "Xbox 360" },
+                new PlatformType { PlatformTypeId = 4, Name = "Xbox One" },
+                new PlatformType { PlatformTypeId = 5, Name = "Xbox Series" },
+                new PlatformType { PlatformTypeId = 6, Name = "PlayStation" },
+                new PlatformType { PlatformTypeId = 7, Name = "PlayStation 2" },
+                new PlatformType { PlatformTypeId = 8, Name = "PlayStation 3" },
+                new PlatformType { PlatformTypeId = 9, Name = "PlayStation 4" },
+                new PlatformType { PlatformTypeId = 10, Name = "PlayStation 5" },
+                new PlatformType { PlatformTypeId = 11, Name = "Nintendo DS" },
+                new PlatformType { PlatformTypeId = 12, Name = "Nintendo 3DS" },
+                new PlatformType { PlatformTypeId = 13, Name = "Wii" },
+                new PlatformType { PlatformTypeId = 14, Name = "Wii U" },
+                new PlatformType { PlatformTypeId = 15, Name = "Switch" },
+                new PlatformType { PlatformTypeId = 16, Name = "PC Windows" },
+                new PlatformType { PlatformTypeId = 17, Name = "PC Mac" },
+                new PlatformType { PlatformTypeId = 18, Name = "PC Linux" },
+                new PlatformType { PlatformTypeId = 19, Name = "PC Other" }
+            );
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PlatformType>(entity =>
+            {
+                entity.ToTable("PlatformType");
+
+                entity.Property(e => e.PlatformTypeId).HasColumnName("PlatformTypeId").UseIdentityColumn();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("Name")
+                    .HasMaxLength(64)
+                    .IsUnicode(false);
+            });
 
             modelBuilder.Entity<GameImage>(entity =>
             {
@@ -695,10 +731,39 @@ namespace Sprint.Data
                     .IsRequired()
                     .HasColumnName("Gender");
 
+                entity.Property(e => e.ReceivePromotionalEmails)
+                    .IsRequired()
+                    .HasColumnName("ReceivePromotionalEmails")
+                    .HasDefaultValue(false);
+
+                // allow null
+                entity.Property(e => e.PreferredGameTypeId)
+                    .HasColumnName("PreferredGameTypeId");
+
+                // allow null
+                entity.Property(e => e.PreferredPlatformTypeId)
+                    .HasColumnName("PreferredPlatformId");
+
                 entity.Property(e => e.WishlistVisibility)
                     .IsRequired()
                     .HasColumnName("WishlistVisibility")
                     .HasDefaultValue(WishlistVisibility.FriendsOnly);
+
+                // foreign key - without navigational property
+                modelBuilder.Entity<User>()
+                   .HasOne<GameType>()
+                   .WithMany()
+                   .HasForeignKey(p => p.PreferredGameTypeId)
+                   .HasPrincipalKey(p => p.GameTypeId)
+                   .HasConstraintName("FK_User_GameType");
+
+                // foreign key - without navigational property
+                modelBuilder.Entity<User>()
+                   .HasOne<PlatformType>()
+                   .WithMany()
+                   .HasForeignKey(p => p.PreferredPlatformTypeId)
+                   .HasPrincipalKey(p => p.PlatformTypeId)
+                   .HasConstraintName("FK_User_PlatformType");
             });
 
             modelBuilder.Entity<Role>(entity =>
