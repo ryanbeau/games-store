@@ -11,58 +11,31 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingStreet)
+            @Html.DisplayNameFor(model => model.Street)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingStreet)
+            @Html.DisplayFor(model => model.Street)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingCity)
+            @Html.DisplayNameFor(model => model.City)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingCity)
+            @Html.DisplayFor(model => model.City)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingProvince)
+            @Html.DisplayNameFor(model => model.Province)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingProvince)
+            @Html.DisplayFor(model => model.Province)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MailingPostal)
+            @Html.DisplayNameFor(model => model.Postal)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MailingPostal)
+            @Html.DisplayFor(model => model.Postal)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingStreet)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShippingStreet)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingCity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShippingCity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingProvince)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShippingProvince)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShippingPostal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShippingPostal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.AccountNum)
+        <dd class="col-sm-10">
+            @Html.HiddenFor(model => model.User.AccountNum)
         </dd>
     </dl>
 </div>

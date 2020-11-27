@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sprint.Data;
 
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201124153813_UpdatedAddressSchema")]
+    partial class UpdatedAddressSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1767,125 +1769,6 @@ namespace Sprint.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Sprint.Models.PlatformType", b =>
-                {
-                    b.Property<int>("PlatformTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("PlatformTypeId")
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnName("Name")
-                        .HasColumnType("varchar(64)")
-                        .HasMaxLength(64)
-                        .IsUnicode(false);
-
-                    b.HasKey("PlatformTypeId");
-
-                    b.ToTable("PlatformType");
-
-                    b.HasData(
-                        new
-                        {
-                            PlatformTypeId = 1,
-                            Name = "Other"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 2,
-                            Name = "Xbox"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 3,
-                            Name = "Xbox 360"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 4,
-                            Name = "Xbox One"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 5,
-                            Name = "Xbox Series"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 6,
-                            Name = "PlayStation"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 7,
-                            Name = "PlayStation 2"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 8,
-                            Name = "PlayStation 3"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 9,
-                            Name = "PlayStation 4"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 10,
-                            Name = "PlayStation 5"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 11,
-                            Name = "Nintendo DS"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 12,
-                            Name = "Nintendo 3DS"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 13,
-                            Name = "Wii"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 14,
-                            Name = "Wii U"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 15,
-                            Name = "Switch"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 16,
-                            Name = "PC Windows"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 17,
-                            Name = "PC Mac"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 18,
-                            Name = "PC Linux"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 19,
-                            Name = "PC Other"
-                        });
-                });
-
             modelBuilder.Entity("Sprint.Models.Review", b =>
                 {
                     b.Property<int>("ReviewId")
@@ -1956,14 +1839,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "a2712888-33cb-4137-b089-894b7326ad6f",
+                            ConcurrencyStamp = "b5c8d46b-0a75-4bfe-b493-050dd60dff3a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "b04ac107-c2a0-4297-bbaf-f0976ce5e06e",
+                            ConcurrencyStamp = "51ea9607-6bf2-4763-9719-bcc9402c15d3",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -2042,20 +1925,6 @@ namespace Sprint.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("PreferredGameTypeId")
-                        .HasColumnName("PreferredGameTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PreferredPlatformTypeId")
-                        .HasColumnName("PreferredPlatformId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ReceivePromotionalEmails")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ReceivePromotionalEmails")
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -2084,10 +1953,6 @@ namespace Sprint.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("PreferredGameTypeId");
-
-                    b.HasIndex("PreferredPlatformTypeId");
-
                     b.ToTable("User");
 
                     b.HasData(
@@ -2095,9 +1960,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "9f26980d-8098-46ab-843b-b2d8ff903979",
+                            AccountNum = "5397e2b9-6aea-4ceb-b082-fbf807d146a3",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "9dd7f504-86d8-4a4c-aa88-2535ad947084",
+                            ConcurrencyStamp = "1c2eaec1-ff73-4087-808a-59e309dcdc4d",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -2105,10 +1970,9 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAELU+szr20ZJu3sIyE60CXxvFiRLd1davtXF8p+Ytc4zMP+C+lInWpszo75yJLizFsA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMKcB8ltCmaon7E/jkBQmgjRSPlNvXb/nHini58q3pFZnzhZNTjopsoPdEMWZRSNgw==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
-                            ReceivePromotionalEmails = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "admin",
@@ -2118,9 +1982,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "32af3121-7c5a-48f3-8816-a8db8973eacb",
+                            AccountNum = "5f718acc-df8a-42e2-ab94-32533698f6af",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "ed37b2e4-340e-41f0-864d-03f2fd03b013",
+                            ConcurrencyStamp = "cfea4406-8bb9-431f-8072-4fa96a5e3298",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -2128,10 +1992,9 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBAKiTiLjYw0QXpwEX1AEzqIsI+4GqvahY02oO0KSAMD+VDdKHDh9L1QfSRYUHwoxA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJQIsUYfjyIMopLL+U+7WtU2Fo20U70JbAJD/zADGQSyVYsowlgUHo+Bw7NpuzbDlA==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
-                            ReceivePromotionalEmails = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "user",
@@ -2216,24 +2079,21 @@ namespace Sprint.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
+                    b.Property<int>("CardNumber")
                         .HasColumnName("CardNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("int");
 
-                    b.Property<string>("Month")
-                        .IsRequired()
+                    b.Property<int>("Month")
                         .HasColumnName("Month")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnName("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Year")
-                        .IsRequired()
+                    b.Property<int>("Year")
                         .HasColumnName("Year")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("int");
 
                     b.HasKey("WalletId");
 
@@ -2363,19 +2223,6 @@ namespace Sprint.Migrations
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Review_User")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Sprint.Models.User", b =>
-                {
-                    b.HasOne("Sprint.Models.GameType", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredGameTypeId")
-                        .HasConstraintName("FK_User_GameType");
-
-                    b.HasOne("Sprint.Models.PlatformType", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredPlatformTypeId")
-                        .HasConstraintName("FK_User_PlatformType");
                 });
 
             modelBuilder.Entity("Sprint.Models.UserGameWishlist", b =>

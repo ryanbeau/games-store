@@ -10,6 +10,7 @@ namespace Sprint.Data
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
         public virtual DbSet<Wallet> Wallet { get; set; }
+        public virtual DbSet<Address> Address { get; set; }
         public virtual DbSet<GameDiscount> GameDiscounts { get; set; }
         public virtual DbSet<GameImage> GameImages { get; set; }
         public virtual DbSet<PlatformType> PlatformTypes { get; set; }
@@ -513,21 +514,13 @@ namespace Sprint.Data
 
                 entity.Property(e => e.UserId).HasColumnName("UserId")
                     .IsRequired();
-                entity.Property(e => e.MailingStreet).HasColumnName("MailingStreet")
+                entity.Property(e => e.Street).HasColumnName("Street")
                     .IsRequired();
-                entity.Property(e => e.MailingCity).HasColumnName("MailingCity")
+                entity.Property(e => e.City).HasColumnName("City")
                     .IsRequired();
-                entity.Property(e => e.MailingProvince).HasColumnName("MailingProvince")
+                entity.Property(e => e.Province).HasColumnName("Province")
                     .IsRequired();
-                entity.Property(e => e.MailingPostal).HasColumnName("MailingPostal")
-                    .IsRequired();
-                entity.Property(e => e.ShippingStreet).HasColumnName("ShippingStreet")
-                    .IsRequired();
-                entity.Property(e => e.ShippingCity).HasColumnName("ShippingCity")
-                    .IsRequired();
-                entity.Property(e => e.ShippingProvince).HasColumnName("ShippingProvince")
-                    .IsRequired();
-                entity.Property(e => e.ShippingPostal).HasColumnName("ShippingPostal")
+                entity.Property(e => e.Postal).HasColumnName("Postal")
                     .IsRequired();
 
                 entity.HasOne(d => d.User)
@@ -804,6 +797,6 @@ namespace Sprint.Data
             Seed(modelBuilder);
         }
 
-        public DbSet<Sprint.Models.Address> Address { get; set; }
+        
     }
 }

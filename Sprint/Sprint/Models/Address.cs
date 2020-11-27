@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Sprint.Models
 {
@@ -6,22 +7,23 @@ namespace Sprint.Models
     {
         public int AddressId { get; set; }
         public int UserId { get; set; }
+        [Required]
+        [StringLength (30, ErrorMessage = "Street must be 30 Characters or less")]
+        [MinLength(3, ErrorMessage = "Minimum 3 Characters")]
+        public string Street {get; set;}
+        [Required]
+        [StringLength(30, ErrorMessage = "City must be 30 Characters or less")]
+        [MinLength(3, ErrorMessage = "Minimum 3 Characters")]
+        public string City { get; set; }
+        [Required]
+        [StringLength(30, ErrorMessage = "Province must be 30 Characters or less")]
+        [MinLength(3, ErrorMessage = "Minimum 3 Characters")]
+        public string Province { get; set; }
+        [Required]
+        [StringLength(6, ErrorMessage = "Postal Code must be 6 Characters or less")]
+        [MinLength(6, ErrorMessage = "Minimum 6 Characters")]
 
-        public string MailingStreet {get; set;}
-
-        public string MailingCity { get; set; }
-
-        public string MailingProvince { get; set; }
-
-        public string MailingPostal { get; set; }
-
-        public string ShippingStreet { get; set; }
-
-        public string ShippingCity { get; set; }
-
-        public string ShippingProvince { get; set; }
-
-        public string ShippingPostal { get; set; }
+        public string Postal { get; set; }
 
         public User User { get; set; }
 
