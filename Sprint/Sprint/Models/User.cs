@@ -16,6 +16,8 @@ namespace Sprint.Models
             CartItems = new HashSet<CartGame>();
             ReceivingCartItems = new HashSet<CartGame>();
             Wishlists = new HashSet<UserGameWishlist>();
+            Wallets = new HashSet<Wallet>();
+            Addresses = new HashSet<Address>();
         }
 
         [Display(Name = "Account Number")]
@@ -57,5 +59,8 @@ namespace Sprint.Models
         public virtual ICollection<CartGame> CartItems { get; set; }
         public virtual ICollection<CartGame> ReceivingCartItems { get; set; }
         public virtual ICollection<UserGameWishlist> Wishlists { get; set; }
+
+        public virtual ICollection<Wallet> Wallets { get; set; }
+        public virtual ICollection<Address> Addresses { get; set; }
     }
 }

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Sprint.Models.Address>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingStreet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingCity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MailingPostal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShippingStreet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShippingCity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShippingProvince)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShippingPostal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingStreet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingCity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingProvince)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MailingPostal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShippingStreet)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShippingCity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShippingProvince)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShippingPostal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.AccountNum)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.AddressId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.AddressId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.AddressId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

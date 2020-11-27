@@ -1,0 +1,62 @@
+@model Sprint.Models.Review
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if (TempData["AlreadyExists"] is string)
+{
+    <div class="alert alert-secondary" role="alert">
+        <i class="fa fa-times-circle mr-2" aria-hidden="true"></i>@TempData["AlreadyExists"]
+    </div>
+}
+
+<div>
+    <h4>@Model.Game.Name Reviewed by @Model.User.UserName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rating)
+        </dt>
+        <dd class="col-sm-10">
+            <div class="rate">
+                <input asp-for="@Model.Rating" type="radio" id="star5" name="@Model.Rating" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star4" name="@Model.Rating" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star3" name="@Model.Rating" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star2" name="@Model.Rating" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star1" name="@Model.Rating" value="1" />
+                <label for="star1" title="text">1 star</label>
+            </div>
+            <span asp-validation-for="@Model.Rating" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReviewContent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReviewContent)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Game)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Game.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (User.Identity.Name.ToLower() == @Model.User.Name.ToLower())
+    {
+        <a class="btn btn-primary btn-danger w-25" asp-action="Edit" asp-route-id="@Model.ReviewId"> Edit</a>
+    }
+    <a class="btn btn-primary btn-danger w-25" asp-action="Index" asp-route-id="@Model.GameId">Back to List</a>
+</div>

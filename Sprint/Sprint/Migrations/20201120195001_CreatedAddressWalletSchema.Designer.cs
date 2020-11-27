@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sprint.Data;
 
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201120195001_CreatedAddressWalletSchema")]
+    partial class CreatedAddressWalletSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -1787,125 +1789,6 @@ namespace Sprint.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Sprint.Models.PlatformType", b =>
-                {
-                    b.Property<int>("PlatformTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("PlatformTypeId")
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnName("Name")
-                        .HasColumnType("varchar(64)")
-                        .HasMaxLength(64)
-                        .IsUnicode(false);
-
-                    b.HasKey("PlatformTypeId");
-
-                    b.ToTable("PlatformType");
-
-                    b.HasData(
-                        new
-                        {
-                            PlatformTypeId = 1,
-                            Name = "Other"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 2,
-                            Name = "Xbox"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 3,
-                            Name = "Xbox 360"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 4,
-                            Name = "Xbox One"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 5,
-                            Name = "Xbox Series"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 6,
-                            Name = "PlayStation"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 7,
-                            Name = "PlayStation 2"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 8,
-                            Name = "PlayStation 3"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 9,
-                            Name = "PlayStation 4"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 10,
-                            Name = "PlayStation 5"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 11,
-                            Name = "Nintendo DS"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 12,
-                            Name = "Nintendo 3DS"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 13,
-                            Name = "Wii"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 14,
-                            Name = "Wii U"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 15,
-                            Name = "Switch"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 16,
-                            Name = "PC Windows"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 17,
-                            Name = "PC Mac"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 18,
-                            Name = "PC Linux"
-                        },
-                        new
-                        {
-                            PlatformTypeId = 19,
-                            Name = "PC Other"
-                        });
-                });
-
             modelBuilder.Entity("Sprint.Models.Review", b =>
                 {
                     b.Property<int>("ReviewId")
@@ -2062,20 +1945,6 @@ namespace Sprint.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("PreferredGameTypeId")
-                        .HasColumnName("PreferredGameTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PreferredPlatformTypeId")
-                        .HasColumnName("PreferredPlatformId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ReceivePromotionalEmails")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ReceivePromotionalEmails")
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -2104,10 +1973,6 @@ namespace Sprint.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("PreferredGameTypeId");
-
-                    b.HasIndex("PreferredPlatformTypeId");
-
                     b.ToTable("User");
 
                     b.HasData(
@@ -2128,7 +1993,6 @@ namespace Sprint.Migrations
                             PasswordHash = "AQAAAAEAACcQAAAAEIRrP6ebxAl/7ZSqLf6DBDN8s3p9R1rkYs6404DQ/JIdfrzZ1IPYB1M5dRKGNJr9aQ==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
-                            ReceivePromotionalEmails = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "admin",
@@ -2151,7 +2015,6 @@ namespace Sprint.Migrations
                             PasswordHash = "AQAAAAEAACcQAAAAEEPg9Mf+0w6zcdjJFNekapP2yBkamQzJoE5A1ED+3x3HbLdPeh8CXCk/drEj3mW3OA==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
-                            ReceivePromotionalEmails = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "user",
@@ -2380,19 +2243,6 @@ namespace Sprint.Migrations
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_Review_User")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Sprint.Models.User", b =>
-                {
-                    b.HasOne("Sprint.Models.GameType", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredGameTypeId")
-                        .HasConstraintName("FK_User_GameType");
-
-                    b.HasOne("Sprint.Models.PlatformType", null)
-                        .WithMany()
-                        .HasForeignKey("PreferredPlatformTypeId")
-                        .HasConstraintName("FK_User_PlatformType");
                 });
 
             modelBuilder.Entity("Sprint.Models.UserGameWishlist", b =>

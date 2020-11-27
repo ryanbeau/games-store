@@ -1,0 +1,55 @@
+@model Sprint.Models.Review
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h3 style="color:white;font-style:italic;">Are you sure you want to delete your review for @Model.Game.Name?</h3>
+<div>
+    <h4>Review</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Rating)
+        </dt>
+        <dd class="col-sm-10">
+            <div class="rate">
+                <input asp-for="@Model.Rating" type="radio" id="star5" name="@Model.Rating" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star4" name="@Model.Rating" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star3" name="@Model.Rating" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star2" name="@Model.Rating" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input asp-for="@Model.Rating" type="radio" id="star1" name="@Model.Rating" value="1" />
+                <label for="star1" title="text">1 star</label>
+            </div>
+            <span asp-validation-for="@Model.Rating" class="text-danger"></span>
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReviewContent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReviewContent)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.User.AccountNum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Game)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Game.Developer)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ReviewId" />
+        <input type="submit" value="Delete" class="btn btn-danger w-25" />
+        <a class="btn btn-primary w-25" asp-action="Index" asp-route-id="@Model.GameId">Back to List</a>
+    </form>
+</div>

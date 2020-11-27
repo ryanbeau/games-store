@@ -1,0 +1,71 @@
+﻿@model Sprint.Models.Game
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Reviews for @Model.Name</h1>
+
+@if ((bool)User?.Identity?.IsAuthenticated)
+{
+    <p>
+        <a asp-route-id="@Model.GameId" asp-action="Create">Create New</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User
+            </th>
+            <th style="max-width:170px;">
+                Rating
+            </th>
+            <th style="max-width:300px;">
+                Comment
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Reviews)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+                <td style="max-width:170px;">
+                    <div class="rate">
+                        <input asp-for="@item.Rating" type="radio" id="star5" name="@item.Rating" value="5" />
+                        <label for="star5" title="text">5 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star4" name="@item.Rating" value="4" />
+                        <label for="star4" title="text">4 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star3" name="@item.Rating" value="3" />
+                        <label for="star3" title="text">3 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star2" name="@item.Rating" value="2" />
+                        <label for="star2" title="text">2 stars</label>
+                        <input asp-for="@item.Rating" type="radio" id="star1" name="@item.Rating" value="1" />
+                        <label for="star1" title="text">1 star</label>
+                    </div>
+                    <span asp-validation-for="@item.Rating" class="text-danger"></span>
+                </td>
+                <td style="max-width:300px;">
+                    @Html.DisplayFor(modelItem => item.ReviewContent)
+                </td>
+                <td>
+                    @if (User?.Identity?.Name?.ToLower() == @item?.User?.Name?.ToLower())
+                    {
+                        <a class="btn btn-primary btn-danger w-25" asp-action="Edit" asp-route-id="@item.ReviewId">Edit</a>
+                    }
+                    <a class="btn btn-primary btn-danger w-25" asp-action="Details" asp-route-id="@item.ReviewId"> Details </a>
+                    @if (User?.Identity?.Name?.ToLower() == @item?.User?.Name?.ToLower())
+                    {
+                        <a class="btn btn-primary btn-danger w-25" asp-action="Delete" asp-route-id="@item.ReviewId"> Delete </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

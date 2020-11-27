@@ -9,6 +9,7 @@ namespace Sprint.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, int>
     {
+        public virtual DbSet<Wallet> Wallet { get; set; }
         public virtual DbSet<GameDiscount> GameDiscounts { get; set; }
         public virtual DbSet<GameImage> GameImages { get; set; }
         public virtual DbSet<PlatformType> PlatformTypes { get; set; }
@@ -476,6 +477,68 @@ namespace Sprint.Data
                     .HasConstraintName("FK_Game_Discount");
             });
 
+            modelBuilder.Entity<Wallet>(entity =>
+            {
+                entity.HasKey(e => e.WalletId);
+                entity.ToTable("Wallet");
+
+                entity.Property(e => e.WalletId).HasColumnName("WalletId").UseIdentityColumn();
+
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
+
+                entity.Property(e => e.CardNumber).HasColumnName("CardNumber")
+                    .IsRequired();
+
+                entity.Property(e => e.Month).HasColumnName("Month")
+                .IsRequired();
+
+                entity.Property(e => e.Year).HasColumnName("Year")
+                .IsRequired();
+
+                entity.HasOne(d => d.User)
+                .WithMany(d => d.Wallets)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Wallet_User");
+
+            });
+
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.HasKey(p => p.AddressId);
+                entity.ToTable("Address");
+
+                entity.Property(e => e.AddressId).HasColumnName("AddressId").UseIdentityColumn();
+
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
+                entity.Property(e => e.MailingStreet).HasColumnName("MailingStreet")
+                    .IsRequired();
+                entity.Property(e => e.MailingCity).HasColumnName("MailingCity")
+                    .IsRequired();
+                entity.Property(e => e.MailingProvince).HasColumnName("MailingProvince")
+                    .IsRequired();
+                entity.Property(e => e.MailingPostal).HasColumnName("MailingPostal")
+                    .IsRequired();
+                entity.Property(e => e.ShippingStreet).HasColumnName("ShippingStreet")
+                    .IsRequired();
+                entity.Property(e => e.ShippingCity).HasColumnName("ShippingCity")
+                    .IsRequired();
+                entity.Property(e => e.ShippingProvince).HasColumnName("ShippingProvince")
+                    .IsRequired();
+                entity.Property(e => e.ShippingPostal).HasColumnName("ShippingPostal")
+                    .IsRequired();
+
+                entity.HasOne(d => d.User)
+                .WithMany(d => d.Addresses)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Address_User");
+
+            }
+            );
+
             modelBuilder.Entity<Review>(entity =>
             {
                 entity.HasKey(e => e.ReviewId);
@@ -740,5 +803,7 @@ namespace Sprint.Data
 
             Seed(modelBuilder);
         }
+
+        public DbSet<Sprint.Models.Address> Address { get; set; }
     }
 }
