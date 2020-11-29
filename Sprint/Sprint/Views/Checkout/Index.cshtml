@@ -1,0 +1,335 @@
+﻿@using Sprint.ViewModels
+@model CheckoutViewModel
+
+@{
+    ViewData["Title"] = $"Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script language="javascript">
+    var taxPercent = @Model.TaxPercent;
+    var itemsTotalPrice = @Model.ItemsTotalPrice;
+    var shippingHandlingFee = @Model.IndividualShippingCost;
+
+    function billing_address_checkbox() {
+        if (document.getElementById("sameAsShippingAddress").checked) {
+            document.getElementById("billingAddresses").style.display = "none";
+            document.getElementById("selectBillingAddress").disabled = true;
+        } else {
+            document.getElementById("billingAddresses").style.display = "block";
+            document.getElementById("selectBillingAddress").disabled = false;
+
+            let shippingAddressValue = document.getElementById("selectShippingAddress").value;
+
+            if (shippingAddressValue == document.getElementById("selectBillingAddress").value) {
+                let billingSelect = document.getElementById("selectBillingAddress")
+
+                for (let i = 0; i < billingSelect.options.length; i++) {
+                    if (billingSelect.options[i].value != shippingAddressValue) {
+                        billingSelect.value = billingSelect.options[i].value;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    function display_select_block(controlId, className, blockIdPrefix) {
+        // hide all blocks
+        let divs = document.getElementsByClassName(className);
+        for (let i = 0; i < divs.length; i++) {
+            divs[i].style.display = "none";
+        }
+
+        // display chosen block
+        let id = blockIdPrefix + document.getElementById(controlId).value;
+        document.getElementById(id).style.display = "block";
+
+        // same address
+        if ((controlId == "selectShippingAddress" || controlId == "selectBillingAddress")
+            && document.getElementById("selectShippingAddress").value == document.getElementById("selectBillingAddress").value) {
+
+            document.getElementById("sameAsShippingAddress").checked = true;
+            billing_address_checkbox();
+        }
+    }
+
+    function ship_item_checkbox() {
+        let shipCount = 0;
+
+        // get all checkbox value
+        let shipInputs = document.getElementsByClassName("shipItemInput");
+        for (let i = 0; i < shipInputs.length; i++) {
+            if (shipInputs[i].checked) {
+                shipCount += 1;
+            }
+        }
+
+        if (shipCount == 0) {
+            document.getElementById("shippingAddressDiv").style.display = "none";
+            document.getElementById("billingAddressDiv").style.display = "none";
+            document.getElementById("selectShippingAddress").disabled = true;
+            document.getElementById("selectBillingAddress").disabled = true;
+        } else {
+            document.getElementById("shippingAddressDiv").style.display = "block";
+            document.getElementById("billingAddressDiv").style.display = "block";
+            document.getElementById("selectShippingAddress").disabled = false;
+            document.getElementById("selectBillingAddress").disabled = false;
+        }
+
+        let shippingHandlingPrice = shipCount * shippingHandlingFee;
+        let beforeTaxPrice = itemsTotalPrice + shippingHandlingPrice;
+        let taxPrice = beforeTaxPrice * taxPercent;
+        let orderTotalPrice = beforeTaxPrice + taxPrice;
+
+        document.getElementById("shippingHandlingPrice").innerHTML = shippingHandlingPrice.toFixed(2);
+        document.getElementById("beforeTaxPrice").innerHTML = beforeTaxPrice.toFixed(2);
+        document.getElementById("taxPrice").innerHTML = taxPrice.toFixed(2);
+        document.getElementById("orderTotalPrice").innerHTML = orderTotalPrice.toFixed(2);
+    }
+</script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<form class="w-100" asp-action="Order">
+    <input type="hidden" name="ItemsTotalPrice" value="@Model.ItemsTotalPrice" />
+
+    <div class="container">
+
+        <div class="row mb-2">
+            <div class="col-md">
+                <h4 class="text-light font-weight-light text-uppercase">
+                    <i class="fa fa-server text-secondary pr-2" aria-hidden="true"></i>Review Your Order
+                </h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md">
+                @if (TempData["CheckoutAlert"] is string)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>@TempData["CheckoutAlert"]
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row mt-1">
+            <div class="col-xl-9">
+                <div class="row rounded moist-bg-light moist-shadow pt-3 pb-3">
+
+                    <div class="col-md-4">
+                        <h5 class="text-dark">Payment Method</h5>
+                        @for (int i = 0; i < Model.WalletCreditCards.Count; i++)
+                        {
+                            Wallet wallet = Model.WalletCreditCards[i];
+
+                            string id = $"creditCard{wallet.WalletId}";
+                            string displayStyle = i == 0 ? "block" : "none";
+                            string trimmedDigits = wallet.CardNumber?.Substring(Math.Max(0, wallet.CardNumber.Length - 4));
+
+                            <div id="@id" style="display:@displayStyle" class="creditCardBlock">
+                                <p class="text-dark">Ending in: @trimmedDigits<br />Expiry: @wallet.Month/@wallet.Year</p>
+                            </div>
+                        }
+                        @if (Model.WalletCreditCards.Count == 1)
+                        {
+                            <input type="hidden" name="WalletId" value="@Model.WalletCreditCards[0].WalletId" />
+                        }
+                        else if (Model.WalletCreditCards.Count > 1)
+                        {
+                            <select id="selectCreditCard" class="form-control border border-secondary" name="WalletId"
+                                    onchange="display_select_block('selectCreditCard', 'creditCardBlock', 'creditCard')">
+                                @foreach (var wallet in Model.WalletCreditCards)
+                                {
+                                    string trimmedDigits = wallet.CardNumber?.Substring(Math.Max(0, wallet.CardNumber.Length - 4));
+
+                                    <option value="@wallet.WalletId">Ending in: @trimmedDigits</option>
+                                }
+                            </select>
+                        }
+                        <a asp-controller="Wallet" asp-action="Create" class="text-secondary">＋Add a payment method</a>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div id="shippingAddressDiv" style="display:none">
+                            <h5 class="text-dark">Shipping address</h5>
+                            @for (int i = 0; i < Model.Addresses.Count; i++)
+                            {
+                                string id = $"shippingAddress{Model.Addresses[i].AddressId}";
+                                string displayStyle = i == 0 ? "block" : "none";
+
+                                <div id="@id" style="display:@displayStyle" class="shippingAddressBlock">
+                                    <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
+                                </div>
+                            }
+                            @if (Model.Addresses.Count == 1)
+                            {
+                                <input type="hidden" name="ShippingId" value="@Model.Addresses[0].AddressId" />
+                            }
+                            else if (Model.Addresses.Count > 1)
+                            {
+                                <select id="selectShippingAddress" class="form-control border border-secondary" name="ShippingId" disabled
+                                        onchange="display_select_block('selectShippingAddress', 'shippingAddressBlock', 'shippingAddress')">
+                                    @foreach (var address in Model.Addresses)
+                                    {
+                                        <option value="@address.AddressId">@address.Street</option>
+                                    }
+                                </select>
+                            }
+                            <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div id="billingAddressDiv" style="display:none">
+                            <h5 class="text-dark">Billing address</h5>
+                            <div id="billingAddresses" style="display:none">
+                                @for (int i = 0; i < Model.Addresses.Count; i++)
+                                {
+                                    string id = $"billingAddress{Model.Addresses[i].AddressId}";
+                                    string displayStyle = i == 0 ? "block" : "none";
+
+                                    <div id="@id" style="display:@displayStyle" class="billingAddressBlock">
+                                        <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
+                                    </div>
+                                }
+                                @if (Model.Addresses.Count > 1)
+                                {
+                                    <select id="selectBillingAddress" class="form-control border border-secondary" name="BillingId" disabled
+                                            onchange="display_select_block('selectBillingAddress', 'billingAddressBlock', 'billingAddress')">
+                                        @foreach (var address in Model.Addresses)
+                                        {
+                                            <option value="@address.AddressId">@address.Street</option>
+                                        }
+                                    </select>
+                                }
+                            </div>
+                            @if (Model.Addresses.Count > 1)
+                            {
+                                <div class="form-check">
+                                    @Html.CheckBox($"SameAsShippingAddress", true, new { Id = "sameAsShippingAddress", Class = "form-check-input", OnChange = "billing_address_checkbox()" })
+                                    <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
+                                </div>
+                            }
+                            else
+                            {
+                                @if (Model.Addresses.Count > 0)
+                                {
+                                    <div class="form-check">
+                                        <input type="hidden" name="SameAsShippingAddress" value="true" />
+                                        <input type="checkbox" class="form-check-input" id="sameAsShippingAddress" checked disabled />
+                                        <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
+                                    </div>
+                                }
+                                <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md mt-3 rounded moist-bg-light moist-shadow">
+                        @for (int i = 0; i < Model.CartCheckout.Items.Count; i++)
+                        {
+                            var item = Model.CartCheckout.Items[i];
+
+                            <div class="row border-bottom border-secondary pt-2 pb-2">
+                                <div class="col-md-2">
+                                    @if (item.Image != null)
+                                    {<img height="50" width="100" src="@item.Image.ImageURL">}
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="text-dark font-weight-bold mb-0">
+                                        @Html.DisplayFor(modelItem => item.CartItem.Game.Name)
+                                    </p>
+                                    <p class="text-secondary mb-0">
+                                        @Html.DisplayFor(modelItem => item.CartItem.Game.Developer)
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    @if (item.Discount != null)
+                                    {
+                                        <div class="d-flex">
+                                            <div class="mr-2">
+                                                <span class="moist-discount-regular-price text-secondary">@item.CartItem.Game.RegularPrice</span>
+                                                <span class="moist-discount-price text-dark">@item.Discount.DiscountPrice</span>
+                                            </div>
+                                            <span class="moist-discount-percent shadow rounded moist-tooltip">
+                                                @string.Format("{0:0%}", item.Discount.DiscountPrice / item.CartItem.Game.RegularPrice)
+                                            </span>
+                                        </div>
+                                        <small class="text-secondary">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                            @(item.Discount.DiscountFinish.ToString("MMM dd h:mm tt"))
+                                        </small>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="text-dark font-weight-bold">@item.CartItem.Game.RegularPrice</h5>
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="hidden" name="OrderItems[@i].CartGameId" value="@item.CartItem.CartGameId" />
+                                    @if (item.CartItem.ReceivingUserId == Model.CartCheckout.User.Id)
+                                    {
+                                        <div class="form-check">
+                                            @{ string id = $"cartGame{item.CartItem.CartGameId}"; }
+                                            @Html.CheckBox($"OrderItems[{i}].ShipItem", false, new { Class = "form-check-input shipItemInput", OnChange = "ship_item_checkbox()" })
+                                            <label class="form-check-label text-dark">Ship this item</label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-dark">Gift for <span class="font-weight-bold">@item.CartItem.ReceivingUser.Name</span></span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3">
+                <div class="row rounded moist-bg-light moist-shadow p-2 ml-1">
+                    @if (Model.WalletCreditCards.Any())
+                    {
+                        <button type="submit" class="btn btn-primary w-100 mt-3 mb-3">Place your order</button>
+                    }
+                    else
+                    {
+                        <h5 class="text-danger">Add a payment type</h5>
+                    }
+
+                    <h5 class="text-dark">Order Summary</h5>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="text-dark p-0">Items:</td>
+                                <td class="text-dark p-0 text-right" id="itemsTotalPrice">@Model.ItemsTotalPrice</td>
+                            </tr>
+                            <tr>
+                                <td class="text-dark p-0 pb-1">Shipping &amp; Handling:</td>
+                                <td class="text-dark p-0 pb-1 text-right" id="shippingHandlingPrice">0.00</td>
+                            </tr>
+                            <tr class="border-top border-secondary">
+                                <td class="text-dark p-0 pt-1">Total Before Tax:</td>
+                                <td class="text-dark p-0 pt-1 text-right" id="beforeTaxPrice">@Model.ItemsTotalPrice</td>
+                            </tr>
+                            <tr>
+                                <td class="text-dark p-0 pb-1">Tax:</td>
+                                <td class="text-dark p-0 pb-1 text-right" id="taxPrice">@((Model.ItemsTotalPrice * Model.TaxPercent).ToString ("#.##"))</td>
+                            </tr>
+                            <tr class="border-top border-secondary">
+                                <td><h5 class="text-danger">Order Total</h5></td>
+                                <td><h5 class="text-danger text-right" id="orderTotalPrice">@((Model.ItemsTotalPrice * (1 + Model.TaxPercent)).ToString("#.##"))</h5></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>

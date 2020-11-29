@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sprint.Data;
 
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201129214909_CreateCheckoutOrderSchema")]
+    partial class CreateCheckoutOrderSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -204,65 +206,6 @@ namespace Sprint.Migrations
                         .IsUnique();
 
                     b.ToTable("CartGame");
-                });
-
-            modelBuilder.Entity("Sprint.Models.Event", b =>
-                {
-                    b.Property<int>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("EventId")
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("EventDateTime")
-                        .HasColumnName("EventDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("EventDescription")
-                        .IsRequired()
-                        .HasColumnName("EventDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EventName")
-                        .IsRequired()
-                        .HasColumnName("EventName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnName("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Event");
-                });
-
-            modelBuilder.Entity("Sprint.Models.EventUser", b =>
-                {
-                    b.Property<int>("EventUserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("EventId")
-                        .HasColumnName("EventId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnName("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventUserId");
-
-                    b.HasIndex("EventId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EventUser");
                 });
 
             modelBuilder.Entity("Sprint.Models.Game", b =>
@@ -2466,30 +2409,6 @@ namespace Sprint.Migrations
                         .WithMany("ReceivingCartItems")
                         .HasForeignKey("ReceivingUserId")
                         .HasConstraintName("FK_CartGame_ReceivingUser")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Sprint.Models.Event", b =>
-                {
-                    b.HasOne("Sprint.Models.User", "User")
-                        .WithMany("CreatedEvents")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_Event_Created_User")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Sprint.Models.EventUser", b =>
-                {
-                    b.HasOne("Sprint.Models.Event", "Event")
-                        .WithMany("EventUsers")
-                        .HasForeignKey("EventId")
-                        .HasConstraintName("FK_Event_User")
-                        .IsRequired();
-
-                    b.HasOne("Sprint.Models.User", "User")
-                        .WithMany("JoinedEvents")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_User_Event")
                         .IsRequired();
                 });
 
