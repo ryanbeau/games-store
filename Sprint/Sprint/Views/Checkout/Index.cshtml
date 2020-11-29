@@ -68,9 +68,13 @@
         if (shipCount == 0) {
             document.getElementById("shippingAddressDiv").style.display = "none";
             document.getElementById("billingAddressDiv").style.display = "none";
+            document.getElementById("selectShippingAddress").disabled = true;
+            document.getElementById("selectBillingAddress").disabled = true;
         } else {
             document.getElementById("shippingAddressDiv").style.display = "block";
             document.getElementById("billingAddressDiv").style.display = "block";
+            document.getElementById("selectShippingAddress").disabled = false;
+            document.getElementById("selectBillingAddress").disabled = false;
         }
 
         let shippingHandlingPrice = shipCount * shippingHandlingFee;
@@ -87,169 +91,184 @@
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class="container">
+<form class="w-100" asp-action="Order">
+    <input type="hidden" name="ItemsTotalPrice" value="@Model.ItemsTotalPrice" />
 
-    <div class="row">
-        <div class="col-md">
-            <h4 class="text-light font-weight-light text-uppercase">
-                <i class="fa fa-server text-secondary pr-2" aria-hidden="true"></i>Review Your Order
-            </h4>
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md">
+                <h4 class="text-light font-weight-light text-uppercase">
+                    <i class="fa fa-server text-secondary pr-2" aria-hidden="true"></i>Review Your Order
+                </h4>
+            </div>
         </div>
-    </div>
 
-    <div class="row mt-3">
-        <div class="col-xl-9">
-            <div class="row rounded moist-bg-light moist-shadow pt-3 pb-3">
+        <div class="row mt-3">
+            <div class="col-xl-9">
+                <div class="row rounded moist-bg-light moist-shadow pt-3 pb-3">
 
-                <div class="col-md-4">
-                    <h5 class="text-dark">Payment Method</h5>
-                    @for (int i = 0; i < Model.WalletCreditCards.Count; i++)
-                    {
-                        Wallet wallet = Model.WalletCreditCards[i];
-
-                        string id = $"creditCard{wallet.WalletId}";
-                        string displayStyle = i == 0 ? "block" : "none";
-                        string trimmedDigits = wallet.CardNumber?.Substring(Math.Max(0, wallet.CardNumber.Length - 4));
-
-                        <div id="@id" style="display:@displayStyle" class="creditCardBlock">
-                            <p class="text-dark">Ending in: @trimmedDigits<br />Expiry: @wallet.Month/@wallet.Year</p>
-                        </div>
-                    }
-                    @if (Model.WalletCreditCards.Count > 1)
-                    {
-                        <select id="selectCreditCard" class="form-control border border-secondary" onchange="display_select_block('selectCreditCard', 'creditCardBlock', 'creditCard')">
-                            @foreach (var wallet in Model.WalletCreditCards)
-                            {
-                                string trimmedDigits = wallet.CardNumber?.Substring(Math.Max(0, wallet.CardNumber.Length - 4));
-
-                                <option value="@wallet.WalletId">Ending in: @trimmedDigits</option>
-                            }
-                        </select>
-                    }
-                    <a asp-controller="Wallet" asp-action="Create" class="text-secondary">＋Add a payment method</a>
-                </div>
-
-                <div class="col-md-4">
-                    <div id="shippingAddressDiv" style="display:none">
-                        <h5 class="text-dark">Shipping address</h5>
-                        @for (int i = 0; i < Model.Addresses.Count; i++)
+                    <div class="col-md-4">
+                        <h5 class="text-dark">Payment Method</h5>
+                        @for (int i = 0; i < Model.WalletCreditCards.Count; i++)
                         {
-                            string id = $"shippingAddress{Model.Addresses[i].AddressId}";
-                            string displayStyle = i == 0 ? "block" : "none";
+                            Wallet wallet = Model.WalletCreditCards[i];
 
-                            <div id="@id" style="display:@displayStyle" class="shippingAddressBlock">
-                                <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
+                            string id = $"creditCard{wallet.WalletId}";
+                            string displayStyle = i == 0 ? "block" : "none";
+                            string trimmedDigits = wallet.CardNumber?.Substring(Math.Max(0, wallet.CardNumber.Length - 4));
+
+                            <div id="@id" style="display:@displayStyle" class="creditCardBlock">
+                                <p class="text-dark">Ending in: @trimmedDigits<br />Expiry: @wallet.Month/@wallet.Year</p>
                             </div>
                         }
-                        <select id="selectShippingAddress" class="form-control border border-secondary" onchange="display_select_block('selectShippingAddress', 'shippingAddressBlock', 'shippingAddress')">
-                            @foreach (var address in Model.Addresses)
-                            {
-                                <option value="@address.AddressId">@address.Street</option>
-                            }
-                        </select>
-                        <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
-                    </div>
-                </div>
+                        @if (Model.WalletCreditCards.Count > 1)
+                        {
+                            <select id="selectCreditCard" class="form-control border border-secondary" name="WalletId" 
+                                    onchange="display_select_block('selectCreditCard', 'creditCardBlock', 'creditCard')">
+                                @foreach (var wallet in Model.WalletCreditCards)
+                                {
+                                    string trimmedDigits = wallet.CardNumber?.Substring(Math.Max(0, wallet.CardNumber.Length - 4));
 
-                <div class="col-md-4">
-                    <div id="billingAddressDiv" style="display:none">
-                        <h5 class="text-dark">Billing address</h5>
-                        <div id="billingAddresses" style="display:none">
+                                    <option value="@wallet.WalletId">Ending in: @trimmedDigits</option>
+                                }
+                            </select>
+                        }
+                        <a asp-controller="Wallet" asp-action="Create" class="text-secondary">＋Add a payment method</a>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div id="shippingAddressDiv" style="display:none">
+                            <h5 class="text-dark">Shipping address</h5>
                             @for (int i = 0; i < Model.Addresses.Count; i++)
                             {
-                                string id = $"billingAddress{Model.Addresses[i].AddressId}";
+                                string id = $"shippingAddress{Model.Addresses[i].AddressId}";
                                 string displayStyle = i == 0 ? "block" : "none";
 
-                                <div id="@id" style="display:@displayStyle" class="billingAddressBlock">
+                                <div id="@id" style="display:@displayStyle" class="shippingAddressBlock">
                                     <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
                                 </div>
                             }
-                            <select id="selectBillingAddress" class="form-control border border-secondary" disabled onchange="display_select_block('selectBillingAddress', 'billingAddressBlock', 'billingAddress')">
+                            <select id="selectShippingAddress" class="form-control border border-secondary" name="ShippingId" disabled 
+                                    onchange="display_select_block('selectShippingAddress', 'shippingAddressBlock', 'shippingAddress')">
                                 @foreach (var address in Model.Addresses)
                                 {
                                     <option value="@address.AddressId">@address.Street</option>
                                 }
                             </select>
+                            <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
                         </div>
-                        <div class="form-check">
-                            @if (Model.Addresses.Count > 1)
-                            {
-                                <input type="checkbox" class="form-check-input" id="sameAsShippingAddress" checked onchange="billing_address_checkbox()">
-                            }
-                            else
-                            {
-                                <input type="checkbox" class="form-check-input" id="sameAsShippingAddress" checked disabled>
-                                <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
-                            }
-                            <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div id="billingAddressDiv" style="display:none">
+                            <h5 class="text-dark">Billing address</h5>
+                            <div id="billingAddresses" style="display:none">
+                                @for (int i = 0; i < Model.Addresses.Count; i++)
+                                {
+                                    string id = $"billingAddress{Model.Addresses[i].AddressId}";
+                                    string displayStyle = i == 0 ? "block" : "none";
+
+                                    <div id="@id" style="display:@displayStyle" class="billingAddressBlock">
+                                        <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
+                                    </div>
+                                }
+                                <select id="selectBillingAddress" class="form-control border border-secondary" name="BillingId" disabled 
+                                        onchange="display_select_block('selectBillingAddress', 'billingAddressBlock', 'billingAddress')">
+                                    @foreach (var address in Model.Addresses)
+                                    {
+                                        <option value="@address.AddressId">@address.Street</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-check">
+                                @if (Model.Addresses.Count > 1)
+                                {
+                                    @Html.CheckBox($"SameAsShippingAddress", true, new { Id = "sameAsShippingAddress", Class = "form-check-input", OnChange = "billing_address_checkbox()" })
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="form-check-input" id="sameAsShippingAddress" checked disabled>
+                                    <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
+                                }
+                                <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
+                            </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md mt-3 rounded moist-bg-light moist-shadow">
+                        @for (int i = 0; i < Model.CartCheckout.Items.Count; i++)
+                        {
+                            var item = Model.CartCheckout.Items[i];
+
+                            <div class="row border-bottom border-secondary pt-2 pb-2">
+                                <div class="col-md-2">
+                                    @if (item.Image != null)
+                                    {<img height="50" width="100" src="@item.Image.ImageURL">}
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="text-dark font-weight-bold mb-0">
+                                        @Html.DisplayFor(modelItem => item.CartItem.Game.Name)
+                                    </p>
+                                    <p class="text-secondary mb-0">
+                                        @Html.DisplayFor(modelItem => item.CartItem.Game.Developer)
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    @if (item.Discount != null)
+                                    {
+                                        <div class="d-flex">
+                                            <div class="mr-2">
+                                                <span class="moist-discount-regular-price text-secondary">@item.CartItem.Game.RegularPrice</span>
+                                                <span class="moist-discount-price text-dark">@item.Discount.DiscountPrice</span>
+                                            </div>
+                                            <span class="moist-discount-percent shadow rounded moist-tooltip">
+                                                @string.Format("{0:0%}", item.Discount.DiscountPrice / item.CartItem.Game.RegularPrice)
+                                            </span>
+                                        </div>
+                                        <small class="text-secondary">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                            @(item.Discount.DiscountFinish.ToString("MMM dd h:mm tt"))
+                                        </small>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="text-dark font-weight-bold">@item.CartItem.Game.RegularPrice</h5>
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="hidden" name="OrderItems[@i].CartGameId" value="@item.CartItem.CartGameId" />
+                                    @if (item.CartItem.ReceivingUserId == Model.CartCheckout.User.Id)
+                                    {
+                                        <div class="form-check">
+                                            @{ string id = $"cartGame{item.CartItem.CartGameId}"; }
+                                            @Html.CheckBox($"OrderItems[{i}].ShipItem", false, new { Class = "form-check-input shipItemInput", OnChange = "ship_item_checkbox()" })
+                                            <label class="form-check-label text-dark">Ship this item</label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-dark">Gift for <span class="font-weight-bold">@item.CartItem.ReceivingUser.Name</span></span>
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
 
-            <div class="row mb-3">
-                <div class="col-md mt-3 rounded moist-bg-light moist-shadow">
-                    @foreach (var item in Model.CartCheckout.Items)
+            <div class="col-xl-3">
+                <div class="row rounded moist-bg-light moist-shadow p-2 ml-1">
+                    @if (Model.WalletCreditCards.Any())
                     {
-                        <div class="row border-bottom border-secondary pt-2 pb-2">
-                            <div class="col-md-2">
-                                @if (item.Image != null)
-                                {<img height="50" width="100" src="@item.Image.ImageURL">}
-                            </div>
-                            <div class="col-md-4">
-                                <p class="text-dark font-weight-bold mb-0">
-                                    @Html.DisplayFor(modelItem => item.CartItem.Game.Name)
-                                </p>
-                                <p class="text-secondary mb-0">
-                                    @Html.DisplayFor(modelItem => item.CartItem.Game.Developer)
-                                </p>
-                            </div>
-                            <div class="col-md-3">
-                                @if (item.Discount != null)
-                                {
-                                    <div class="d-flex">
-                                        <div class="mr-2">
-                                            <span class="moist-discount-regular-price text-secondary">@item.CartItem.Game.RegularPrice</span>
-                                            <span class="moist-discount-price text-dark">@item.Discount.DiscountPrice</span>
-                                        </div>
-                                        <span class="moist-discount-percent shadow rounded moist-tooltip">
-                                            @string.Format("{0:0%}", item.Discount.DiscountPrice / item.CartItem.Game.RegularPrice)
-                                        </span>
-                                    </div>
-                                    <small class="text-secondary">
-                                        <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                        @(item.Discount.DiscountFinish.ToString("MMM dd h:mm tt"))
-                                    </small>
-                                }
-                                else
-                                {
-                                    <h5 class="text-dark font-weight-bold">@item.CartItem.Game.RegularPrice</h5>
-                                }
-                            </div>
-                            <div class="col-md-3">
-                                @if (item.CartItem.ReceivingUserId == Model.CartCheckout.User.Id)
-                                {
-                                    <div class="form-check">
-                                        @{ string id = $"cartGame{item.CartItem.CartGameId}"; }
-                                        <input type="checkbox" class="form-check-input shipItemInput" id="@id" onchange="ship_item_checkbox()">
-                                        <label class="form-check-label text-dark" for="@id">Ship this item</label>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <span class="text-dark">Gift for <span class="font-weight-bold">@item.CartItem.ReceivingUser.Name</span></span>
-                                }
-                            </div>
-                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3 mb-3">Place your order</button>
                     }
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-3">
-            <div class="row rounded moist-bg-light moist-shadow p-2 ml-1">
-                <form class="w-100" asp-action="Order">
-                    <button type="submit" class="btn btn-primary w-100 mt-3 mb-3">Place your order</button>
+                    else
+                    {
+                        <h5 class="text-danger">Add a payment type</h5>
+                    }
 
                     <h5 class="text-dark">Order Summary</h5>
                     <table class="table table-borderless">
@@ -276,9 +295,9 @@
                             </tr>
                         </tbody>
                     </table>
-                </form>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
+</form>

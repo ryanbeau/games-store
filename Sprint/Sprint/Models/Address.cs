@@ -1,10 +1,16 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Sprint.Models
 {
     public class Address
     {
+        public Address()
+        {
+            ShippedOrders = new HashSet<Order>();
+            BilledOrders = new HashSet<Order>();
+        }
+
         public int AddressId { get; set; }
         public int UserId { get; set; }
         [Required]
@@ -27,5 +33,7 @@ namespace Sprint.Models
 
         public User User { get; set; }
 
+        public virtual ICollection<Order> ShippedOrders { get; set; }
+        public virtual ICollection<Order> BilledOrders { get; set; }
     }
 }

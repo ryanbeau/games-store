@@ -18,6 +18,8 @@ namespace Sprint.Data
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<CartGame> CartGames { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
         public virtual DbSet<UserGameWishlist> UserGameWishlists { get; set; }
         public virtual DbSet<UserRelationship> UserRelationships { get; set; }
 
@@ -364,6 +366,70 @@ namespace Sprint.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.ToTable("Order");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderId").UseIdentityColumn();
+
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
+
+                entity.Property(e => e.OrderDate).HasColumnName("OrderDate")
+                    .IsRequired();
+
+                entity.Property(e => e.ShippingAddressId).HasColumnName("ShippingAddressId");
+
+                entity.Property(e => e.BillingAddressId).HasColumnName("BillingAddressId");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Order_User");
+
+                entity.HasOne(d => d.ShippingAddress)
+                    .WithMany(p => p.ShippedOrders)
+                    .HasForeignKey(d => d.ShippingAddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Order_ShippedAddress");
+
+                entity.HasOne(d => d.BillingAddress)
+                    .WithMany(p => p.BilledOrders)
+                    .HasForeignKey(d => d.BillingAddressId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Order_BilledAddress");
+            });
+
+            modelBuilder.Entity<OrderItem>(entity =>
+            {
+                entity.ToTable("OrderItem");
+
+                entity.Property(e => e.OrderItemId).HasColumnName("OrderItemId").UseIdentityColumn();
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderId")
+                    .IsRequired();
+
+                entity.Property(e => e.OwnerUserId).HasColumnName("OwnerUserId")
+                    .IsRequired();
+
+                entity.Property(e => e.PhysicallyOwned).HasColumnName("PhysicallyOwned")
+                    .HasDefaultValue(false)
+                    .IsRequired();
+
+                entity.HasOne(d => d.OwnerUser)
+                    .WithMany(p => p.OwnedItems)
+                    .HasForeignKey(d => d.OwnerUserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItem_OwnerUser");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderItems)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderItem_Order");
+            });
+
             modelBuilder.Entity<PlatformType>(entity =>
             {
                 entity.ToTable("PlatformType");
@@ -524,13 +590,11 @@ namespace Sprint.Data
                     .IsRequired();
 
                 entity.HasOne(d => d.User)
-                .WithMany(d => d.Addresses)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Address_User");
-
-            }
-            );
+                    .WithMany(d => d.Addresses)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Address_User");
+            });
 
             modelBuilder.Entity<Review>(entity =>
             {
