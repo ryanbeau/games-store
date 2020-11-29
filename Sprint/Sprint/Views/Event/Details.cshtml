@@ -1,0 +1,90 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+
+@model Sprint.ViewModels.EventViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Event Details</h1>
+
+<div class="container">
+    <h4>@Model.Event.EventName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EventName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EventName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EventDateTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EventDateTime)
+        </dd>
+        <dt class="col-sm-2">
+            Created By
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.User.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Registered Users
+        </dt>
+        <dd class="col-sm-10">
+            @Model.JoinedUserCount
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Event.EventDescription)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Event.EventDescription)
+        </dd>
+    </dl>
+    <div class="row">
+        @if (SignInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
+        {
+            <div class="col-sm-6">
+                @if (Model.IsUserJoined)
+                {
+                    <form class="w-100" asp-route-id="@Model.Event.EventId" asp-controller="Event" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Event", new { id = @Model.Event.EventId })">
+                        <button type="submit" class="btn btn-primary w-100">Unregister</button>
+                    </form>
+                }
+                else
+                {
+                    <form class="w-100" asp-route-id="@Model.Event.EventId" asp-controller="Event" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Event", new { id = @Model.Event.EventId })">
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                }
+            </div>
+            <div class="col-sm-6">
+                <a class="btn btn-primary w-100" role="button" asp-action="Index">Back to List</a>
+            </div>
+        }
+        else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+        {
+            <div class="col-sm-4">
+                <a class="btn btn-primary w-100" role="button" asp-action="Edit" asp-route-id="@Model.Event.EventId">Edit</a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-primary btn-danger w-100" role="button" asp-action="Delete" asp-route-id="@Model.Event.EventId">Delete</a>
+            </div>
+            <div class="col-sm-4">
+                <a class="btn btn-primary w-100" role="button" asp-action="Index">Back to List</a>
+            </div>
+        }
+        else
+        {
+            <div class="col-sm-6">
+                <a class="btn btn-primary w-100" role="button" asp-area="Identity" asp-page="/Account/Login">Login to join this event!</a>
+            </div>
+            <div class="col-sm-6">
+                <a class="btn btn-primary w-100" role="button" asp-action="Index">Back to List</a>
+            </div>
+        }
+    </div>
+</div>

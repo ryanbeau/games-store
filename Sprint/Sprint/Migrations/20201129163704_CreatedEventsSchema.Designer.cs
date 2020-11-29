@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sprint.Data;
 
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201129163704_CreatedEventsSchema")]
+    partial class CreatedEventsSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1830,86 +1832,6 @@ namespace Sprint.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Sprint.Models.Order", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("OrderId")
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("BillingAddressId")
-                        .HasColumnName("BillingAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnName("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OrderNumber")
-                        .IsRequired()
-                        .HasColumnName("OrderNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ShippingAddressId")
-                        .HasColumnName("ShippingAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnName("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WalletId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("BillingAddressId");
-
-                    b.HasIndex("ShippingAddressId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("WalletId");
-
-                    b.ToTable("Order");
-                });
-
-            modelBuilder.Entity("Sprint.Models.OrderItem", b =>
-                {
-                    b.Property<int>("OrderItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("OrderItemId")
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("OrderId")
-                        .HasColumnName("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OwnerUserId")
-                        .HasColumnName("OwnerUserId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("PhysicallyOwned")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("PhysicallyOwned")
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.HasKey("OrderItemId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("OwnerUserId");
-
-                    b.ToTable("OrderItem");
-                });
-
             modelBuilder.Entity("Sprint.Models.PlatformType", b =>
                 {
                     b.Property<int>("PlatformTypeId")
@@ -2099,14 +2021,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "58d1c40a-90b4-47b1-9f00-753e2cd44458",
+                            ConcurrencyStamp = "45df4e08-d79c-4dd5-b1c0-b2405bddc269",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "8f0b356a-83d0-4160-b258-26f0849249d2",
+                            ConcurrencyStamp = "70a3dd0d-d5d9-4507-9391-2223a5caf080",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -2238,9 +2160,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "54331bd3-78bf-470f-b1a7-13b9079f0e3a",
+                            AccountNum = "bd6b7f90-b314-4b57-9520-feed8be1497c",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "7207bc29-df76-4da9-b18f-5d835603eab1",
+                            ConcurrencyStamp = "c9c74efc-584b-44ce-b8c2-80ea319f6be7",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -2248,7 +2170,7 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMgQJTBX5qXc0YlaEYl4wVsZrDGxfm/7UU1as7smMUlyz0SadwQWTFlh78oM9k+Lhg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG+UozRbllg/cdCaHScHwFV3kv2aGs4QeTTVbgP65vd/QTs/8zeMSCzxDklG7QbFBA==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             ReceivePromotionalEmails = false,
@@ -2261,9 +2183,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "96ecd5bd-c2a9-498c-b9dd-d6f67c673beb",
+                            AccountNum = "7b02558a-91bc-4bc4-b072-1cbd8a1a971c",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "59d6e6aa-83e8-42fd-a287-1b7025098000",
+                            ConcurrencyStamp = "de9d80c1-ddab-451e-8dee-b01807160deb",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -2271,7 +2193,7 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJmy00MyfmzFoo5RAhq1X5LI/IsP7S0JEhJoDrRjmFQRerB7vEhIptiTEMbs8QRKgA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJJIJ/jpRM/CP+E8r9h5150gmA3uWDBNGnjvLmruf8DtkTQCTiQSE8iNQhzeZDbpWA==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             ReceivePromotionalEmails = false,
@@ -2517,46 +2439,6 @@ namespace Sprint.Migrations
                         .WithMany("GameImages")
                         .HasForeignKey("GameId")
                         .HasConstraintName("FK_GameImage_Game")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Sprint.Models.Order", b =>
-                {
-                    b.HasOne("Sprint.Models.Address", "BillingAddress")
-                        .WithMany("BilledOrders")
-                        .HasForeignKey("BillingAddressId")
-                        .HasConstraintName("FK_Order_BilledAddress");
-
-                    b.HasOne("Sprint.Models.Address", "ShippingAddress")
-                        .WithMany("ShippedOrders")
-                        .HasForeignKey("ShippingAddressId")
-                        .HasConstraintName("FK_Order_ShippedAddress");
-
-                    b.HasOne("Sprint.Models.User", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .HasConstraintName("FK_Order_User")
-                        .IsRequired();
-
-                    b.HasOne("Sprint.Models.Wallet", "Wallet")
-                        .WithMany()
-                        .HasForeignKey("WalletId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Sprint.Models.OrderItem", b =>
-                {
-                    b.HasOne("Sprint.Models.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .HasConstraintName("FK_OrderItem_Order")
-                        .IsRequired();
-
-                    b.HasOne("Sprint.Models.User", "OwnerUser")
-                        .WithMany("OwnedItems")
-                        .HasForeignKey("OwnerUserId")
-                        .HasConstraintName("FK_OrderItem_OwnerUser")
                         .IsRequired();
                 });
 
