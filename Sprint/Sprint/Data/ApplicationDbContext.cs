@@ -20,6 +20,8 @@ namespace Sprint.Data
         public virtual DbSet<CartGame> CartGames { get; set; }
         public virtual DbSet<UserGameWishlist> UserGameWishlists { get; set; }
         public virtual DbSet<UserRelationship> UserRelationships { get; set; }
+        public virtual DbSet<Event> Event { get; set; }
+        public virtual DbSet<EventUser> EventUsers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -570,6 +572,61 @@ namespace Sprint.Data
                     .HasConstraintName("FK_Review_User");
             });
 
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.HasKey(e => e.EventId);
+
+                entity.ToTable("Event");
+
+                entity.Property(p => p.EventId).HasColumnName("EventId").UseIdentityColumn();
+
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
+
+                entity.Property(e => e.EventName)
+                    .IsRequired()
+                    .HasColumnName("EventName");
+
+                entity.Property(e => e.EventDescription)
+                    .IsRequired()
+                    .HasColumnName("EventDescription");
+
+                entity.Property(e => e.EventDateTime)
+                    .IsRequired()
+                    .HasColumnName("EventDateTime");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.CreatedEvents)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Event_Created_User");
+            });
+
+            modelBuilder.Entity<EventUser>(entity =>
+            {
+                entity.HasKey(e => e.EventUserId);
+
+                entity.ToTable("EventUser");
+
+                entity.Property(p => p.EventId).HasColumnName("EventId")
+                    .IsRequired();
+
+                entity.Property(e => e.UserId).HasColumnName("UserId")
+                    .IsRequired();
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.EventUsers)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Event_User");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.JoinedEvents)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_User_Event");
+            });
+
             modelBuilder.Entity<CartGame>(entity =>
             {
                 entity.HasKey(e => e.CartGameId);
@@ -796,7 +853,5 @@ namespace Sprint.Data
 
             Seed(modelBuilder);
         }
-
-        
     }
 }

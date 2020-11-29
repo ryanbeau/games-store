@@ -1,0 +1,67 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+
+@model IEnumerable<Sprint.Models.Event>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Moist Events</h1>
+
+<p>
+    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
+    else
+    {
+        <span>Select an event for more information.</span>
+    }
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EventName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EventDateTime)
+            </th>
+            <th>
+                Created By
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.EventId">@Html.DisplayFor(modelItem => item.EventName)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EventDateTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Name)
+                </td>
+                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
