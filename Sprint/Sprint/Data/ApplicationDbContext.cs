@@ -378,6 +378,9 @@ namespace Sprint.Data
                 entity.Property(e => e.OrderDate).HasColumnName("OrderDate")
                     .IsRequired();
 
+                entity.Property(e => e.OrderNumber).HasColumnName("OrderNumber")
+                    .IsRequired();
+
                 entity.Property(e => e.ShippingAddressId).HasColumnName("ShippingAddressId");
 
                 entity.Property(e => e.BillingAddressId).HasColumnName("BillingAddressId");

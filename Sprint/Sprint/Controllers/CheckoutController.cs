@@ -123,7 +123,7 @@ namespace Sprint.Controllers
 
             if (wallet == null)
             {
-                ViewData["CheckoutAlert"] = "Payment type is required.";
+                TempData["CheckoutAlert"] = "Payment type is required.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -138,7 +138,7 @@ namespace Sprint.Controllers
 
             if (orderContainsShippedItems && shippingAddress == null)
             {
-                ViewData["CheckoutAlert"] = "Shipping address is required.";
+                TempData["CheckoutAlert"] = "Shipping address is required to ship a game.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -150,7 +150,7 @@ namespace Sprint.Controllers
 
             if (orderContainsShippedItems && billingAddress == null)
             {
-                ViewData["CheckoutAlert"] = "Billing address is required.";
+                TempData["CheckoutAlert"] = "Billing address is required.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -187,7 +187,7 @@ namespace Sprint.Controllers
             decimal itemsTotalPrice = cartOrder.Items.Sum(i => i.Discount?.DiscountPrice ?? i.CartItem.Game.RegularPrice);
             if (itemsTotalPrice != orderDetails.ItemsTotalPrice)
             {
-                ViewData["CheckoutAlert"] = "Checkout price currently differs from original. Please reconfirm order.";
+                TempData["CheckoutAlert"] = "Checkout price currently differs from original. Please reconfirm order.";
                 return RedirectToAction(nameof(Index));
             }
 
@@ -199,9 +199,10 @@ namespace Sprint.Controllers
             var order = new Order
             {
                 UserId = user.Id,
+                OrderNumber = Guid.NewGuid().ToString(),
                 WalletId = orderDetails.WalletId.Value,
-                ShippingAddressId = orderContainsShippedItems ? shippingAddress.AddressId : default,
-                BillingAddressId = orderContainsShippedItems ? billingAddress.AddressId : default,
+                ShippingAddressId = orderContainsShippedItems ? shippingAddress.AddressId : default(int?),
+                BillingAddressId = orderContainsShippedItems ? billingAddress.AddressId : default(int?),
                 OrderDate = now,
             };
 
@@ -222,14 +223,14 @@ namespace Sprint.Controllers
 
             await _context.SaveChangesAsync();
 
-            ViewData["CheckoutSuccess"] = "Your order has been successfully processed.";
-            return RedirectToAction(nameof(Index));
+            TempData["CheckoutSuccess"] = "Your order has been successfully processed.";
+            return RedirectToAction(nameof(Confirmation), new { orderNumber = order.OrderNumber });
         }
 
         [HttpGet]
-        public IActionResult OrderComplete()
+        public IActionResult Confirmation(string orderNumber)
         {
-            return null;
+            return View();
         }
     }
 }

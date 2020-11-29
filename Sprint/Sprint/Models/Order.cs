@@ -15,6 +15,7 @@ namespace Sprint.Models
         public int WalletId { get; set; }
         public int? ShippingAddressId { get; set; }
         public int? BillingAddressId { get; set; }
+        public string OrderNumber { get; set; }
         public DateTime OrderDate { get; set; }
 
         public virtual User User { get; set; }

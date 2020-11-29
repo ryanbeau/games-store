@@ -96,7 +96,7 @@
 
     <div class="container">
 
-        <div class="row">
+        <div class="row mb-2">
             <div class="col-md">
                 <h4 class="text-light font-weight-light text-uppercase">
                     <i class="fa fa-server text-secondary pr-2" aria-hidden="true"></i>Review Your Order
@@ -104,7 +104,18 @@
             </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row">
+            <div class="col-md">
+                @if (TempData["CheckoutAlert"] is string)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa fa-exclamation-triangle mr-2" aria-hidden="true"></i>@TempData["CheckoutAlert"]
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row mt-1">
             <div class="col-xl-9">
                 <div class="row rounded moist-bg-light moist-shadow pt-3 pb-3">
 
@@ -122,9 +133,13 @@
                                 <p class="text-dark">Ending in: @trimmedDigits<br />Expiry: @wallet.Month/@wallet.Year</p>
                             </div>
                         }
-                        @if (Model.WalletCreditCards.Count > 1)
+                        @if (Model.WalletCreditCards.Count == 1)
                         {
-                            <select id="selectCreditCard" class="form-control border border-secondary" name="WalletId" 
+                            <input type="hidden" name="WalletId" value="@Model.WalletCreditCards[0].WalletId" />
+                        }
+                        else if (Model.WalletCreditCards.Count > 1)
+                        {
+                            <select id="selectCreditCard" class="form-control border border-secondary" name="WalletId"
                                     onchange="display_select_block('selectCreditCard', 'creditCardBlock', 'creditCard')">
                                 @foreach (var wallet in Model.WalletCreditCards)
                                 {
@@ -149,13 +164,20 @@
                                     <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
                                 </div>
                             }
-                            <select id="selectShippingAddress" class="form-control border border-secondary" name="ShippingId" disabled 
-                                    onchange="display_select_block('selectShippingAddress', 'shippingAddressBlock', 'shippingAddress')">
-                                @foreach (var address in Model.Addresses)
-                                {
-                                    <option value="@address.AddressId">@address.Street</option>
-                                }
-                            </select>
+                            @if (Model.Addresses.Count == 1)
+                            {
+                                <input type="hidden" name="ShippingId" value="@Model.Addresses[0].AddressId" />
+                            }
+                            else if (Model.Addresses.Count > 1)
+                            {
+                                <select id="selectShippingAddress" class="form-control border border-secondary" name="ShippingId" disabled
+                                        onchange="display_select_block('selectShippingAddress', 'shippingAddressBlock', 'shippingAddress')">
+                                    @foreach (var address in Model.Addresses)
+                                    {
+                                        <option value="@address.AddressId">@address.Street</option>
+                                    }
+                                </select>
+                            }
                             <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
                         </div>
                     </div>
@@ -173,26 +195,36 @@
                                         <p class="text-dark">@Model.Addresses[i].Street<br />@Model.Addresses[i].City<br />@Model.Addresses[i].Province @Model.Addresses[i].Postal</p>
                                     </div>
                                 }
-                                <select id="selectBillingAddress" class="form-control border border-secondary" name="BillingId" disabled 
-                                        onchange="display_select_block('selectBillingAddress', 'billingAddressBlock', 'billingAddress')">
-                                    @foreach (var address in Model.Addresses)
-                                    {
-                                        <option value="@address.AddressId">@address.Street</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="form-check">
                                 @if (Model.Addresses.Count > 1)
                                 {
-                                    @Html.CheckBox($"SameAsShippingAddress", true, new { Id = "sameAsShippingAddress", Class = "form-check-input", OnChange = "billing_address_checkbox()" })
+                                    <select id="selectBillingAddress" class="form-control border border-secondary" name="BillingId" disabled
+                                            onchange="display_select_block('selectBillingAddress', 'billingAddressBlock', 'billingAddress')">
+                                        @foreach (var address in Model.Addresses)
+                                        {
+                                            <option value="@address.AddressId">@address.Street</option>
+                                        }
+                                    </select>
                                 }
-                                else
-                                {
-                                    <input type="checkbox" class="form-check-input" id="sameAsShippingAddress" checked disabled>
-                                    <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
-                                }
-                                <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
                             </div>
+                            @if (Model.Addresses.Count > 1)
+                            {
+                                <div class="form-check">
+                                    @Html.CheckBox($"SameAsShippingAddress", true, new { Id = "sameAsShippingAddress", Class = "form-check-input", OnChange = "billing_address_checkbox()" })
+                                    <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
+                                </div>
+                            }
+                            else
+                            {
+                                @if (Model.Addresses.Count > 0)
+                                {
+                                    <div class="form-check">
+                                        <input type="hidden" name="SameAsShippingAddress" value="true" />
+                                        <input type="checkbox" class="form-check-input" id="sameAsShippingAddress" checked disabled />
+                                        <label class="form-check-label text-dark" for="sameAsShippingAddress">Same as shipping address</label>
+                                    </div>
+                                }
+                                <a asp-controller="Address" asp-action="Create" class="text-secondary">＋Add an address</a>
+                            }
                         </div>
                     </div>
                 </div>
