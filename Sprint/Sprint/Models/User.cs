@@ -13,6 +13,8 @@ namespace Sprint.Models
             RelatedRelationships = new HashSet<UserRelationship>();
             RelatingRelationships = new HashSet<UserRelationship>();
             Reviews = new HashSet<Review>();
+            CreatedEvents = new HashSet<Event>();
+            JoinedEvents = new HashSet<EventUser>();
             CartItems = new HashSet<CartGame>();
             ReceivingCartItems = new HashSet<CartGame>();
             Wishlists = new HashSet<UserGameWishlist>();
@@ -56,6 +58,8 @@ namespace Sprint.Models
         /// </summary>
         public virtual ICollection<UserRelationship> RelatingRelationships { get; set; }
         public virtual ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Event> CreatedEvents { get; set; }
+        public virtual ICollection<EventUser> JoinedEvents { get; set; }
         public virtual ICollection<CartGame> CartItems { get; set; }
         public virtual ICollection<CartGame> ReceivingCartItems { get; set; }
         public virtual ICollection<UserGameWishlist> Wishlists { get; set; }
