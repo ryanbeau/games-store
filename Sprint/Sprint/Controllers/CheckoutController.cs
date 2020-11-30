@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Sprint.Data;
@@ -15,10 +15,27 @@ using Sprint.ViewModels;
 
 namespace Sprint.Controllers
 {
+    public class OrderDetails
+    {
+        public List<OrderDetailsItem> OrderItems { get; set; }
+        public int? ShippingId { get; set; }
+        public int? BillingId { get; set; }
+        public int? WalletId { get; set; }
+        public bool? SameAsShippingAddress { get; set; }
+        public decimal ItemsTotalPrice { get; set; }
+    }
+
+    public class OrderDetailsItem
+    {
+        public int CartGameId { get; set; }
+        public bool ShipItem { get; set; }
+    }
+
     [Authorize(Roles = "Admin,Member")]
     public class CheckoutController : Controller
     {
-        private const decimal INDIVIDUAL_SHIPPING_COST = 4.40m; // TODO: this is a fixed cost for practical example
+        public const decimal INDIVIDUAL_SHIPPING_COST = 4.40m; // TODO: this is a fixed cost for practical example
+        public const decimal TAX_PERCENT = 0.13m; // TODO: this is a fixed cost for practical example
 
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
@@ -27,22 +44,6 @@ namespace Sprint.Controllers
         {
             _userManager = userManager;
             _context = context;
-        }
-
-        public class OrderDetails
-        {
-            public List<OrderItems> OrderItems { get; set; }
-            public int? ShippingId { get; set; }
-            public int? BillingId { get; set; }
-            public int? WalletId { get; set; }
-            public bool? SameAsShippingAddress { get; set; }
-            public decimal ItemsTotalPrice { get; set; }
-        }
-
-        public class OrderItems
-        {
-            public int CartGameId { get; set; }
-            public bool ShipItem { get; set; }
         }
 
         // GET: Checkout
@@ -78,9 +79,9 @@ namespace Sprint.Controllers
                 User = user,
             };
 
-            if (cart.Items.Any(i => i.CartItem.CartUserId != user.Id))
+            if (!cart.Items.Any())
             {
-                return BadRequest(); //this should never happen unless a Cart Item is added maliciously or by server error?
+                return RedirectToAction(nameof(CartController.Index), "Cart");
             }
 
             // checkout
@@ -90,7 +91,7 @@ namespace Sprint.Controllers
 
                 ItemsTotalPrice = cart.Items.Sum(i => i.Discount?.DiscountPrice ?? i.CartItem.Game.RegularPrice),
 
-                TaxPercent = 0.13m,
+                TaxPercent = TAX_PERCENT,
 
                 IndividualShippingCost = INDIVIDUAL_SHIPPING_COST,
 
@@ -128,27 +129,27 @@ namespace Sprint.Controllers
             }
 
             // does order contain shipped items
-            bool orderContainsShippedItems = orderDetails.OrderItems.Any(i => i.ShipItem);
+            int orderShippedItemsCount = orderDetails.OrderItems.Count(i => i.ShipItem);
 
             // address verify
-            Address shippingAddress = orderContainsShippedItems 
+            Address shippingAddress = orderShippedItemsCount > 0
                 ? await _context.Address
                     .FirstOrDefaultAsync(a => a.AddressId == orderDetails.ShippingId && a.UserId == user.Id)
                 : default;
 
-            if (orderContainsShippedItems && shippingAddress == null)
+            if (orderShippedItemsCount > 0 && shippingAddress == null)
             {
                 TempData["CheckoutAlert"] = "Shipping address is required to ship a game.";
                 return RedirectToAction(nameof(Index));
             }
 
             // address verify
-            Address billingAddress = orderContainsShippedItems && orderDetails.SameAsShippingAddress != true 
+            Address billingAddress = orderShippedItemsCount > 0 && orderDetails.SameAsShippingAddress != true 
                 ? await _context.Address
                     .FirstOrDefaultAsync(a => a.AddressId == orderDetails.BillingId && a.UserId == user.Id)
                 : shippingAddress;
 
-            if (orderContainsShippedItems && billingAddress == null)
+            if (orderShippedItemsCount > 0 && billingAddress == null)
             {
                 TempData["CheckoutAlert"] = "Billing address is required.";
                 return RedirectToAction(nameof(Index));
@@ -196,13 +197,19 @@ namespace Sprint.Controllers
                 .Where(i => orderDetails.OrderItems.Any(o => o.CartGameId == i.CartItem.CartGameId))
                 .Select(v => v.CartItem);
 
+            decimal shippingHandlingAmount = orderShippedItemsCount * INDIVIDUAL_SHIPPING_COST;
+            decimal taxAmount = (itemsTotalPrice + orderShippedItemsCount) * TAX_PERCENT;
+
             var order = new Order
             {
                 UserId = user.Id,
                 OrderNumber = Guid.NewGuid().ToString(),
                 WalletId = orderDetails.WalletId.Value,
-                ShippingAddressId = orderContainsShippedItems ? shippingAddress.AddressId : default(int?),
-                BillingAddressId = orderContainsShippedItems ? billingAddress.AddressId : default(int?),
+                OrderItemsAmount = itemsTotalPrice,
+                OrderTaxAmount = taxAmount,
+                OrderShippingHandlingAmount = shippingHandlingAmount,
+                ShippingAddressId = shippingAddress?.AddressId ?? default(int?),
+                BillingAddressId = billingAddress?.AddressId ?? default(int?),
                 OrderDate = now,
             };
 
@@ -213,7 +220,9 @@ namespace Sprint.Controllers
             var orderItems = items.Select(i => new OrderItem
             {
                 OrderId = order.OrderId,
+                GameId = i.GameId,
                 OwnerUserId = i.ReceivingUserId,
+                ItemNumber = Guid.NewGuid().ToString(),
                 PhysicallyOwned = orderDetails.OrderItems.Any(o => o.ShipItem && o.CartGameId == i.CartGameId),
             });
 
@@ -228,9 +237,90 @@ namespace Sprint.Controllers
         }
 
         [HttpGet]
-        public IActionResult Confirmation(string orderNumber)
+        public async Task<IActionResult> Confirmation(string orderNumber)
         {
-            return View();
+            if (orderNumber == null)
+            {
+                return NotFound();
+            }
+
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(i => i.OwnerUser)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(i => i.Game)
+                        .ThenInclude(g => g.GameImages)
+                .FirstOrDefaultAsync(o => o.OrderNumber == orderNumber && o.UserId == user.Id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var library = order.OrderItems
+                .Where(o => o.OwnerUserId == user.Id)
+                .Select(o => new ConfirmationItemViewModel
+                {
+                    Game = o.Game,
+
+                    Image = o.Game.GameImages.FirstOrDefault(i => i.ImageType == ImageType.Banner),
+
+                    PhysicallyOwned = o.PhysicallyOwned,
+
+                    ItemNumber = o.ItemNumber,
+
+                    GiftedUser = o.OwnerUserId != user.Id ? o.OwnerUser : default,
+                })
+                .ToList();
+
+            return View(library);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Download(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            OrderItem item = await _context.OrderItems
+                .Include(o => o.Game)
+                .FirstOrDefaultAsync(o => o.ItemNumber == id && o.OwnerUserId == user.Id && !o.PhysicallyOwned);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var invalidChars = Path.GetInvalidFileNameChars().ToHashSet();
+
+            // clean string - using Game's Name
+            string name = item.Game.Name;
+            for (int i = name.Length - 1; i >= 0; i--)
+            {
+                if (invalidChars.Contains(name[i]))
+                {
+                    name = name.Remove(i, 1);
+                }
+            }
+
+            // mock a file download with a png
+            var path = Path.GetFullPath("./File/static-game-asset.png");
+
+            return PhysicalFile(path, "image/png", $"{name}.png");
         }
     }
 }

@@ -159,6 +159,18 @@ namespace Sprint.Tests.Helpers
             };
         }
 
+        protected GameDiscount CreateDiscount(int? id, decimal discountPrice, int gameId, DateTime startDate, DateTime finishDate)
+        {
+            return new GameDiscount
+            {
+                DiscountId = id ?? default,
+                DiscountPrice = discountPrice,
+                GameId = gameId,
+                DiscountStart = startDate,
+                DiscountFinish = finishDate,
+            };
+        }
+
         protected CartGame CreateCartGame(int? id, int cartUserId, int receivingUserId, int gameId, DateTime? added = null)
         {
             return new CartGame
@@ -198,24 +210,24 @@ namespace Sprint.Tests.Helpers
             };
         }
 
-        protected Wallet CreateWallet(int? id, int userId, int walletId, string cardNumber, string year, string month)
+        protected Wallet CreateWallet(int? id, int userId, string cardNumber, string year, string month)
         {
             return new Wallet
             {
+                WalletId = id ?? default,
                 UserId = userId,
-                WalletId = walletId,
                 CardNumber = cardNumber, 
                 Year = year, 
                 Month = month
             };
         }
 
-        protected Address CreateAddress(int? id, int userId, int addressId, string street, string city, string province, string postal)
+        protected Address CreateAddress(int? id, int userId, string street, string city, string province, string postal)
         {
             return new Address
             {
+                AddressId = id ?? default,
                 UserId = userId,
-                AddressId = addressId,
                 Street = street,
                 City = city,
                 Province = province,

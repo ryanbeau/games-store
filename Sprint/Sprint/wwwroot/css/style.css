@@ -20,6 +20,11 @@ body {
     padding: 20px;
 }
 
+.moist-bg-blue {
+    background-color: #216eb9;
+    color: #ffffff;
+}
+
 .moist-banner-title {
     font-size: 25px;
     line-height: 30px;

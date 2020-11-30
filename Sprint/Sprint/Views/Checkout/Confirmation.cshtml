@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Sprint.ViewModels
+@model List<ConfirmationItemViewModel>
+
+@{
     ViewData["Title"] = $"Checkout Confirmation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -15,10 +18,38 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-xl-9">
-            <div class="row rounded moist-bg-light moist-shadow pt-3 pb-3">
-                TODO: display confirmation and download games
-            </div>
+        <div class="col-md rounded moist-bg-light moist-shadow">
+            @foreach(var item in Model)
+            {
+                <div class="row border-bottom border-secondary pt-3 pb-3">
+                    <div class="col-md-2">
+                        @if (item.Image != null)
+                        {<img height="50" width="100" src="@item.Image.ImageURL">}
+                    </div>
+                    <div class="col-md-5">
+                        <p class="text-dark font-weight-bold mb-0">
+                            @Html.DisplayFor(modelItem => item.Game.Name)
+                        </p>
+                        <p class="text-secondary mb-0">
+                            @Html.DisplayFor(modelItem => item.Game.Developer)
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        @if (item.GiftedUser != null)
+                        {
+                            <span class="text-dark">Gift for <span class="font-weight-bold">@item.GiftedUser.Name</span></span>
+                        }
+                        else if (item.PhysicallyOwned)
+                        {
+                            <span class="text-dark">Item shipped</span>
+                        }
+                        else 
+                        {
+                            <a class="btn btn-primary w-100" role="button" asp-action="Download" asp-route-id="@item.ItemNumber">Download Game</a>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>

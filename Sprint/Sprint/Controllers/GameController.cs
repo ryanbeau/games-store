@@ -63,7 +63,10 @@ namespace Sprint.Controllers
                     Discount = _context.GameDiscounts
                         .Where(d => d.GameId == g.GameId && d.DiscountPrice < g.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
                         .OrderBy(d => d.DiscountPrice)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+
+                    IsOwned = user != null && _context.OrderItems
+                        .Any(o => o.GameId == g.GameId && o.OwnerUserId == user.Id && !o.PhysicallyOwned),
                 })
                 .ToListAsync();
 
@@ -113,32 +116,33 @@ namespace Sprint.Controllers
                 return NotFound();
             }
 
-                    return View(new GameViewModel
+            return View(new GameViewModel
             {
                 Game = game,
 
                 Image = await _context.GameImages
-            .FirstOrDefaultAsync(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner),
+                    .FirstOrDefaultAsync(i => i.GameId == game.GameId && i.ImageType == ImageType.Banner),
 
                 Images = await _context.GameImages
-            .Where(i => i.GameId == game.GameId && i.ImageType == ImageType.Regular)
-            .ToListAsync(),
+                    .Where(i => i.GameId == game.GameId && i.ImageType == ImageType.Regular)
+                    .ToListAsync(),
 
                 Discount = await _context.GameDiscounts
-            .Where(d => d.GameId == game.GameId && d.DiscountPrice < game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
-            .OrderBy(d => d.DiscountPrice)
-            .FirstOrDefaultAsync(),
+                    .Where(d => d.GameId == game.GameId && d.DiscountPrice < game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                    .OrderBy(d => d.DiscountPrice)
+                    .FirstOrDefaultAsync(),
 
                 IsWishlisted = user != null && await _context.UserGameWishlists
-                .AnyAsync(w => w.GameId == game.GameId && w.UserId == user.Id),
+                    .AnyAsync(w => w.GameId == game.GameId && w.UserId == user.Id),
 
                 IsInCart = user != null && await _context.CartGames
-                .AnyAsync(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
+                    .AnyAsync(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
 
-                AverageRating = game.Reviews.Count != 0 ? (int)game.Reviews.Select(review => review.Rating).Average() : 0
+                AverageRating = game.Reviews.Count != 0 ? (int)game.Reviews.Select(review => review.Rating).Average() : 0,
 
-                // TODO : Is Owned
-            }); ; ;
+                IsOwned = user != null && await _context.OrderItems
+                    .AnyAsync(o => o.GameId == game.GameId && o.OwnerUserId == user.Id && !o.PhysicallyOwned),
+            });
         }
 
         // GET: Game/Create

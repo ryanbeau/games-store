@@ -138,12 +138,12 @@
                                     {
                                         <img class="card-img-top moist-card-img" src="@Url.Content(item.Image.ImageURL)" alt="Thumbnail [100%x117]" style="height: 117px; width: 100%; display: block;">
                                     }
-                                    <div class="card-body p-2 pb-3">
-                                        <p class="card-text text-dark m-0 p-0 pb-1">@item.Game.Name</p>
+                                    <div class="card-body pl-0 pt-2 pr-2 pb-2 pb-3">
+                                        <p class="card-text text-dark m-0 p-0 pb-1 ml-2">@item.Game.Name</p>
                                         <div class="d-flex justify-content-between">
-                                            @if (SignInManager.IsSignedIn(User))
+                                            @if (SignInManager.IsSignedIn(User) && !item.IsOwned)
                                             {
-                                                <div class="btn-group hide mr-auto">
+                                                <div class="btn-group hide mr-auto pl-2">
                                                     @if (item.IsWishlisted)
                                                     {
                                                         <form asp-route-gameId="@item.Game.GameId" asp-route-returnUrl="@Url.Action("Index", "Game")" asp-controller="Wishlist" asp-action="Remove">
@@ -168,6 +168,12 @@
                                                             <button type="submit" class="btn btn-sm btn-outline-secondary gradient-button"><i class="fa fa-shopping-cart text-dark" aria-hidden="true"></i></button>
                                                         </form>
                                                     }
+                                                </div>
+                                            }
+                                            else if (item.IsOwned)
+                                            {
+                                                <div class="moist-bg-blue pt-1 pb-1 pl-2 pr-2 rounded-right">
+                                                    <i class="fa fa-list pr-2" aria-hidden="true"></i>In Library
                                                 </div>
                                             }
                                             @if (item.Discount != null && item.Game.RegularPrice != 0)
