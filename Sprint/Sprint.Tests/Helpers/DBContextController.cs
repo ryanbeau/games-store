@@ -198,24 +198,24 @@ namespace Sprint.Tests.Helpers
             };
         }
 
-        protected Wallet CreateWallet(int? id, int userId, int walletId, string cardNumber, string year, string month)
+        protected Wallet CreateWallet(int? id, int userId, string cardNumber, string year, string month)
         {
             return new Wallet
             {
+                WalletId = id ?? default,
                 UserId = userId,
-                WalletId = walletId,
                 CardNumber = cardNumber, 
                 Year = year, 
                 Month = month
             };
         }
 
-        protected Address CreateAddress(int? id, int userId, int addressId, string street, string city, string province, string postal)
+        protected Address CreateAddress(int? id, int userId, string street, string city, string province, string postal)
         {
             return new Address
             {
+                AddressId = id ?? default,
                 UserId = userId,
-                AddressId = addressId,
                 Street = street,
                 City = city,
                 Province = province,

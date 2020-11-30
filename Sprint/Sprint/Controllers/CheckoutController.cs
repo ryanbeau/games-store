@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Sprint.Data;
@@ -18,7 +18,8 @@ namespace Sprint.Controllers
     [Authorize(Roles = "Admin,Member")]
     public class CheckoutController : Controller
     {
-        private const decimal INDIVIDUAL_SHIPPING_COST = 4.40m; // TODO: this is a fixed cost for practical example
+        public const decimal INDIVIDUAL_SHIPPING_COST = 4.40m; // TODO: this is a fixed cost for practical example
+        public const decimal TAX_PERCENT = 0.13m; // TODO: this is a fixed cost for practical example
 
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
@@ -78,9 +79,9 @@ namespace Sprint.Controllers
                 User = user,
             };
 
-            if (cart.Items.Any(i => i.CartItem.CartUserId != user.Id))
+            if (!cart.Items.Any())
             {
-                return BadRequest(); //this should never happen unless a Cart Item is added maliciously or by server error?
+                return RedirectToAction(nameof(CartController.Index), "Cart");
             }
 
             // checkout
@@ -90,7 +91,7 @@ namespace Sprint.Controllers
 
                 ItemsTotalPrice = cart.Items.Sum(i => i.Discount?.DiscountPrice ?? i.CartItem.Game.RegularPrice),
 
-                TaxPercent = 0.13m,
+                TaxPercent = TAX_PERCENT,
 
                 IndividualShippingCost = INDIVIDUAL_SHIPPING_COST,
 
@@ -213,7 +214,9 @@ namespace Sprint.Controllers
             var orderItems = items.Select(i => new OrderItem
             {
                 OrderId = order.OrderId,
+                GameId = i.GameId,
                 OwnerUserId = i.ReceivingUserId,
+                ItemNumber = Guid.NewGuid().ToString(),
                 PhysicallyOwned = orderDetails.OrderItems.Any(o => o.ShipItem && o.CartGameId == i.CartGameId),
             });
 
@@ -228,9 +231,80 @@ namespace Sprint.Controllers
         }
 
         [HttpGet]
-        public IActionResult Confirmation(string orderNumber)
+        public async Task<IActionResult> Confirmation(string orderNumber)
         {
-            return View();
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            var order = await _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(i => i.OwnerUser)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(i => i.Game)
+                        .ThenInclude(g => g.GameImages)
+                .FirstOrDefaultAsync(o => o.OrderNumber == orderNumber && o.UserId == user.Id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            var library = order.OrderItems
+                .Where(o => o.OwnerUserId == user.Id)
+                .Select(o => new ConfirmationItemViewModel
+                {
+                    Game = o.Game,
+
+                    Image = o.Game.GameImages.FirstOrDefault(i => i.ImageType == ImageType.Banner),
+
+                    PhysicallyOwned = o.PhysicallyOwned,
+
+                    ItemNumber = o.ItemNumber,
+
+                    GiftedUser = o.OwnerUserId != user.Id ? o.OwnerUser : default,
+                })
+                .ToList();
+
+            return View(library);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Download(string id)
+        {
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            OrderItem item = await _context.OrderItems
+                .Include(o => o.Game)
+                .FirstOrDefaultAsync(o => o.ItemNumber == id && o.OwnerUserId == user.Id && !o.PhysicallyOwned);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            var invalidChars = Path.GetInvalidFileNameChars().ToHashSet();
+
+            // clean string - using Game's Name
+            string name = item.Game.Name;
+            for (int i = name.Length - 1; i >= 0; i--)
+            {
+                if (invalidChars.Contains(name[i]))
+                {
+                    name = name.Remove(i);
+                }
+            }
+
+            // mock a file download with a png
+            var path = Path.GetFullPath("./File/static-game-asset.png");
+
+            return PhysicalFile(path, "image/png", $"{name}.png");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Sprint.Tests.Controllers
             _context.AddRange(
                 identityUser = CreateUser(2, IdentityPrincipalUserName, "email1@email.com", true, "Password0!", "Name1", "human", "555-555-5555", new DateTime(1970, 01, 01)),
                 user1 = CreateUser(1, IdentityPrincipalUserName, "email2@email.com", true, "Password0!", "Name1", "human", "555-555-5555", new DateTime(1970, 01, 01)),
-                address1 = CreateAddress(1, user1.Id, 1, "14 Street", "Toronto", "Ontario", "L0L0L0" )
+                address1 = CreateAddress(1, user1.Id, "14 Street", "Toronto", "Ontario", "L0L0L0" )
                 );
 
             _context.SaveChanges();

@@ -415,12 +415,25 @@ namespace Sprint.Data
                 entity.Property(e => e.OrderId).HasColumnName("OrderId")
                     .IsRequired();
 
+                entity.Property(e => e.GameId).HasColumnName("GameId")
+                    .IsRequired();
+
                 entity.Property(e => e.OwnerUserId).HasColumnName("OwnerUserId")
+                    .IsRequired();
+
+                entity.Property(e => e.ItemNumber).HasColumnName("ItemNumber")
                     .IsRequired();
 
                 entity.Property(e => e.PhysicallyOwned).HasColumnName("PhysicallyOwned")
                     .HasDefaultValue(false)
                     .IsRequired();
+
+                // foreign key - without navigational property
+                entity.HasOne(d => d.Game)
+                   .WithMany()
+                   .HasForeignKey(p => p.GameId)
+                   .HasPrincipalKey(p => p.GameId)
+                   .HasConstraintName("FK_OrderItem_Game");
 
                 entity.HasOne(d => d.OwnerUser)
                     .WithMany(p => p.OwnedItems)

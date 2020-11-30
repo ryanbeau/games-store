@@ -129,34 +129,45 @@
     <div class="row">
         @if (SignInManager.IsSignedIn(User) && !User.IsInRole("Admin"))
         {
-            <div class="col-sm-4">
-                @if (Model.IsWishlisted)
-                {
-                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
-                        <button type="submit" class="btn btn-primary w-100">Remove from wishlist</button>
-                    </form>
-                }
-                else
-                {
-                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
-                        <button type="submit" class="btn btn-primary w-100">Add to wishlist</button>
-                    </form>
-                }
-            </div>
-            <div class="col-sm-4">
-                @if (Model.IsInCart)
-                {
-                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Cart" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
-                        <button type="submit" class="btn btn-primary w-100">Remove from Cart</button>
-                    </form>
-                }
-                else
-                {
-                    <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
-                        <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
-                    </form>
-                }
-            </div>
+            @if (Model.IsOwned)
+            {
+                <div class="col-sm-8">
+                    <h4 class="moist-bg-blue pt-1 pb-1 pl-2 pr-2 rounded-right">
+                        <i class="fa fa-list pr-2" aria-hidden="true"></i>In Library
+                    </h4>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-4">
+                    @if (Model.IsWishlisted)
+                    {
+                        <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                            <button type="submit" class="btn btn-primary w-100">Remove from wishlist</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Wishlist" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                            <button type="submit" class="btn btn-primary w-100">Add to wishlist</button>
+                        </form>
+                    }
+                </div>
+                <div class="col-sm-4">
+                    @if (Model.IsInCart)
+                    {
+                        <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Cart" asp-action="Remove" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                            <button type="submit" class="btn btn-primary w-100">Remove from Cart</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form class="w-100" asp-route-gameId="@Model.Game.GameId" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@Url.Action("Details", "Game", new { id = @Model.Game.GameId })">
+                            <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                        </form>
+                    }
+                </div>
+            }
         }
         else if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
         {

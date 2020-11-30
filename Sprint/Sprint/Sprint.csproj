@@ -5,6 +5,16 @@
     <UserSecretsId>aspnet-Sprint-E23BB89F-04F0-4B06-B141-76FCB3F326BF</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="File\static-game-asset.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="File\static-game-asset.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />

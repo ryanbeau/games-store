@@ -29,7 +29,7 @@ namespace Sprint.Tests.Controllers
             _context.AddRange(
                 identityUser = CreateUser(2, IdentityPrincipalUserName, "email1@email.com", true, "Password0!", "Name1", "human", "555-555-5555", new DateTime(1970, 01, 01)),
                 user1 = CreateUser(1, IdentityPrincipalUserName, "email2@email.com", true, "Password0!", "Name1", "human", "555-555-5555", new DateTime(1970, 01, 01)),
-                wallet1 = CreateWallet(1, user1.Id, 1, "1234123412341234", "22", "12")
+                wallet1 = CreateWallet(1, user1.Id, "1234123412341234", "22", "12")
                 );
 
             _context.SaveChanges();
