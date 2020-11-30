@@ -15,6 +15,22 @@ using Sprint.ViewModels;
 
 namespace Sprint.Controllers
 {
+    public class OrderDetails
+    {
+        public List<OrderDetailsItem> OrderItems { get; set; }
+        public int? ShippingId { get; set; }
+        public int? BillingId { get; set; }
+        public int? WalletId { get; set; }
+        public bool? SameAsShippingAddress { get; set; }
+        public decimal ItemsTotalPrice { get; set; }
+    }
+
+    public class OrderDetailsItem
+    {
+        public int CartGameId { get; set; }
+        public bool ShipItem { get; set; }
+    }
+
     [Authorize(Roles = "Admin,Member")]
     public class CheckoutController : Controller
     {
@@ -28,22 +44,6 @@ namespace Sprint.Controllers
         {
             _userManager = userManager;
             _context = context;
-        }
-
-        public class OrderDetails
-        {
-            public List<OrderItems> OrderItems { get; set; }
-            public int? ShippingId { get; set; }
-            public int? BillingId { get; set; }
-            public int? WalletId { get; set; }
-            public bool? SameAsShippingAddress { get; set; }
-            public decimal ItemsTotalPrice { get; set; }
-        }
-
-        public class OrderItems
-        {
-            public int CartGameId { get; set; }
-            public bool ShipItem { get; set; }
         }
 
         // GET: Checkout
@@ -239,6 +239,11 @@ namespace Sprint.Controllers
         [HttpGet]
         public async Task<IActionResult> Confirmation(string orderNumber)
         {
+            if (orderNumber == null)
+            {
+                return NotFound();
+            }
+
             User user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -280,6 +285,11 @@ namespace Sprint.Controllers
         [HttpGet]
         public async Task<IActionResult> Download(string id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             User user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -303,7 +313,7 @@ namespace Sprint.Controllers
             {
                 if (invalidChars.Contains(name[i]))
                 {
-                    name = name.Remove(i);
+                    name = name.Remove(i, 1);
                 }
             }
 

@@ -159,6 +159,18 @@ namespace Sprint.Tests.Helpers
             };
         }
 
+        protected GameDiscount CreateDiscount(int? id, decimal discountPrice, int gameId, DateTime startDate, DateTime finishDate)
+        {
+            return new GameDiscount
+            {
+                DiscountId = id ?? default,
+                DiscountPrice = discountPrice,
+                GameId = gameId,
+                DiscountStart = startDate,
+                DiscountFinish = finishDate,
+            };
+        }
+
         protected CartGame CreateCartGame(int? id, int cartUserId, int receivingUserId, int gameId, DateTime? added = null)
         {
             return new CartGame
