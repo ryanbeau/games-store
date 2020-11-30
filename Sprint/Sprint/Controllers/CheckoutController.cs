@@ -129,27 +129,27 @@ namespace Sprint.Controllers
             }
 
             // does order contain shipped items
-            bool orderContainsShippedItems = orderDetails.OrderItems.Any(i => i.ShipItem);
+            int orderShippedItemsCount = orderDetails.OrderItems.Count(i => i.ShipItem);
 
             // address verify
-            Address shippingAddress = orderContainsShippedItems 
+            Address shippingAddress = orderShippedItemsCount > 0
                 ? await _context.Address
                     .FirstOrDefaultAsync(a => a.AddressId == orderDetails.ShippingId && a.UserId == user.Id)
                 : default;
 
-            if (orderContainsShippedItems && shippingAddress == null)
+            if (orderShippedItemsCount > 0 && shippingAddress == null)
             {
                 TempData["CheckoutAlert"] = "Shipping address is required to ship a game.";
                 return RedirectToAction(nameof(Index));
             }
 
             // address verify
-            Address billingAddress = orderContainsShippedItems && orderDetails.SameAsShippingAddress != true 
+            Address billingAddress = orderShippedItemsCount > 0 && orderDetails.SameAsShippingAddress != true 
                 ? await _context.Address
                     .FirstOrDefaultAsync(a => a.AddressId == orderDetails.BillingId && a.UserId == user.Id)
                 : shippingAddress;
 
-            if (orderContainsShippedItems && billingAddress == null)
+            if (orderShippedItemsCount > 0 && billingAddress == null)
             {
                 TempData["CheckoutAlert"] = "Billing address is required.";
                 return RedirectToAction(nameof(Index));
@@ -197,13 +197,19 @@ namespace Sprint.Controllers
                 .Where(i => orderDetails.OrderItems.Any(o => o.CartGameId == i.CartItem.CartGameId))
                 .Select(v => v.CartItem);
 
+            decimal shippingHandlingAmount = orderShippedItemsCount * INDIVIDUAL_SHIPPING_COST;
+            decimal taxAmount = (itemsTotalPrice + orderShippedItemsCount) * TAX_PERCENT;
+
             var order = new Order
             {
                 UserId = user.Id,
                 OrderNumber = Guid.NewGuid().ToString(),
                 WalletId = orderDetails.WalletId.Value,
-                ShippingAddressId = orderContainsShippedItems ? shippingAddress.AddressId : default(int?),
-                BillingAddressId = orderContainsShippedItems ? billingAddress.AddressId : default(int?),
+                OrderItemsAmount = itemsTotalPrice,
+                OrderTaxAmount = taxAmount,
+                OrderShippingHandlingAmount = shippingHandlingAmount,
+                ShippingAddressId = shippingAddress?.AddressId ?? default(int?),
+                BillingAddressId = billingAddress?.AddressId ?? default(int?),
                 OrderDate = now,
             };
 

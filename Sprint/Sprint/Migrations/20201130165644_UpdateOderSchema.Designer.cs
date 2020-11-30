@@ -10,8 +10,8 @@ using Sprint.Data;
 namespace Sprint.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201130053829_UpdateOderItemSchema")]
-    partial class UpdateOderItemSchema
+    [Migration("20201130165644_UpdateOderSchema")]
+    partial class UpdateOderSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1849,10 +1849,22 @@ namespace Sprint.Migrations
                         .HasColumnName("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("OrderItemsAmount")
+                        .HasColumnName("OrderItemsAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("OrderNumber")
                         .IsRequired()
                         .HasColumnName("OrderNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("OrderShippingHandlingAmount")
+                        .HasColumnName("OrderShippingHandlingAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OrderTaxAmount")
+                        .HasColumnName("OrderTaxAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("ShippingAddressId")
                         .HasColumnName("ShippingAddressId")
@@ -2111,14 +2123,14 @@ namespace Sprint.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "daa270df-251d-470f-8b1a-0efbc93696f1",
+                            ConcurrencyStamp = "69d314f2-0487-4fd2-9d29-c56d312e86c4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "f5a52565-5d0f-4d61-9549-fba8df5aab08",
+                            ConcurrencyStamp = "62db92ec-80b6-4156-8449-04e1887aadad",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -2250,9 +2262,9 @@ namespace Sprint.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            AccountNum = "5d9606fa-ecbc-40bd-8426-b67dadd12949",
+                            AccountNum = "10c5e423-8504-4733-9352-5cefa1149c3b",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "68660dad-b267-4d1b-947a-98a8612c02af",
+                            ConcurrencyStamp = "06949549-6299-4b55-949a-efa73669ab64",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -2260,7 +2272,7 @@ namespace Sprint.Migrations
                             Name = "Admin",
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFGZbjeoUx6X0B5OYKCVZk4ht/dp8QWR8jJD0DgqMXzDO+53X1sMlLkMBT+TUyzKtg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG9cf9iOYOWWpExw1g9byVEx6ibclUut+nINnntyQ3/wuVgoJja/0zd4IbkLUNmQPA==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             ReceivePromotionalEmails = false,
@@ -2273,9 +2285,9 @@ namespace Sprint.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            AccountNum = "442077de-dd35-4563-bc6c-821743909f78",
+                            AccountNum = "6f6f86f7-4fb4-484e-84a9-a8496e9a6921",
                             BirthDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "23289860-b69a-488d-be22-23f1027f486b",
+                            ConcurrencyStamp = "f2a948a2-3b7f-499f-9f4a-0f5c863e2b4c",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             Gender = "Other",
@@ -2283,7 +2295,7 @@ namespace Sprint.Migrations
                             Name = "User",
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPSKowZ0uoGl/RH1LA5cWtlfY5DjwRbZYDSQAR2CEShOrPLoIeT5oIIaB4I2XZcXfQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBSl1ScYA/h+7fPIeXnelXu03nuT3mVirNrfdhEK652JjitLj42Mw59slfGtLmu+Bg==",
                             PhoneNumber = "555-555-5555",
                             PhoneNumberConfirmed = false,
                             ReceivePromotionalEmails = false,

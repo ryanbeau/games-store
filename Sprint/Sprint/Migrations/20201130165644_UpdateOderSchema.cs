@@ -2,7 +2,7 @@
 
 namespace Sprint.Migrations
 {
-    public partial class UpdateOderItemSchema : Migration
+    public partial class UpdateOderSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,6 +18,27 @@ namespace Sprint.Migrations
                 nullable: false,
                 defaultValue: "");
 
+            migrationBuilder.AddColumn<decimal>(
+                name: "OrderItemsAmount",
+                table: "Order",
+                type: "decimal(18,2)",
+                nullable: false,
+                defaultValue: 0m);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "OrderShippingHandlingAmount",
+                table: "Order",
+                type: "decimal(18,2)",
+                nullable: false,
+                defaultValue: 0m);
+
+            migrationBuilder.AddColumn<decimal>(
+                name: "OrderTaxAmount",
+                table: "Order",
+                type: "decimal(18,2)",
+                nullable: false,
+                defaultValue: 0m);
+
             migrationBuilder.AlterColumn<string>(
                 name: "Postal",
                 table: "Address",
@@ -31,28 +52,28 @@ namespace Sprint.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "ConcurrencyStamp",
-                value: "daa270df-251d-470f-8b1a-0efbc93696f1");
+                value: "69d314f2-0487-4fd2-9d29-c56d312e86c4");
 
             migrationBuilder.UpdateData(
                 table: "Role",
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "ConcurrencyStamp",
-                value: "f5a52565-5d0f-4d61-9549-fba8df5aab08");
+                value: "62db92ec-80b6-4156-8449-04e1887aadad");
 
             migrationBuilder.UpdateData(
                 table: "User",
                 keyColumn: "Id",
                 keyValue: 1,
                 columns: new[] { "AccountNum", "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "5d9606fa-ecbc-40bd-8426-b67dadd12949", "68660dad-b267-4d1b-947a-98a8612c02af", "AQAAAAEAACcQAAAAEFGZbjeoUx6X0B5OYKCVZk4ht/dp8QWR8jJD0DgqMXzDO+53X1sMlLkMBT+TUyzKtg==" });
+                values: new object[] { "10c5e423-8504-4733-9352-5cefa1149c3b", "06949549-6299-4b55-949a-efa73669ab64", "AQAAAAEAACcQAAAAEG9cf9iOYOWWpExw1g9byVEx6ibclUut+nINnntyQ3/wuVgoJja/0zd4IbkLUNmQPA==" });
 
             migrationBuilder.UpdateData(
                 table: "User",
                 keyColumn: "Id",
                 keyValue: 2,
                 columns: new[] { "AccountNum", "ConcurrencyStamp", "PasswordHash" },
-                values: new object[] { "442077de-dd35-4563-bc6c-821743909f78", "23289860-b69a-488d-be22-23f1027f486b", "AQAAAAEAACcQAAAAEPSKowZ0uoGl/RH1LA5cWtlfY5DjwRbZYDSQAR2CEShOrPLoIeT5oIIaB4I2XZcXfQ==" });
+                values: new object[] { "6f6f86f7-4fb4-484e-84a9-a8496e9a6921", "f2a948a2-3b7f-499f-9f4a-0f5c863e2b4c", "AQAAAAEAACcQAAAAEBSl1ScYA/h+7fPIeXnelXu03nuT3mVirNrfdhEK652JjitLj42Mw59slfGtLmu+Bg==" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItem_GameId",
@@ -85,6 +106,18 @@ namespace Sprint.Migrations
             migrationBuilder.DropColumn(
                 name: "ItemNumber",
                 table: "OrderItem");
+
+            migrationBuilder.DropColumn(
+                name: "OrderItemsAmount",
+                table: "Order");
+
+            migrationBuilder.DropColumn(
+                name: "OrderShippingHandlingAmount",
+                table: "Order");
+
+            migrationBuilder.DropColumn(
+                name: "OrderTaxAmount",
+                table: "Order");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Postal",
