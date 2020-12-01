@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Sprint.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Sprint.Services;
 
 namespace Sprint
 {
@@ -45,6 +47,9 @@ namespace Sprint
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AppData"));
             });
+
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
 
             services.AddControllersWithViews();
             services.AddRazorPages();

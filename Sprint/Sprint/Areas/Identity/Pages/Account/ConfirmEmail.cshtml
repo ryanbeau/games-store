@@ -1,0 +1,17 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Your Account has been Confirmed";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+            <h4 class="text-light font-weight-light text-uppercase">
+                <i class="fa fa-users text-secondary pr-2" aria-hidden="true"></i>@ViewData["Title"]
+            </h4>
+        </div>
+    </div>
+
+    <p class="text-center"><a asp-area="Identity" asp-page="/Account/Login">Please login</a></p>
+</div>
