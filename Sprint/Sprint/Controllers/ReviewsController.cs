@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -70,6 +71,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Create(int? id, [Bind("ReviewId,UserId,GameId,Rating,ReviewContent")] Review review)
         {
             User user = await _userManager.GetUserAsync(User);
@@ -134,6 +136,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Edit(int id, [Bind("Game,User,UserId,GameId,ReviewId,Rating,ReviewContent")] Review review)
         {
             if (id != review.ReviewId)
@@ -166,6 +169,7 @@ namespace Sprint.Controllers
         }
 
         // GET: Reviews/Delete/5
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -188,6 +192,7 @@ namespace Sprint.Controllers
         // POST: Reviews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Member")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
