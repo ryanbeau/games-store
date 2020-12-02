@@ -74,7 +74,7 @@ namespace Sprint.Controllers
         {
             User user = await _userManager.GetUserAsync(User);
 
-            if (id == null)
+            if (id == null || user == null)
             {
                 return NotFound();
             }

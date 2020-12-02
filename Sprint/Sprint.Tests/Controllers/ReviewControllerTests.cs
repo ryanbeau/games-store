@@ -12,6 +12,7 @@ namespace Sprint.Tests.Controllers
 {
     public class ReviewControllerTests : DBContextController<ReviewsController>
     {
+        private User identityUser;
         private User user1;
         private Game game1;
         private Review review1;
@@ -28,6 +29,8 @@ namespace Sprint.Tests.Controllers
             GameType testGameType;
 
             _context.AddRange(
+                // identity user
+                identityUser = CreateUser(2, IdentityPrincipalUserName, "email@email.com", true, "Password0!", "Name1", "human", "555-555-5555", new DateTime(1970, 01, 01)),
                 // user
                 user1 = CreateUser(1, IdentityPrincipalUserName, "email1@email.com", true, "Password0!", "Name1", "human", "555-555-5555", new DateTime(1970, 01, 01)),
                 // game type
@@ -73,18 +76,20 @@ namespace Sprint.Tests.Controllers
         public async Task Create_ReturnsViewResult(int? gameId)
         {
             // Arrange
+            GetUserAsyncReturns = identityUser;
 
             // Act
             var result = await ControllerSUT.Create(gameId, review1);
 
             // Assert
-            Assert.IsAssignableFrom<NotFoundResult>(result);
+            Assert.IsAssignableFrom<RedirectToActionResult>(result);
         }
 
         [Fact]
         public async Task Create_ReturnsNotFoundResult_WhenGameIdNull()
         {
             // Arrange
+            GetUserAsyncReturns = identityUser;
 
             // Act
             var result = await ControllerSUT.Create(null, review1);
