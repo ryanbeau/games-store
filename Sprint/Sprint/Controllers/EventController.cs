@@ -51,13 +51,8 @@ namespace Sprint.Controllers
                     .CountAsync(e => e.EventId == id),
 
                 IsUserJoined = user != null && await _context.EventUsers
-                    .AnyAsync(e => e.UserId == user.Id),
+                    .AnyAsync(e => e.UserId == user.Id && e.EventId == id),
             };
-
-            if (activity == null)
-            {
-                return NotFound();
-            }
 
             return View(activity);
         }
@@ -75,7 +70,7 @@ namespace Sprint.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventId,UserId,EventName,EventDescription")] Event @event)
+        public async Task<IActionResult> Create([Bind("EventId,UserId,EventName,EventDescription,EventDateTime")] Event @event)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +78,7 @@ namespace Sprint.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", @event.UserId);
+
             return View(@event);
         }
 
@@ -161,7 +156,7 @@ namespace Sprint.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", activity.UserId);
+
             return View(activity);
         }
 
@@ -171,7 +166,7 @@ namespace Sprint.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("EventId,UserId,EventName,EventDescription")] Event activity)
+        public async Task<IActionResult> Edit(int id, [Bind("EventId,UserId,EventName,EventDescription,EventDateTime")] Event activity)
         {
             if (id != activity.EventId)
             {
@@ -198,7 +193,7 @@ namespace Sprint.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum", activity.UserId);
+
             return View(activity);
         }
 

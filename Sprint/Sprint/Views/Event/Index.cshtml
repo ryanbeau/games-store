@@ -7,29 +7,53 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Moist Events</h1>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    a:link {
+        color: dimgray;
+    }
 
+    a:visited {
+        color: dimgray;
+    }
+
+    a:hover {
+        color: orange;
+    }
+
+    a:active {
+        color: orange;
+    }
+</style>
+<h4 class="text-light font-weight-light text-uppercase"><i class="fa fa-calendar text-secondary pr-2" aria-hidden="true"></i> Moist Events</h4>
+<hr />
 <p>
     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
     {
-        <a asp-action="Create">Create New</a>
+        <a asp-action="Create"><input type="button" value="Create New" class="btn btn-primary" /></a>
     }
     else
     {
         <span>Select an event for more information.</span>
     }
 </p>
-<table class="table">
+<table class="table table-hover table-borderless rounded moist-bg-light moist-shadow moist-border-secondary mt-3">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.EventName)
+                <p class="text-dark font-weight-bold mb-0">
+                    @Html.DisplayNameFor(model => model.EventName)
+                </p>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EventDateTime)
+                <p class="text-dark font-weight-bold mb-0">
+                    @Html.DisplayNameFor(model => model.EventDateTime)
+                </p>
             </th>
             <th>
-                Created By
+                <p class="text-dark font-weight-bold mb-0">
+                    Created By
+                </p>
             </th>
             <th></th>
         </tr>
@@ -39,20 +63,28 @@
         {
             <tr>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.EventId">@Html.DisplayFor(modelItem => item.EventName)</a>
+                    <p class="text-secondary font-weight-bold mb-0">
+                        <a asp-action="Details" asp-route-id="@item.EventId">@Html.DisplayFor(modelItem => item.EventName)</a>
+                    </p>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EventDateTime)
+                    <p class="text-secondary mb-0">
+                        @Html.DisplayFor(modelItem => item.EventDateTime)
+                    </p>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.Name)
+                    <p class="text-secondary mb-0">
+                        @Html.DisplayFor(modelItem => item.User.Name)
+                    </p>
                 </td>
                 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                 {
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                        <p class="text-secondary mb-0">
+                            <a class="text-decoration-none" asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
+                            <a class="text-decoration-none" asp-action="Details" asp-route-id="@item.EventId">Details</a> |
+                            <a class="text-decoration-none" asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                        </p>
                     </td>
                 }
                 else
