@@ -33,7 +33,7 @@
                 @if (Model.WishlistVisibility != WishlistVisibility.OnlyMe)
                 {
                     <a class="text-light cursor-pointer" data-toggle="tooltip" data-placement="top" title="Copy wishlist link"
-                       onclick="copy_to_clipboard('@{<text>@Url.Action("Index", "Wishlist", new { username = Model.User.UserName }, Url.ActionContext.HttpContext.Request.Scheme)</text>}')">
+                       onclick="copy_to_clipboard('@{<text>@Url.Action("Shared", "Wishlist", new { username = Model.User.UserName }, Url.ActionContext.HttpContext.Request.Scheme)</text>}')">
                         <i class="fa fa-copy text-secondary" aria-hidden="true"></i>
                         <span>Share wishlist</span>
                     </a>
@@ -99,10 +99,30 @@
                         </span>
                     </td>
                     <td>
-                        @* Rating TODO: change this below when Review is implemented *@
-                        <span title="Rating: 3.5">
-                            <i class="fa fa-star text-secondary" aria-hidden="true"></i><i class="fa fa-star text-secondary" aria-hidden="true"></i><i class="fa fa-star text-secondary" aria-hidden="true"></i><i class="fa fa-star-half-o text-secondary" aria-hidden="true"></i><i class="fa fa-star-o text-secondary" aria-hidden="true"></i>
-                        </span>
+                        @if (item.RatingAverage == 0)
+                        {
+                            <span class="text-secondary font-italic" title="Insufficient ratings to calculate an average">Rating n/a</span>
+                        }
+                        else
+                        {
+                            <span title="Rating: @Math.Round(item.RatingAverage, 1, MidpointRounding.AwayFromZero)">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    if (item.RatingAverage <= i)
+                                    {
+                                        <i class="fa fa-star-o text-secondary" aria-hidden="true"></i> // empty star
+                                    }
+                                    else if (item.RatingAverage < i+1)
+                                    {
+                                        <i class="fa fa-star-half-o text-secondary" aria-hidden="true"></i> // half star
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-star text-secondary" aria-hidden="true"></i> // full star
+                                    }
+                                }
+                            </span>
+                        }
                     </td>
                     <td>
                         <span class="cursor-help text-secondary" title="@item.WishlistItem.AddedOn?.ToString("MMM dd h:mm tt")">

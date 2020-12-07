@@ -138,7 +138,7 @@ namespace Sprint.Controllers
                 IsInCart = user != null && await _context.CartGames
                     .AnyAsync(c => c.GameId == game.GameId && c.CartUserId == user.Id && c.ReceivingUserId == user.Id),
 
-                AverageRating = game.Reviews.Count != 0 ? (int)game.Reviews.Select(review => review.Rating).Average() : 0,
+                AverageRating = game.Reviews.Any() ? (int)game.Reviews.Select(review => review.Rating).Average() : 0,
 
                 IsOwned = user != null && await _context.OrderItems
                     .AnyAsync(o => o.GameId == game.GameId && o.OwnerUserId == user.Id && !o.PhysicallyOwned),

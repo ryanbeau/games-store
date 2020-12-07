@@ -104,7 +104,7 @@
                             @if (item.RelatedUser.WishlistVisibility == WishlistVisibility.Everyone ||
                      item.RelatedUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
                             {
-                                <a asp-controller="Wishlist" asp-route-username="@item.RelatedUser.UserName"
+                                <a asp-controller="Wishlist" asp-action="Shared" asp-route-username="@item.RelatedUser.UserName"
                                    class="flex-fill btn btn-primary font-weight-bold mr-3" role="button">
                                     <i class="fa fa-heart pr-2" aria-hidden="true"></i>
                                     View @item.RelatedUser.Name's Wishlist

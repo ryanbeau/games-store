@@ -38,7 +38,7 @@ namespace Sprint.Tests.Controllers
             GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
 
             // Act
-            var result = await ControllerSUT.UserWishlist("bob");
+            var result = await ControllerSUT.Shared("bob");
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
@@ -52,7 +52,7 @@ namespace Sprint.Tests.Controllers
             GetUserAsyncReturns = new User { Id = 1, UserName = "bob" };
 
             // Act
-            var result = await ControllerSUT.UserWishlist("fred");
+            var result = await ControllerSUT.Shared("fred");
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<NotFoundResult>(result);
@@ -66,7 +66,7 @@ namespace Sprint.Tests.Controllers
             FindByNameAsyncReturns = new User { Id = 2, UserName = "fred", WishlistVisibility = WishlistVisibility.OnlyMe };
 
             // Act
-            var result = await ControllerSUT.UserWishlist("fred");
+            var result = await ControllerSUT.Shared("fred");
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
@@ -82,7 +82,7 @@ namespace Sprint.Tests.Controllers
             FindByNameAsyncReturns = new User { Id = 2, UserName = "fred", WishlistVisibility = WishlistVisibility.FriendsOnly };
 
             // Act
-            var result = await ControllerSUT.UserWishlist("fred");
+            var result = await ControllerSUT.Shared("fred");
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<RedirectToActionResult>(result);
@@ -98,7 +98,7 @@ namespace Sprint.Tests.Controllers
             FindByNameAsyncReturns = new User { Id = 2, UserName = "fred", WishlistVisibility = WishlistVisibility.Everyone };
 
             // Act
-            var result = await ControllerSUT.UserWishlist("fred");
+            var result = await ControllerSUT.Shared("fred");
 
             // Assert
             var viewResult = Assert.IsAssignableFrom<ViewResult>(result);
