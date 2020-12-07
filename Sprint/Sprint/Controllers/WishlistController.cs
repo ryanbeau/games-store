@@ -50,6 +50,13 @@ namespace Sprint.Controllers
                         .FirstOrDefault(),
 
                     IsInCart = w != null && w.User.CartItems.Any(c => c.GameId == w.GameId && c.ReceivingUserId == w.UserId),
+
+                    RatingAverage = w != null 
+                        ? _context.Reviews
+                            .Where(r => r.GameId == w.GameId)
+                            .Select(r => r.Rating)
+                            .Average()
+                        : 0,
                 })
                 .ToListAsync();
 
@@ -62,14 +69,14 @@ namespace Sprint.Controllers
         }
 
         // GET: Wishlist
-        [HttpGet, Route("Wishlist/{username}"), ActionName("Index")]
+        [HttpGet("[controller]/{username}")]
         [Authorize(Roles = "Admin,Member")]
-        public async Task<IActionResult> UserWishlist(string username)
+        public async Task<IActionResult> Shared(string username)
         {
             User user = await _userManager.GetUserAsync(User);
 
             // if viewing your own page - redirect to index
-            if (username == user.UserName)
+            if (username == user?.UserName)
             {
                 return RedirectToAction(nameof(Index));
             }
@@ -90,7 +97,7 @@ namespace Sprint.Controllers
             // redirect if friends-only wishlist & we are either blocked or not friends
             if (wishlistUser.WishlistVisibility == WishlistVisibility.FriendsOnly)
             {
-                bool areFriendsOrPending = await _context.UserRelationships
+                bool areFriendsOrPending = user != null && await _context.UserRelationships
                     .AnyAsync(r => r.Type != Relationship.Blocked && r.RelatingUserId == wishlistUser.Id && r.RelatedUserId == user.Id);
 
                 if (!areFriendsOrPending)
@@ -99,6 +106,8 @@ namespace Sprint.Controllers
                     return RedirectToAction("Index", "Friends"); // somehow we got here - redirect
                 }
             }
+
+            DateTime now = DateTime.Now;
 
             var wishlistGames = await _context.UserGameWishlists
                 .Include(w => w.Game)
@@ -110,7 +119,18 @@ namespace Sprint.Controllers
 
                     Image = _context.GameImages.FirstOrDefault(i => i.GameId == w.GameId && i.ImageType == ImageType.Banner),
 
+                    Discount = w.Game.Discounts.Where(d => d.DiscountPrice < w.Game.RegularPrice && d.DiscountStart <= now && d.DiscountFinish > now)
+                        .OrderBy(d => d.DiscountPrice)
+                        .FirstOrDefault(),
+
                     IsInCart = w != null && _context.CartGames.Any(c => c.GameId == w.Game.GameId && c.CartUserId == w.UserId && c.ReceivingUserId == wishlistUser.Id),
+
+                    RatingAverage = w != null
+                        ? _context.Reviews
+                            .Where(r => r.GameId == w.GameId)
+                            .Select(r => r.Rating)
+                            .Average()
+                        : 0,
                 })
                 .ToListAsync();
 
