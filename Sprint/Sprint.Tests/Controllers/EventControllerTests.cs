@@ -63,13 +63,13 @@ namespace Sprint.Tests.Controllers
 
 
         [Fact]
-        public void Create_ReturnsViewResult()
+        public async Task Create_ReturnsViewResult()
         {
             // Arrange
             GetUserAsyncReturns = new User { Id = 1 };
 
             // Act
-            var result = ControllerSUT.Create();
+            var result = await ControllerSUT.Create();
 
             // Assert
             Assert.IsAssignableFrom<ViewResult>(result);
