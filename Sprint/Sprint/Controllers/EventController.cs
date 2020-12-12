@@ -59,9 +59,15 @@ namespace Sprint.Controllers
 
         // GET: Event/Create
         [Authorize(Roles = "Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "AccountNum");
+            User user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Problem();
+            }
+
+            ViewData["UserId"] = user.Id;
             return View();
         }
 
